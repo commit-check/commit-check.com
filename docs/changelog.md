@@ -53,7 +53,8 @@ below and to the page that documents the feature properly.
 * The documentation, the landing page and the blog moved to
   [commit-check.com](https://commit-check.com) and are published from one
   domain. `docs.commit-check.com` URLs redirect.
-  See PRs [#515](https://github.com/commit-check/commit-check/pull/515),
+  See PRs [#514](https://github.com/commit-check/commit-check/pull/514),
+  [#515](https://github.com/commit-check/commit-check/pull/515),
   [#518](https://github.com/commit-check/commit-check/pull/518) and
   [#519](https://github.com/commit-check/commit-check/pull/519).
 
