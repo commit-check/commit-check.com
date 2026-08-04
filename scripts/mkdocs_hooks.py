@@ -20,13 +20,37 @@ LEGACY_URLS = {
     "migration": "migration/",
     "troubleshoot": "troubleshoot/",
     "changelog": "changelog/",
-    "what-is-new": "what-is-new/",
     # The CLI reference is no longer a generated page; the flags it listed are
     # documented alongside the settings that control them.
     "cli_args": "configuration/",
     "cli": "configuration/",
-    "README": "getting-started/installation/",
+    "README": "getting-started/",
+    "what-is-new": "changelog/",
     "genindex": "",
+}
+
+#: Retired page URL -> the page that absorbed it.
+#
+# Unlike LEGACY_URLS these are directory URLs, so the stub is written to
+# ``<old>/index.html``. Nothing is served at the old path any more, so the stub
+# cannot shadow a real page the way a flat ``rules.html`` would, and it is
+# written on every host rather than skipped on Netlify.
+#
+# Two URLs are deliberately absent: ``rules/`` and ``configuration/``. The rule
+# IDs printed by every released version of the package link to
+# ``commit-check.com/rules/#ccNNN`` — the URL is hardcoded in
+# ``commit_check/rules_catalog.py`` — so those two pages do not move.
+MOVED_URLS = {
+    "getting-started/installation": "getting-started/",
+    "getting-started/quickstart": "getting-started/",
+    "getting-started/why": "",
+    "guides/pre-commit": "guides/integrations/",
+    "guides/github-actions": "guides/integrations/",
+    "guides/organization": "guides/integrations/",
+    "guides/signoff": "guides/policies/",
+    "guides/ai-attribution": "guides/policies/",
+    "what-is-new": "changelog/",
+    "projects": "",
 }
 
 # Redirect stubs for the URLs the Sphinx site served.
@@ -58,18 +82,27 @@ REDIRECT = """<!doctype html>
 
 
 def on_post_build(config, **kwargs) -> None:
-    """Write a redirect stub for each URL the Sphinx site used to serve."""
+    """Write a redirect stub for each URL this site no longer serves."""
     site = Path(config["site_dir"])
-    # On Netlify the stubs would be served in place of the real pages: Netlify
-    # resolves ``/rules/`` to the file ``rules.html``, so the stub that
-    # redirects to ``/rules/`` would shadow ``rules/index.html`` and loop. The
-    # ``[[redirects]]`` table in netlify.toml covers the same URLs with real
-    # 301s, so the stubs are only written for hosts without redirects.
-    if os.environ.get("NETLIFY") == "true":
-        return
     # Deploy previews pass their own URL in, and it may arrive without the
     # trailing slash the targets below are joined onto.
     base = (config["site_url"] or "/").rstrip("/") + "/"
+
+    # Retired pages first: these run on every host, Netlify included. The old
+    # path has no page of its own any more, so the stub is the only thing that
+    # can answer for it.
+    for old, target in MOVED_URLS.items():
+        stub = site / old / "index.html"
+        stub.parent.mkdir(parents=True, exist_ok=True)
+        stub.write_text(REDIRECT.format(url=base + target), encoding="utf-8")
+
+    # On Netlify the .html stubs would be served in place of the real pages:
+    # Netlify resolves ``/rules/`` to the file ``rules.html``, so the stub that
+    # redirects to ``/rules/`` would shadow ``rules/index.html`` and loop. The
+    # ``[[redirects]]`` table in netlify.toml covers the same URLs with real
+    # 301s, so these are only written for hosts without redirects.
+    if os.environ.get("NETLIFY") == "true":
+        return
     for legacy, target in LEGACY_URLS.items():
         (site / f"{legacy}.html").write_text(
             REDIRECT.format(url=base + target), encoding="utf-8"

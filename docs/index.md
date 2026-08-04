@@ -31,7 +31,7 @@ whatever your AI agent is committing on your behalf.
     ```yaml title=".pre-commit-config.yaml"
     repos:
       - repo: https://github.com/commit-check/commit-check
-        rev: v2.11.0
+        rev: v2.13.0
         hooks:
           - id: check-message
           - id: check-branch
@@ -62,6 +62,59 @@ whatever your AI agent is committing on your behalf.
       }
     }
     ```
+
+## Why it exists
+
+Git history is a database that every team writes to and almost nobody validates.
+
+The cost shows up later, and indirectly. Release notes get written by hand
+because commit subjects cannot be grouped. `git bisect` walks through merge
+commits that record nothing but a sync. A commit is attributed to `ec2-user`
+because a build box had no `user.name`. A contribution has to be rejected months
+after the fact because it never carried a `Signed-off-by` trailer.
+
+None of these are caught by a linter, a type checker, or a test suite. They are
+all caught by review — which means inconsistently, by whoever happens to be
+looking, and only after the work is done.
+
+Commit Check treats commit metadata the way linters treat code: a policy written
+down once, enforced identically everywhere, with a stable identifier for every
+diagnostic so findings can be discussed, cited, and tracked.
+
+<div class="grid cards" markdown>
+
+-   :material-file-cog-outline:{ .lg .middle } __One config__
+
+    ---
+
+    A single `cchk.toml` drives the CLI, the pre-commit hook, the GitHub Action
+    and the MCP server. There is no second place where the rules can disagree
+    with themselves.
+
+-   :material-lightning-bolt-outline:{ .lg .middle } __Fails where it is cheap__
+
+    ---
+
+    The same check that runs in CI runs in your `commit-msg` hook. A malformed
+    subject costs a second locally, or a full CI cycle plus a force-push
+    remotely.
+
+-   :material-tag-outline:{ .lg .middle } __Stable rule IDs__
+
+    ---
+
+    Every rule has an ID like `CC003` that never changes once released. Cite it
+    in a review comment, link to its documentation, suppress it per-rule.
+
+-   :material-shield-check:{ .lg .middle } __Built to be trusted__
+
+    ---
+
+    SLSA Level 3 build provenance with artifact attestation you can verify
+    before installing. A failure names the rule, quotes the offending value,
+    and says how to fix it.
+
+</div>
 
 ## What it checks
 
@@ -101,7 +154,7 @@ whatever your AI agent is committing on your behalf.
     Require the `Signed-off-by` trailer locally, so contributors find out before
     CI rejects the pull request.
 
-    [:octicons-arrow-right-24: Signoff guide](guides/signoff.md)
+    [:octicons-arrow-right-24: Policy guides](guides/policies.md#require-signoff-dco)
 
 -   :material-robot-outline:{ .lg .middle } __AI attribution__
 
@@ -110,7 +163,7 @@ whatever your AI agent is committing on your behalf.
     Whatever your project has decided about AI-assisted commits, enforce it
     mechanically instead of relitigating it in review.
 
-    [:octicons-arrow-right-24: AI attribution guide](guides/ai-attribution.md)
+    [:octicons-arrow-right-24: Policy guides](guides/policies.md#ai-attribution)
 
 -   :material-office-building-outline:{ .lg .middle } __Org-wide policy__
 
@@ -119,34 +172,88 @@ whatever your AI agent is committing on your behalf.
     Inherit a base config from a shared repository, then let each project
     override only what it needs.
 
-    [:octicons-arrow-right-24: Organization guide](guides/organization.md)
+    [:octicons-arrow-right-24: Integrations](guides/integrations.md#across-an-organization)
 
 </div>
 
-## Built to be trusted
+## What it is not
+
+Commit Check is deliberately narrow: it validates *metadata*, not code.
+
+- **Not a code linter.** It never reads your source files.
+- **Not a replacement for review.** It enforces the mechanical rules so review
+  can spend its attention on the change itself.
+- **Not opinionated by default.** Most rules are off until you turn them on. See
+  the [rules reference](rules.md) for what applies out of the box.
+
+It is a lightweight, open alternative to
+[GitHub Enterprise metadata restrictions](https://docs.github.com/en/enterprise-server@3.11/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
+and Bitbucket's paid
+[Yet Another Commit Checker](https://marketplace.atlassian.com/apps/1211854/yet-another-commit-checker),
+without requiring a particular forge or an enterprise plan. If you already run
+`ruff`, `eslint` or `golangci-lint` on your source, Commit Check is the
+equivalent for the commits that carry it.
+
+## Ecosystem
+
+One policy engine, multiple enforcement surfaces. Write your `cchk.toml` once —
+every surface reads the same file.
+
+```mermaid
+graph TB
+    subgraph Policy["📄 cchk.toml"]
+        direction LR
+        Config[One policy file]
+    end
+
+    subgraph Engine["⚙️ commit-check<br/>(Python core)"]
+        direction LR
+        CLI[CLI & pre-commit]
+        API[Python API]
+    end
+
+    subgraph Surfaces["🚀 Enforcement surfaces"]
+        Action[commit-check-action<br/>GitHub Action]
+        MCP[commit-check-mcp<br/>MCP Server]
+    end
+
+    Config --> Engine
+    CLI --> Action
+    API --> MCP
+    Action --> CI[CI Pipeline]
+    MCP --> Agent[AI Coding Agent]
+```
 
 <div class="grid cards" markdown>
 
--   :material-shield-check:{ .lg .middle } __SLSA Level 3__
+-   :fontawesome-brands-python: __commit-check__
 
     ---
 
-    Build provenance with artifact attestation you can verify before
-    installing.
+    **Core engine** — Python CLI, library and pre-commit hooks. Runs every
+    validation the other surfaces expose.
 
--   :material-tag-outline:{ .lg .middle } __Stable rule IDs__
+    [:octicons-arrow-right-24: Getting started](getting-started.md)
+    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check)
 
-    ---
-
-    Every diagnostic carries an ID like `CC003` that never changes, so you can
-    cite it in review, suppress it, or feed it to tooling.
-
--   :material-source-commit:{ .lg .middle } __Used in production__
+-   :material-github: __commit-check-action__
 
     ---
 
-    Running at Apache, Texas Instruments, Mila, and
-    [many more](https://github.com/commit-check/commit-check-action/network/dependents).
+    **GitHub Action** — CI integration that posts results as check runs, job
+    summaries and pull request comments.
+
+    [:octicons-arrow-right-24: Guide](guides/integrations.md#in-github-actions)
+    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-action)
+
+-   :material-robot: __commit-check-mcp__
+
+    ---
+
+    **MCP server** — exposes the validations as structured tools for AI coding
+    agents such as Claude Code, Cursor and Copilot.
+
+    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-mcp)
 
 </div>
 
@@ -233,48 +340,7 @@ whatever your AI agent is committing on your behalf.
 
 </div>
 
-## Ecosystem
-
-Commit Check is a family of projects — one engine, multiple surfaces.
-Write your policy **once** in a `cchk.toml`, enforce it **everywhere**.
-
-<div class="grid cards" markdown>
-
--   :fontawesome-brands-python: __commit-check__ `v2.11.0`
-
-    ---
-
-    **Core engine** — Python CLI, library & pre-commit hooks.
-
-    :material-star: AI attribution governance, message patterns, JSON output
-
-    [:octicons-arrow-right-24: Docs](getting-started/installation.md)
-    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check)
-
--   :material-github: __commit-check-action__ `v2.10.0`
-
-    ---
-
-    **GitHub Action** — seamless CI integration with PR comments.
-
-    :material-star: Windows runner, PR title validation
-
-    [:octicons-arrow-right-24: Docs](guides/github-actions.md)
-    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-action)
-
--   :material-robot: __commit-check-mcp__ `v0.1.7`
-
-    ---
-
-    **MCP Server** — structured tools for AI coding agents.
-
-    :material-star: AI attribution governance, message patterns
-
-    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-mcp)
-
-</div>
-
-[See all projects →](projects.md){ .md-button }
+And [many more](https://github.com/commit-check/commit-check-action/network/dependents).
 
 ## Ready in two minutes
 
@@ -286,8 +352,8 @@ $ commit-check --message --branch
 No configuration file needed to start — sensible defaults apply immediately, and
 you tighten them when you are ready.
 
-[Install :octicons-arrow-right-24:](getting-started/installation.md){ .md-button .md-button--primary }
-[Why Commit Check?](getting-started/why.md){ .md-button }
+[Get started :octicons-arrow-right-24:](getting-started.md){ .md-button .md-button--primary }
+[Rules reference](rules.md){ .md-button }
 
 ---
 

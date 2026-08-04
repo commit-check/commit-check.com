@@ -4,7 +4,25 @@ All **notable changes** to this project will be documented in this file.
 
 Full changelog available at [GitHub releases](https://github.com/commit-check/commit-check/releases).
 
-## v2.13.0 (2026-08-04)
+## Highlights
+
+The releases worth knowing about, newest first. Each links to its full entry
+below and to the page that documents the feature properly.
+
+| Version | What changed | Documented in |
+|---|---|---|
+| [2.13.0](#v2130) | Stable rule IDs in terminal output and JSON | [Rules reference](rules.md) |
+| [2.12.0](#v2120) | Author name and email patterns became configurable | [CC101](rules.md#cc101) · [CC102](rules.md#cc102) |
+| [2.11.0](#v2110) | AI attribution policy | [Policy guides](guides/policies.md#ai-attribution) |
+| [2.10.0](#v2100) | `dependabot/` and `renovate/` branches accepted by default | [CC201](rules.md#cc201) |
+| [2.9.0](#v290) | AI agent branch prefixes accepted by default | [CC201](rules.md#cc201) |
+| [2.8.0](#v280) | Custom `message_pattern`; Python 3.9 dropped | [CC001](rules.md#cc001) |
+| [2.7.0](#v270) | Force push blocking | [CC301](rules.md#cc301) |
+| [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
+| [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
+| [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.13.0 (2026-08-04) { #v2130 }
 
 ### New Features
 
@@ -35,11 +53,12 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 * The documentation, the landing page and the blog moved to
   [commit-check.com](https://commit-check.com) and are published from one
   domain. `docs.commit-check.com` URLs redirect.
-  See PRs [#515](https://github.com/commit-check/commit-check/pull/515),
+  See PRs [#514](https://github.com/commit-check/commit-check/pull/514),
+  [#515](https://github.com/commit-check/commit-check/pull/515),
   [#518](https://github.com/commit-check/commit-check/pull/518) and
   [#519](https://github.com/commit-check/commit-check/pull/519).
 
-## v2.12.2 (2026-08-01)
+## v2.12.2 (2026-08-01) { #v2122 }
 
 ### Bug Fixes
 
@@ -53,7 +72,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   rejected by `subject_imperative`.
   See PR [#496](https://github.com/commit-check/commit-check/pull/496).
 
-## v2.12.1 (2026-07-31)
+## v2.12.1 (2026-07-31) { #v2121 }
 
 ### Bug Fixes
 
@@ -63,13 +82,13 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 * Hardened the `pip install` step flagged by SonarCloud code scanning.
   See PR [#479](https://github.com/commit-check/commit-check/pull/479).
 
-## v2.12.0 (2026-07-24)
+## v2.12.0 (2026-07-24) { #v2120 }
 
 ### New Features
 
-* **Configurable author patterns** — `author_name` and `author_email` accept a
-  custom regex, so organisations can require their own naming or email domain
-  instead of the built-in patterns.
+* **Configurable author patterns** — `author_name_pattern` and
+  `author_email_pattern` accept a custom regex, so organisations can require
+  their own naming or email domain instead of the built-in patterns.
   See PR [#459](https://github.com/commit-check/commit-check/pull/459).
 
 ### Bug Fixes
@@ -82,12 +101,17 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   to the last commit's author. A misconfigured identity used to pass whenever
   the previous commit happened to be valid.
   See PR [#461](https://github.com/commit-check/commit-check/pull/461).
+
+## v2.11.1 (2026-07-09) { #v2111 }
+
+### Bug Fixes
+
 * `require_signed_off_by` accepts any name, and is skipped for authors listed
   in `ignore_authors`.
   See PRs [#462](https://github.com/commit-check/commit-check/pull/462) and
   [#464](https://github.com/commit-check/commit-check/pull/464).
 
-## v2.11.0 (2026-07-06)
+## v2.11.0 (2026-07-06) { #v2110 }
 
 ### New Features
 
@@ -108,7 +132,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 * Migrated PyPI publishing to `pypa/gh-action-pypi-publish`
 * Removed OpenSSF Scorecard badge after evaluation (moved to Scorecard dashboard)
 
-## v2.10.1 (2026-06-30)
+## v2.10.1 (2026-06-30) { #v2101 }
 
 ### Bug Fixes
 
@@ -126,7 +150,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 * Removed legacy YAML config parsing code from `util.py`.
   See PR [#444](https://github.com/commit-check/commit-check/pull/444).
 
-## v2.10.0 (2026-06-26)
+## v2.10.0 (2026-06-26) { #v2100 }
 
 ### New Features
 
@@ -135,7 +159,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   so dependency update branches are automatically recognized.
   See PR [#442](https://github.com/commit-check/commit-check/pull/442).
 
-## v2.9.0 (2026-06-22)
+## v2.9.0 (2026-06-22) { #v290 }
 
 ### New Features
 
@@ -144,7 +168,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   `DEFAULT_BRANCH_TYPES` so branches created by AI coding agents are
   recognized as valid. See PR [#438](https://github.com/commit-check/commit-check/pull/438).
 
-## v2.8.1 (2026-06-22)
+## v2.8.1 (2026-06-22) { #v281 }
 
 ### Chores
 
@@ -154,7 +178,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 * Added SchemaStore IDE autocompletion support for `cchk.toml`.
   See PR [#433](https://github.com/commit-check/commit-check/pull/433).
 
-## v2.8.0 (2026-06-13)
+## v2.8.0 (2026-06-13) { #v280 }
 
 ### New Features
 
@@ -170,7 +194,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   `py.typed` marker added for downstream type checkers.
   See PR [#424](https://github.com/commit-check/commit-check/pull/424).
 
-## v2.7.1 (2026-06-08)
+## v2.7.1 (2026-06-08) { #v271 }
 
 ### Chores
 
@@ -178,7 +202,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 * Added commit-check vs GitHub Rulesets comparison table to the README.
   See PR [#419](https://github.com/commit-check/commit-check/pull/419).
 
-## v2.7.0 (2026-05-16)
+## v2.7.0 (2026-05-16) { #v270 }
 
 ### New Features
 
@@ -203,7 +227,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   engineering, general), growing the total from 234 to 390.
   See PR [#414](https://github.com/commit-check/commit-check/pull/414).
 
-## v2.6.0 (2026-04-20)
+## v2.6.0 (2026-04-20) { #v260 }
 
 ### New Features
 
@@ -214,7 +238,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 
 * Fixed `print_error_header` state handling so repeated validations stay consistent when `--compact` is used.
 
-## v2.5.0 (2026-04-03)
+## v2.5.0 (2026-04-03) { #v250 }
 
 ### New Features
 
@@ -226,7 +250,7 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
 
 * Fixed incorrect mock target in `test_main_with_message_empty_string_no_stdin_with_git`: was patching `commit_check.util.get_commit_info` (ineffective) instead of `commit_check.engine.get_commit_info`.
 
-## v2.0.0 (2025-10-01)
+## v2.0.0 (2025-10-01) { #v200 }
 
 !!! warning
 
@@ -262,10 +286,10 @@ Architecture Redesign:
 
 See PR [#280](https://github.com/commit-check/commit-check/pull/280)
 
-## v0.10.2 (2025-08-26)
+## v0.10.2 (2025-08-26) { #v0102 }
 
 Last release before the big v2.0 changes.
 
-## v0.1.0 (2022-11-02)
+## v0.1.0 (2022-11-02) { #v010 }
 
 Initial release of commit-check.

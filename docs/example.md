@@ -1,8 +1,8 @@
 # Command-line recipes
 
-Ways to invoke the checks directly. For wiring them into a workflow, see the
-[pre-commit](guides/pre-commit.md) and [GitHub Actions](guides/github-actions.md)
-guides instead — those cover the setup this page assumes you already have.
+Ways to invoke the checks directly. For wiring them into a workflow, see
+[Integrations](guides/integrations.md) instead — that covers the setup this page
+assumes you already have.
 
 Every option, and the environment variable and TOML key that set it, is listed
 in [Configuration](configuration.md).
@@ -104,7 +104,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.11.0
+    rev: v2.13.0
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
