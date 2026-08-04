@@ -1,0 +1,126 @@
+# Netlify builds the site for deploy previews on pull requests.
+#
+# This file exists so the build is defined in version control rather than in
+# Netlify's web UI: when the docs toolchain changes, the preview build changes
+# with it in the same commit, and a mismatch shows up in review instead of
+# silently producing an empty preview.
+
+[build]
+  command = "pip install -r docs/requirements.txt && mkdocs build --strict"
+  publish = "site"
+
+[build.environment]
+  PYTHON_VERSION = "3.12"
+
+# On a deploy preview, point the site at the preview itself. Without this the
+# canonical links and the generated redirect stubs would send reviewers from
+# the preview back to the production site, which defeats the purpose.
+#
+# SITE_URL has to be set here rather than in a [context.*.environment] block:
+# those values are literals, so "${DEPLOY_PRIME_URL}" would reach MkDocs
+# unexpanded and be rejected as a URL without a scheme. The build command runs
+# in a shell, where the variable actually expands.
+#
+# SOCIAL_CARDS=false because nobody shares a preview link for its preview
+# image, and skipping the cards keeps previews fast and free of the system
+# cairo dependency.
+[context.deploy-preview]
+  command = "pip install -r docs/requirements.txt && SITE_URL=\"$DEPLOY_PRIME_URL/\" SOCIAL_CARDS=false mkdocs build --strict"
+
+[context.branch-deploy]
+  command = "pip install -r docs/requirements.txt && SITE_URL=\"$DEPLOY_PRIME_URL/\" SOCIAL_CARDS=false mkdocs build --strict"
+
+# The URLs the original Sphinx site served. The build does not emit redirect
+# stubs on Netlify (see scripts/mkdocs_hooks.py): a stub at rules.html would be
+# served for /rules/ requests too, shadowing the real page and redirecting to
+# itself. Declaring the URLs here resolves them before file lookup, so they
+# cannot collide with the pages they point at. Browsers carry the fragment of
+# the requested URL across the redirect, so /rules.html#cc003 lands on
+# /rules/#cc003.
+[[redirects]]
+  from = "/configuration.html"
+  to = "/configuration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/rules.html"
+  to = "/rules/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/example.html"
+  to = "/example/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/migration.html"
+  to = "/migration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/troubleshoot.html"
+  to = "/troubleshoot/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/changelog.html"
+  to = "/changelog/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/what-is-new.html"
+  to = "/what-is-new/"
+  status = 301
+  force = true
+
+# The CLI reference is no longer a generated page; the flags it listed are
+# documented alongside the settings that control them.
+[[redirects]]
+  from = "/cli_args.html"
+  to = "/configuration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cli.html"
+  to = "/configuration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cli/"
+  to = "/configuration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/README.html"
+  to = "/getting-started/installation/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/genindex.html"
+  to = "/"
+  status = 301
+  force = true
+
+# "Getting started" is a nav section rather than a page, so the bare directory
+# has nothing to serve. The old landing site published this URL.
+[[redirects]]
+  from = "/getting-started/"
+  to = "/getting-started/quickstart/"
+  status = 301
+  force = true

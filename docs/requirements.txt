@@ -1,0 +1,7 @@
+# The community fork of MkDocs and Material, which the site moved to when
+# upstream MkDocs 2.0 announced it would remove the plugin system this site
+# depends on (social cards, blog) with no migration path.
+#
+# The `imaging` extra pulls in cairosvg and pillow, which the social plugin
+# needs to render the share cards.
+mkdocs-ng-material[imaging]==9.7.7

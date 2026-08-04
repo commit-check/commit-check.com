@@ -1,0 +1,157 @@
+site_name: Commit Check
+# Deploy previews override this so the preview is self-consistent; see
+# netlify.toml.
+site_url: !ENV [SITE_URL, 'https://commit-check.com/']
+site_description: >-
+  Enforce commit message, branch naming, author and signoff standards —
+  one policy, across your CLI, pre-commit hooks, CI, and AI agents.
+site_author: shenxianpeng
+copyright: Copyright &copy; 2022 - 2026 Commit Check
+
+# The documentation covers a family of repositories, so the links point at the
+# organisation rather than at any single one. edit_uri is absolute for the same
+# reason: the pages live here, not in the repository they document.
+repo_url: https://github.com/commit-check/commit-check.com
+repo_name: commit-check/commit-check.com
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+
+theme:
+  name: material
+  language: en
+  custom_dir: docs/overrides
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Follow system theme
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    # Navigation lives in the left sidebar, grouped into sections — deliberately
+    # not navigation.tabs, which moves the top level up into the header.
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+
+extra_css:
+  # Brand colours and typography, then the landing-page-specific layout.
+  - assets/extra.css
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/commit-check
+      name: Commit Check on GitHub
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/commit-check/
+      name: commit-check on PyPI
+  analytics:
+    provider: google
+    property: G-TSR5L4JL2V
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Link to this section
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+  - blog
+  # Generates the preview image shown when a page is shared on Slack, X or
+  # LinkedIn. Needs cairo and pillow, which the docs requirements pull in.
+  #
+  # Deploy previews turn this off (see netlify.toml): nobody shares a preview
+  # link for its preview image, and skipping the cards keeps those builds fast
+  # and free of the system cairo dependency.
+  - social:
+      enabled: !ENV [SOCIAL_CARDS, true]
+      cards_layout_options:
+        background_color: "#2c9ccd"
+
+hooks:
+  - scripts/mkdocs_hooks.py
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: getting-started/installation.md
+      - Quick start: getting-started/quickstart.md
+      - Why Commit Check: getting-started/why.md
+  - Guides:
+      - Pre-commit hook: guides/pre-commit.md
+      - GitHub Actions: guides/github-actions.md
+      - Organization-wide policy: guides/organization.md
+      - Signoff and DCO: guides/signoff.md
+      - AI attribution policy: guides/ai-attribution.md
+      - Command-line recipes: example.md
+  - Reference:
+      - Rules: rules.md
+      - Configuration: configuration.md
+  - About:
+      - Migrating from v1: migration.md
+      - Troubleshooting: troubleshoot.md
+      - Release highlights: what-is-new.md
+      - Changelog: changelog.md
+      - Projects: projects.md
+  - Blog:
+      - blog/index.md
