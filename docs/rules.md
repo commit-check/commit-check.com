@@ -7,7 +7,7 @@ review comments, issue templates, and tooling.
 Rule IDs appear in commit-check's output and in `--format json` results:
 
 ```text
-CC003 subject_imperative check failed ==> docs: revamped the profile
+CC003 subject-imperative check failed ==> docs: revamped the profile
 Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug')
 Suggest: Change the first verb to imperative form, e.g., 'fix' instead of 'fixed'
 Docs: https://commit-check.com/rules/#cc003

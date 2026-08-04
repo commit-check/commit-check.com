@@ -34,7 +34,7 @@ ai_attribution = "forbid"
 Commits carrying a recognised AI signature now fail:
 
 ```text
-CC013 ai_attribution check failed ==> feat: add caching layer
+CC013 ai-attribution check failed ==> feat: add caching layer
 AI attribution policy violation
 Suggest: This project forbids AI-assisted commits. Remove AI trailers and re-commit.
 Docs: https://commit-check.com/rules/#cc013

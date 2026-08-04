@@ -20,7 +20,7 @@ whatever your AI agent is committing on your behalf.
 
     ```console
     $ commit-check --message --branch
-    CC003 subject_imperative check failed ==> docs: revamped the profile
+    CC003 subject-imperative check failed ==> docs: revamped the profile
     Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug')
     Suggest: Change the first verb to imperative form
     Docs: https://commit-check.com/rules/#cc003

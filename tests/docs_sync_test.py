@@ -28,6 +28,10 @@ def _read_doc(name: str) -> str:
     return (DOCS / name).read_text(encoding="utf-8")
 
 
+#: A pasted failure line, e.g. ``CC003 subject-imperative check failed ==> ...``
+_SAMPLE_FAILURE = re.compile(r"(CC\d{3}) (\S+) check failed ==>")
+
+
 def _rule_section(content: str, rule_id: str) -> str:
     """Return just the part of the rules page belonging to one rule."""
     _, _, after = content.partition(f"{{ #{rule_id.lower()} }}")
@@ -56,6 +60,27 @@ class TestRulesDocumentation:
             assert heading in content, (
                 f"docs/rules.md has no section titled '{heading}'"
             )
+
+    def test_sample_output_matches_what_the_tool_prints(self):
+        """Pasted terminal output has to name rules the way the tool does.
+
+        These blocks are transcripts, so nothing regenerates them and nothing
+        else here reads them: the heading and options-table guards both look
+        at reference tables. When the printed name moved from the config key
+        to its kebab-case form, six samples across four pages kept showing the
+        old one and every test still passed.
+        """
+        by_id = {entry.rule_id: entry for entry in ALL_RULES}
+        stale = []
+        for page in DOCS.rglob("*.md"):
+            for rule_id, printed in _SAMPLE_FAILURE.findall(page.read_text("utf-8")):
+                entry = by_id.get(rule_id)
+                if entry and printed != entry.name:
+                    stale.append(
+                        f"{page.relative_to(DOCS)}: {rule_id} shown as "
+                        f"'{printed}', the tool prints '{entry.name}'"
+                    )
+        assert not stale, "sample output is out of date:\n  " + "\n  ".join(stale)
 
     def test_every_rule_explains_itself(self):
         """Each rule section must answer what it does and why it matters."""
