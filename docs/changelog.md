@@ -23,7 +23,7 @@ below and to the page that documents the feature properly.
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
-## v2.13.1 (2026-08-04) { #v2131 }
+## v2.13.1 (2026-08-05) { #v2131 }
 
 ### New Features
 
