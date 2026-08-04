@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.13.1](#v2131) | JSON output reports the checked value for passing checks | [Output for scripts and CI](example.md#output-for-scripts-and-ci) |
 | [2.13.0](#v2130) | Stable rule IDs in terminal output and JSON | [Rules reference](rules.md) |
 | [2.12.0](#v2120) | Author name and email patterns became configurable | [CC101](rules.md#cc101) · [CC102](rules.md#cc102) |
 | [2.11.0](#v2110) | AI attribution policy | [Policy guides](guides/policies.md#ai-attribution) |
@@ -21,6 +22,24 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.13.1 (2026-08-04) { #v2131 }
+
+### New Features
+
+* **Passed checks report what they checked** — `--format json` and the
+  `validate_all_detailed()` API now populate `value` on passing checks with
+  the raw input that was validated (commit subject, branch name, author
+  name/email, push refs), so tooling such as commit-check-action can show
+  exactly what passed instead of an empty string. Terminal output is
+  unchanged.
+  See PR [#522](https://github.com/commit-check/commit-check/pull/522).
+
+### Documentation
+
+* Added a link to [commit-check.com](https://commit-check.com) in the header
+  of the generated `cchk.toml`.
+  See PR [#524](https://github.com/commit-check/commit-check/pull/524).
 
 ## v2.13.0 (2026-08-04) { #v2130 }
 
