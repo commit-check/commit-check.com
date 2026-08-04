@@ -1,0 +1,92 @@
+LICENSE
+  h_95e33fbd4ab2d9 1-21
+README.md
+  h_95e33fbd4ab2d9 1-51
+docs/CNAME
+  h_95e33fbd4ab2d9 1
+docs/assets/extra.css
+  h_95e33fbd4ab2d9 1-91
+docs/assets/favicon.svg
+  h_95e33fbd4ab2d9 1-8
+docs/assets/logo.svg
+  h_95e33fbd4ab2d9 1-13
+docs/blog/.authors.yml
+  h_95e33fbd4ab2d9 1-5
+docs/blog/author/team.md
+  h_95e33fbd4ab2d9 1-3
+docs/blog/index.md
+  h_95e33fbd4ab2d9 1-3
+docs/blog/posts/ai-attribution-governance.md
+  h_95e33fbd4ab2d9 1-203
+docs/blog/posts/ai-native-commit-check.md
+  h_95e33fbd4ab2d9 1-116
+docs/blog/posts/configuring-commit-check.md
+  h_95e33fbd4ab2d9 1-135
+docs/blog/posts/introducing-commit-check.md
+  h_95e33fbd4ab2d9 1-88
+docs/changelog.md
+  h_95e33fbd4ab2d9 1-188
+docs/configuration.md
+  h_95e33fbd4ab2d9 1-305
+docs/demo.tape
+  h_95e33fbd4ab2d9 1-39
+docs/example.md
+  h_95e33fbd4ab2d9 1-198
+docs/getting-started/installation.md
+  h_95e33fbd4ab2d9 1-78
+docs/getting-started/quickstart.md
+  h_95e33fbd4ab2d9 1-148
+docs/getting-started/why.md
+  h_95e33fbd4ab2d9 1-56
+docs/guides/ai-attribution.md
+  h_95e33fbd4ab2d9 1-75
+docs/guides/github-actions.md
+  h_95e33fbd4ab2d9 1-102
+docs/guides/organization.md
+  h_95e33fbd4ab2d9 1-100
+docs/guides/pre-commit.md
+  h_95e33fbd4ab2d9 1-89
+docs/guides/signoff.md
+  h_95e33fbd4ab2d9 1-81
+docs/index.md
+  h_95e33fbd4ab2d9 1-303
+docs/migration.md
+  h_95e33fbd4ab2d9 1-189
+docs/overrides/home.html
+  h_95e33fbd4ab2d9 1-18
+docs/overrides/main.html
+  h_95e33fbd4ab2d9 1-6
+docs/projects.md
+  h_95e33fbd4ab2d9 1-41
+docs/requirements.txt
+  h_95e33fbd4ab2d9 1-7
+docs/rules.md
+  h_95e33fbd4ab2d9 1-696
+docs/stylesheets/extra.css
+  h_95e33fbd4ab2d9 1-475
+docs/troubleshoot.md
+  h_95e33fbd4ab2d9 1-41
+docs/what-is-new.md
+  h_95e33fbd4ab2d9 1-91
+mkdocs.yml
+  h_95e33fbd4ab2d9 1-157
+netlify.toml
+  h_95e33fbd4ab2d9 1-126
+noxfile.py
+  h_95e33fbd4ab2d9 1-17
+scripts/mkdocs_hooks.py
+  h_95e33fbd4ab2d9 1-76
+tests/docs_sync_test.py
+  h_95e33fbd4ab2d9 1-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "ad7973a11be065625c2f6a691a9a1b014fb2bfda",
+  "prompts": {},
+  "humans": {
+    "h_95e33fbd4ab2d9": {
+      "author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
