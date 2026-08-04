@@ -35,12 +35,6 @@ below and to the page that documents the feature properly.
   unchanged.
   See PR [#522](https://github.com/commit-check/commit-check/pull/522).
 
-### Documentation
-
-* Added a link to [commit-check.com](https://commit-check.com) in the header
-  of the generated `cchk.toml`.
-  See PR [#524](https://github.com/commit-check/commit-check/pull/524).
-
 ## v2.13.0 (2026-08-04) { #v2130 }
 
 ### New Features
