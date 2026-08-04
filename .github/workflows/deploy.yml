@@ -25,15 +25,20 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Installed from main rather than PyPI: the site documents rule IDs that
-      # are merged but not yet released, so the published package would report
-      # a spurious mismatch. Switch this to the released package once a version
-      # carrying them is on PyPI.
-      - name: Install commit-check from main
+      # The released package, deliberately unpinned. This site documents the
+      # version a reader can actually install, so the check is only meaningful
+      # against that — pinning would let the two drift apart silently until
+      # somebody bumped the pin.
+      #
+      # This used to install from main, because the rule IDs the site documents
+      # were merged but unreleased and PyPI would have reported a spurious
+      # mismatch. v2.13.0 shipped them, so the exception is over. If a future
+      # release is documented here ahead of time, point this back at main for
+      # as long as that is true, and no longer.
+      - name: Install the released commit-check
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pytest
-          python -m pip install "commit-check @ git+https://github.com/commit-check/commit-check@main"
+          python -m pip install pytest commit-check
 
       - name: Check the docs against the package
         run: pytest tests/ -q
