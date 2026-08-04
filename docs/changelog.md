@@ -4,6 +4,89 @@ All **notable changes** to this project will be documented in this file.
 
 Full changelog available at [GitHub releases](https://github.com/commit-check/commit-check/releases).
 
+## v2.13.0 (2026-08-04)
+
+### New Features
+
+* **Stable rule IDs** — every diagnostic now carries an ID such as `CC003` that
+  never changes once released. The ID appears in terminal output and in
+  `--format json` as `rule_id`, alongside a `docs_url` pointing at the rule's
+  section of the [rules reference](rules.md), so a failure can be cited in
+  review, looked up, or matched by tooling.
+  See PR [#512](https://github.com/commit-check/commit-check/pull/512).
+* **More branch types accepted by default** — `docs/`, `ci/`, `test/`,
+  `refactor/`, `build/`, `perf/` and `style/` join the default
+  `allow_branch_types`, which stays a superset of the Conventional Branch
+  specification.
+  See PR [#505](https://github.com/commit-check/commit-check/pull/505).
+
+### Bug Fixes
+
+* **Rule IDs link to their documentation** — where the terminal renders OSC 8
+  hyperlinks, the ID itself is the link and the separate `Docs:` line is
+  dropped. Piped output and CI logs keep the printed URL. Failure output also
+  names rules the way the reference titles them (`subject-min-length` rather
+  than `subject_min_length`), and the advice for the length rules now names the
+  configured limit instead of referring to it.
+  See PR [#520](https://github.com/commit-check/commit-check/pull/520).
+
+### Documentation
+
+* The documentation, the landing page and the blog moved to
+  [commit-check.com](https://commit-check.com) and are published from one
+  domain. `docs.commit-check.com` URLs redirect.
+  See PRs [#515](https://github.com/commit-check/commit-check/pull/515),
+  [#518](https://github.com/commit-check/commit-check/pull/518) and
+  [#519](https://github.com/commit-check/commit-check/pull/519).
+
+## v2.12.2 (2026-08-01)
+
+### Bug Fixes
+
+* **Space-separated AI model names** — Co-author trailers naming a model with
+  spaces rather than hyphens are now recognised by the AI attribution check.
+  See PR [#506](https://github.com/commit-check/commit-check/pull/506).
+
+### Chores
+
+* Recognised more common imperative verbs, so ordinary subjects stop being
+  rejected by `subject_imperative`.
+  See PR [#496](https://github.com/commit-check/commit-check/pull/496).
+
+## v2.12.1 (2026-07-31)
+
+### Bug Fixes
+
+* **Running without the package installed** — `PackageNotFoundError` is handled
+  instead of crashing when the version cannot be resolved.
+  See PR [#483](https://github.com/commit-check/commit-check/pull/483).
+* Hardened the `pip install` step flagged by SonarCloud code scanning.
+  See PR [#479](https://github.com/commit-check/commit-check/pull/479).
+
+## v2.12.0 (2026-07-24)
+
+### New Features
+
+* **Configurable author patterns** — `author_name` and `author_email` accept a
+  custom regex, so organisations can require their own naming or email domain
+  instead of the built-in patterns.
+  See PR [#459](https://github.com/commit-check/commit-check/pull/459).
+
+### Bug Fixes
+
+* **Crash on Chinese Windows** — commit messages are no longer decoded with the
+  system GBK codec, which raised `UnicodeDecodeError`.
+  See PR [#475](https://github.com/commit-check/commit-check/pull/475).
+* **Author validation reads git config first** — `git config user.name` is the
+  identity the *next* commit will carry, so it is checked before falling back
+  to the last commit's author. A misconfigured identity used to pass whenever
+  the previous commit happened to be valid.
+  See PR [#461](https://github.com/commit-check/commit-check/pull/461).
+* `require_signed_off_by` accepts any name, and is skipped for authors listed
+  in `ignore_authors`.
+  See PRs [#462](https://github.com/commit-check/commit-check/pull/462) and
+  [#464](https://github.com/commit-check/commit-check/pull/464).
+
 ## v2.11.0 (2026-07-06)
 
 ### New Features

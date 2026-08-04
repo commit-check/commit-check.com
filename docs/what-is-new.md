@@ -4,6 +4,42 @@ The changes worth knowing about, newest first, each pointing at the page that
 documents it properly. For the full record of every change, see the
 [changelog](changelog.md).
 
+## 2.13.0 — Stable rule IDs
+
+Every diagnostic now carries an ID that never changes once released, so a
+failure can be cited in review, looked up, or matched by tooling.
+
+```console
+$ commit-check --message
+CC003 subject-imperative check failed ==> docs: revamped the profile
+Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug')
+Suggest: Change the first verb to imperative form
+Docs: https://commit-check.com/rules/#cc003
+```
+
+The ID also appears in `--format json` as `rule_id`, next to a `docs_url`. In a
+terminal that renders hyperlinks the ID *is* the link, and the `Docs:` line is
+dropped — piped output and CI logs keep it.
+
+`docs/`, `ci/`, `test/`, `refactor/`, `build/`, `perf/` and `style/` also join
+the default branch types.
+
+[:octicons-arrow-right-24: Rules reference](rules.md)
+
+## 2.12.0 — Custom author patterns
+
+`author_name` and `author_email` accept a regex of your own, so a team can
+require its own naming convention or email domain rather than the built-in
+patterns.
+
+```toml title="cchk.toml"
+[commit]
+author_email = "^.+@example\\.com$"
+```
+
+[:octicons-arrow-right-24: CC101](rules.md#cc101) ·
+[CC102](rules.md#cc102)
+
 ## 2.11.0 — AI attribution policy
 
 Commits carrying the trailers AI coding tools add — Claude Code, Copilot,
