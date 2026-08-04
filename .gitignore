@@ -1,0 +1,15 @@
+# Build output
+site/
+
+# Social card cache
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.nox/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db

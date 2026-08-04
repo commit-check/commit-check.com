@@ -1,0 +1,81 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # The reference pages describe behaviour that lives in the commit-check
+  # repository, so they can drift without anything here changing. This job
+  # reads both and fails when they disagree.
+  docs-sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      # Installed from main rather than PyPI: the site documents rule IDs that
+      # are merged but not yet released, so the published package would report
+      # a spurious mismatch. Switch this to the released package once a version
+      # carrying them is on PyPI.
+      - name: Install commit-check from main
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install "commit-check @ git+https://github.com/commit-check/commit-check@main"
+
+      - name: Check the docs against the package
+        run: pytest tests/ -q
+
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      # The social plugin renders the share cards through cairo, which cairosvg
+      # loads at runtime rather than bundling.
+      - name: Install cairo
+        run: sudo apt-get install -y --no-install-recommends libcairo2
+
+      - name: Build site
+        run: pipx run nox -s docs
+
+      - name: Upload site as pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: ${{ github.event.repository.name }}_site
+          path: ${{ github.workspace }}/site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    needs: [build]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: ${{ github.event.repository.name }}_site
