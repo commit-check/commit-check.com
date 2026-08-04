@@ -1,8 +1,8 @@
 # Command-line recipes
 
-Ways to invoke the checks directly. For wiring them into a workflow, see the
-[pre-commit](guides/pre-commit.md) and [GitHub Actions](guides/github-actions.md)
-guides instead — those cover the setup this page assumes you already have.
+Ways to invoke the checks directly. For wiring them into a workflow, see
+[Integrations](guides/integrations.md) instead — that covers the setup this page
+assumes you already have.
 
 Every option, and the environment variable and TOML key that set it, is listed
 in [Configuration](configuration.md).

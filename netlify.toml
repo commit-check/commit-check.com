@@ -75,7 +75,7 @@
 
 [[redirects]]
   from = "/what-is-new.html"
-  to = "/what-is-new/"
+  to = "/changelog/"
   status = 301
   force = true
 
@@ -101,7 +101,7 @@
 
 [[redirects]]
   from = "/README.html"
-  to = "/getting-started/installation/"
+  to = "/getting-started/"
   status = 301
   force = true
 
@@ -117,10 +117,11 @@
   status = 301
   force = true
 
-# "Getting started" is a nav section rather than a page, so the bare directory
-# has nothing to serve. The old landing site published this URL.
-[[redirects]]
-  from = "/getting-started/"
-  to = "/getting-started/quickstart/"
-  status = 301
-  force = true
+# "Getting started" used to be a nav section with nothing at its own URL, and
+# this file redirected the bare directory to the quick start page. It is a real
+# page now, so the redirect is gone — a forced redirect here would shadow it.
+#
+# The pages that were merged into it, and the other retired URLs, are covered by
+# the stubs scripts/mkdocs_hooks.py writes into the build. Those are directory
+# URLs with no page behind them, so unlike the .html rules above they cannot
+# collide with anything and need no entry here.

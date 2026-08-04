@@ -1,15 +1,46 @@
-# Quick start
+# Getting started
 
-By the end of this page you will have Commit Check rejecting a bad commit
-message on your machine, and you will understand what it is telling you.
+By the end of this page you will have Commit Check installed, rejecting a bad
+commit message on your machine, and wired into the two places it belongs.
 
 It takes about five minutes and needs nothing but a Git repository.
 
 ## 1. Install
 
+=== "pip"
+
+    ```console
+    $ pip install commit-check
+    ```
+
+=== "uv"
+
+    ```console
+    $ uv tool install commit-check
+    ```
+
+=== "pipx"
+
+    ```console
+    $ pipx install commit-check
+    ```
+
+Verify the install:
+
 ```console
-$ pip install commit-check
+$ commit-check --version
 ```
+
+The CLI is also available as `cchk`, which is the same program under a shorter
+name.
+
+!!! tip "Supported Python versions"
+
+    Commit Check supports Python 3.10 through 3.14, on Linux, macOS and Windows.
+
+Running it as a [pre-commit hook](guides/integrations.md#as-a-pre-commit-hook)
+or a [GitHub Action](guides/integrations.md#in-github-actions) needs no
+installation step at all — both fetch it for you.
 
 ## 2. Watch it reject something
 
@@ -77,8 +108,8 @@ $ commit-check --branch
 
     `commit-check --message` never evaluates branch rules, and vice versa. Each
     check is selected by its own flag, so you can run exactly what a given hook
-    or CI job needs. The
-    [rules reference](../rules.md) lists which flag activates each rule.
+    or CI job needs. The [rules reference](rules.md) lists which flag activates
+    each rule.
 
 ## 5. Write down your policy
 
@@ -109,8 +140,8 @@ $ commit-check --message
 
     Even with no config file, Conventional Commits, Conventional Branch, subject
     length limits of 5–80 characters, and author name/email patterns are
-    enforced. Check the *Default* column in the
-    [rules reference](../rules.md) before assuming a rule is off.
+    enforced. Check the *Default* column in the [rules reference](rules.md)
+    before assuming a rule is off.
 
 ## 6. Make it automatic
 
@@ -126,7 +157,7 @@ belongs:
     A pre-commit hook rejects the message as you write it, so nothing bad
     reaches the branch in the first place.
 
-    [:octicons-arrow-right-24: Pre-commit guide](../guides/pre-commit.md)
+    [:octicons-arrow-right-24: Pre-commit hook](guides/integrations.md#as-a-pre-commit-hook)
 
 -   :material-github:{ .lg .middle } __On every pull request__
 
@@ -135,14 +166,24 @@ belongs:
     A GitHub Action checks every commit in the PR and can comment on the PR
     with what needs fixing.
 
-    [:octicons-arrow-right-24: GitHub Actions guide](../guides/github-actions.md)
+    [:octicons-arrow-right-24: GitHub Actions](guides/integrations.md#in-github-actions)
 
 </div>
 
+## Verifying the download
+
+Releases are built with [SLSA Level 3](https://slsa.dev) provenance. To verify a
+release artifact came from this repository's build pipeline:
+
+```console
+$ gh attestation verify commit_check-*.whl --repo commit-check/commit-check
+```
+
 ## Where to go next
 
-- **[Rules reference](../rules.md)** — every rule, what it does, why it matters,
+- **[Rules reference](rules.md)** — every rule, what it does, why it matters,
   and how to configure it.
-- **[Configuration](../configuration.md)** — every option, its type and default,
+- **[Configuration](configuration.md)** — every option, its type and default,
   plus the environment variable and CLI flag that override it.
-- **[Why Commit Check](why.md)** — the reasoning behind the tool.
+- **[Command-line recipes](example.md)** — checking a range, wiring up CI,
+  reading the JSON output.
