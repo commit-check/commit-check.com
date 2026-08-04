@@ -1,0 +1,20 @@
+docs/changelog.md
+  s_192055f7306c39::t_59bacba5b175de 14,26-42
+  s_192055f7306c39::t_56abcdd332155a 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "219eaa4cee87f31abdf148b9567f4da33856a59b",
+  "prompts": {},
+  "sessions": {
+    "s_192055f7306c39": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019fcdc0-0c8f-7df5-b2d6-362cbe07f50b",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
