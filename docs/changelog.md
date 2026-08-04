@@ -82,6 +82,11 @@ Full changelog available at [GitHub releases](https://github.com/commit-check/co
   to the last commit's author. A misconfigured identity used to pass whenever
   the previous commit happened to be valid.
   See PR [#461](https://github.com/commit-check/commit-check/pull/461).
+
+## v2.11.1 (2026-07-09)
+
+### Bug Fixes
+
 * `require_signed_off_by` accepts any name, and is skipped for authors listed
   in `ignore_authors`.
   See PRs [#462](https://github.com/commit-check/commit-check/pull/462) and
