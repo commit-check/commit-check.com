@@ -240,11 +240,12 @@ graph LR
 
 </div>
 
-## Trusted by developers worldwide
+## Used by
 
 <div class="trusted-by" markdown>
 
-**Used by developers and organizations worldwide in their production workflows.**
+**Commit Check runs in repositories across these organizations, and in
+[many more](https://github.com/commit-check/commit-check-action/network/dependents).**
 
 <div class="logo-grid">
   <div class="logo-item">
@@ -322,8 +323,6 @@ graph LR
 </div>
 
 </div>
-
-And [many more](https://github.com/commit-check/commit-check-action/network/dependents).
 
 ---
 
