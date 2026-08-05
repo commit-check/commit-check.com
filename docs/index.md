@@ -2,26 +2,19 @@
 hide:
   - navigation
   - toc
+template: home.html
 title: Commit Check
 description: Enforce commit message, branch naming, author and signoff standards across your CLI, pre-commit hooks, CI, and AI agents.
 ---
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
 
-<!-- The hero lives here rather than in a template block because Material
-     injects a top-level heading of its own into any page whose content has
-     none. A hero rendered outside the content produced a second, competing
-     heading ("Home") on top of this one. -->
+<!-- The visible page title is the hero's, rendered full-width by
+     overrides/home.html. This heading is hidden, and exists only because
+     Material injects a title of its own — the nav label, "Home" — into any
+     page whose content has none, which would compete with the hero. -->
 
-<div class="hero" markdown>
-
-# Commit Check
-
-Clean commits. Clear standards.
-
-[Get started :material-rocket-launch-outline:](getting-started.md){ .md-button .md-button--primary }
-
-</div>
+# Commit Check { .cc-page-title }
 
 ## One config, enforced everywhere
 

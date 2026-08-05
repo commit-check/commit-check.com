@@ -8,15 +8,31 @@ th {
 }
 
 /* Hero --------------------------------------------------------------------
-   Written in index.md rather than a template block, so its <h1> is the page's
-   only one. The negative margins pull it out to the edges of the content
-   column, which the padding above it would otherwise inset. */
+   Rendered by overrides/home.html, which puts it outside the width-capped
+   content column so the background reaches the window edges on its own. Moving
+   it into the page content caps it at the column and needs a `calc(50% - 50vw)`
+   full-bleed hack to escape again; keeping it in the template avoids that.
+
+   Its <h1> is the page's visible title; .cc-page-title below is the hidden
+   counterpart that keeps Material from injecting a second one. */
 .hero {
     text-align: center;
-    padding: 4rem 0;
-    margin: -1.2rem -1.5rem 2rem;
+    padding: 4rem 1rem;
     background: var(--md-primary-fg-color);
     color: var(--md-primary-bg-color);
+}
+
+/* Material renders a title into any page whose content has none, using the nav
+   label — "Home" here, competing with the hero above it. The page carries this
+   heading purely to suppress that. */
+.md-typeset .cc-page-title {
+    display: none;
+}
+
+/* With the title hidden, the "edit this page" pencil is left floating alone in
+   the corner. A landing page is not one anybody edits. */
+.md-content__inner:has(> .cc-page-title) .md-content__button {
+    display: none;
 }
 
 /* Scales down rather than overflowing the viewport: at a flat 3rem the title
@@ -39,15 +55,9 @@ th {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.9;
-    width: min(90%, 34rem);
+    width: min(96%, 34rem);
     margin-left: auto;
     margin-right: auto;
-}
-
-/* The hero is now the first element of the page content, so the "edit this
-   page" pencil floats inside it. A landing page is not one anybody edits. */
-.md-content__inner:has(> .hero) .md-content__button {
-    display: none;
 }
 
 .hero .twemoji {
