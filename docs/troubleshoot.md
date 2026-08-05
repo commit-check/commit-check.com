@@ -68,10 +68,14 @@ git commit --amend --no-edit --no-verify
 
 ## A rule fires that you never turned on
 
-Commit Check is not silent by default. With no config file at all it still
-enforces Conventional Commits, Conventional Branch, subject length limits and
-the author name and email patterns. The *Default* column in the
-[rules reference](rules.md#rule-index) shows which rules those are.
+Commit Check is not silent by default. Whichever checks you asked for run with
+their defaults already applied, even with no config file present: `--message`
+enforces Conventional Commits, the 5–80 character subject limits and an
+allow-list of ten commit types; `--branch` enforces Conventional Branch and an
+allow-list of twenty-one branch types; `--author-name` and `--author-email`
+apply the built-in patterns. The *Default* column in the
+[rules reference](rules.md#rule-index) shows every rule's starting state, and
+the [configuration page](configuration.md) spells the split out.
 
 To see what a given repository is actually enforcing, check which config file
 it picked up — the search order is in

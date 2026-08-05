@@ -14,15 +14,27 @@ flag overrides both for a single run.
 
 !!! tip "Defaults are not "nothing""
 
-    With no configuration file at all, Commit Check still enforces Conventional
-    Commits ([CC001](rules.md#cc001)), Conventional Branch
-    ([CC201](rules.md#cc201)), subject lengths of 5–80 characters
-    ([CC004](rules.md#cc004), [CC005](rules.md#cc005)) and the author name and
-    email patterns ([CC101](rules.md#cc101), [CC102](rules.md#cc102)).
+    Two different things decide whether a rule fires: whether you asked for
+    that check at all, and what the option defaults to. A check only runs when
+    its flag is passed — `--message` never evaluates branch rules — but once a
+    check is running, these apply with no configuration file present:
 
-    Off by default: subject capitalization, imperative mood, required body and
-    signoff, rebase requirements, and every `allow_*` restriction. The *Default*
-    column in the [rules reference](rules.md#rule-index) is the full picture.
+    | Check | Enforced by default |
+    |---|---|
+    | `--message` | Conventional Commits ([CC001](rules.md#cc001)), subject lengths of 5–80 characters ([CC004](rules.md#cc004), [CC005](rules.md#cc005)), and an allow-list of ten commit types |
+    | `--branch` | Conventional Branch ([CC201](rules.md#cc201)) and an allow-list of twenty-one branch types |
+    | `--author-name` / `--author-email` | The built-in name and email patterns ([CC101](rules.md#cc101), [CC102](rules.md#cc102)) |
+
+    Off until you turn them on: subject capitalization, imperative mood,
+    required body and signoff, and rebase requirements.
+
+    The `allow_*` options are a mix, so read them individually rather than
+    assuming: `allow_commit_types` and `allow_branch_types` are allow-lists
+    that restrict from the start, while `allow_merge_commits`,
+    `allow_revert_commits`, `allow_empty_commits`, `allow_fixup_commits`,
+    `allow_wip_commits` and `allow_force_push` all default to permitting
+    everything. The *Default* column in the
+    [rules reference](rules.md#rule-index) is the full picture.
 
 ## Where the config file lives
 
@@ -226,13 +238,20 @@ setting in the file appears to have no effect.
 ## Every option
 
 Types are as TOML understands them. A default shown as `""` means the option is
-empty, not that the check is off — read the description, because for the two
-pattern options an empty value means "use the built-in pattern".
+unset, which is never the same as the check being off — but it does not mean
+the same thing twice, so read the description rather than the cell:
+
+- `message_pattern` unset leaves `conventional_commits` to generate the
+  pattern. [CC001](rules.md#cc001) still runs.
+- `author_name_pattern` unset falls back to the built-in name pattern.
+  [CC101](rules.md#cc101) still runs.
+- `require_rebase_target` unset is the one case where the check really does not
+  run — there is no branch to compare against.
 
 | Section | Option | Type | Default | Description |
 |---|---|---|---|---|
 | commit | conventional_commits | bool | true | Enforce Conventional Commits specification. |
-| commit | message_pattern | str | "" (disabled) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
+| commit | message_pattern | str | "" (no custom pattern) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
 | commit | subject_capitalized | bool | false | Subject must start with a capital letter. |
 | commit | subject_imperative | bool | false | Subject must be in imperative mood. Forms of verbs can be found at [imperatives.py](https://github.com/commit-check/commit-check/blob/main/commit_check/imperatives.py) |
 | commit | subject_max_length | int | 80 | Maximum length of the subject line. |
