@@ -87,21 +87,29 @@ came from this repository's pipeline before you install it.
 Git history is a database that every team writes to and almost nobody validates.
 
 The cost shows up later, and indirectly. Release notes get written by hand
-because commit subjects cannot be grouped. `git bisect` walks through merge
-commits that record nothing but a sync. A commit is attributed to `ec2-user`
-because a build box had no `user.name`. A contribution has to be rejected months
-after the fact because it never carried a `Signed-off-by` trailer.
+because commit subjects cannot be grouped. A `git bisect` ends on a merge
+commit, where the change that broke the build could be in either parent or in
+the resolution. A commit is attributed to `ec2-user` because a build box had no
+`user.name`. A branch has its history rewritten months later because none of its
+commits carried a `Signed-off-by` trailer.
 
 None of these are caught by a linter, a type checker, or a test suite. They are
 all caught by review — which means inconsistently, by whoever happens to be
 looking, and only after the work is done.
 
-Commit Check treats commit metadata the way linters treat code: a policy written
-down once, enforced identically everywhere, with a stable identifier for every
-diagnostic so findings can be discussed, cited, and tracked. And enforced where
-it is cheapest — the check that runs in CI is the same one that runs in your
+Commit Check makes them mechanical instead, and catches them where it is
+cheapest: the check that runs in CI is the same one that runs in your
 `commit-msg` hook, where a malformed subject costs a second to fix rather than a
 full CI cycle and a force-push.
+
+It treats commit metadata the way linters treat code — a policy written down
+once, enforced identically everywhere, with a stable identifier for every
+diagnostic so findings can be discussed, cited, and tracked.
+
+Not all of that policy is on to begin with. Two of the four problems above are
+decisions rather than defects — whether merge commits belong in your history,
+and whether contributors must sign off — and they stay off until you make them.
+The [rules reference](rules.md#rule-index) marks which rules start on.
 
 ## What it checks
 
