@@ -52,6 +52,7 @@ th {
 
 .hero .twemoji {
     --md-icon-size: 1.125em;
+
     display: inline-flex;
     height: var(--md-icon-size);
     vertical-align: text-top;
