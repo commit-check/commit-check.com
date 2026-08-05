@@ -11,10 +11,10 @@ check committer name.....................................................Failed
 
 Commit rejected by Commit-Check.
 
-Type author_name check failed => 12
-It doesn't match regex: ^[A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u024F ,.\'-]+$|.*(\[bot])
+CC101 author-name check failed ==> 12
 The committer name seems invalid
-Suggest: run command `git config user.name "Your Name"`
+Suggest: git config user.name 'Your Name'
+Docs: https://commit-check.com/rules/#cc101
 ```
 
 To fix it, you can either update your Git config or temporarily skip the check using one of the following methods.

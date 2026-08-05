@@ -1,6 +1,7 @@
 # Configuration
 
-`commit-check` can be configured in three ways with the following priority (highest to lowest):
+`commit-check` reads its settings from four places, in this priority order
+(highest to lowest):
 
 1. **Command-line arguments** (`--subject-imperative=true`)
 2. **Environment variables** (`CCHK_SUBJECT_IMPERATIVE=true`)
