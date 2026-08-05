@@ -51,6 +51,9 @@ MOVED_URLS = {
     "guides/ai-attribution": "guides/policies/",
     "what-is-new": "changelog/",
     "projects": "",
+    # An orphan: nothing linked to it, it was not in the nav, and it matched no
+    # key in .authors.yml, so the blog never treated it as an author page.
+    "blog/author/team": "blog/",
 }
 
 # Redirect stubs for the URLs the Sphinx site served.

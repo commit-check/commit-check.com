@@ -341,11 +341,22 @@ And [many more](https://github.com/commit-check/commit-check-action/network/depe
 
 <div class="community-section" markdown>
 
-## Join our community
+## Questions, bugs, contributions
 
-**Be part of a growing ecosystem of developers who care about Commit Check.**
+**Start a [discussion](https://github.com/commit-check/commit-check/discussions)**
+if you are weighing up a policy, are not sure whether something is a bug, or
+want to know how other projects have handled it.
 
-[GitHub Issue :fontawesome-brands-github:](https://github.com/commit-check/commit-check/issues){ .md-button }
-[GitHub Pull Request :fontawesome-brands-github:](https://github.com/commit-check/commit-check/pulls){ .md-button }
+**Open an [issue](https://github.com/commit-check/commit-check/issues)** when
+something is broken or missing — include the output of
+`commit-check --format json`, which carries the rule ID and the value that
+failed.
+
+**Send a pull request** to any of the
+[repositories](https://github.com/commit-check). The engine, the Action and the
+MCP server are separate — [Ecosystem](#ecosystem) above shows which is which.
+
+[Discussions :fontawesome-brands-github:](https://github.com/commit-check/commit-check/discussions){ .md-button .md-button--primary }
+[Issues :fontawesome-brands-github:](https://github.com/commit-check/commit-check/issues){ .md-button }
 
 </div>
