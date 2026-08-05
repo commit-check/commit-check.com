@@ -189,7 +189,7 @@ The primary use case for CLI arguments is configuring commit-check in `.pre-comm
 ```yaml
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.13.0
+    rev: v2.13.1
     hooks:
       - id: check-message
         args:
