@@ -68,6 +68,21 @@ whatever your AI agent is committing on your behalf.
     }
     ```
 
+## Start with two commands
+
+```console
+$ pip install commit-check
+$ commit-check --message --branch
+```
+
+No configuration file needed to start — sensible defaults apply immediately, and
+you tighten them when you are ready. Releases carry
+[SLSA Level 3](https://slsa.dev) build provenance, so you can verify an artifact
+came from this repository's pipeline before you install it.
+
+[Get started :octicons-arrow-right-24:](getting-started.md){ .md-button .md-button--primary }
+[Rules reference](rules.md){ .md-button }
+
 ## Why it exists
 
 Git history is a database that every team writes to and almost nobody validates.
@@ -84,42 +99,10 @@ looking, and only after the work is done.
 
 Commit Check treats commit metadata the way linters treat code: a policy written
 down once, enforced identically everywhere, with a stable identifier for every
-diagnostic so findings can be discussed, cited, and tracked.
-
-<div class="grid cards" markdown>
-
--   :material-file-cog-outline:{ .lg .middle } __One config__
-
-    ---
-
-    A single `cchk.toml` drives the CLI, the pre-commit hook, the GitHub Action
-    and the MCP server. There is no second place where the rules can disagree
-    with themselves.
-
--   :material-lightning-bolt-outline:{ .lg .middle } __Fails where it is cheap__
-
-    ---
-
-    The same check that runs in CI runs in your `commit-msg` hook. A malformed
-    subject costs a second locally, or a full CI cycle plus a force-push
-    remotely.
-
--   :material-tag-outline:{ .lg .middle } __Stable rule IDs__
-
-    ---
-
-    Every rule has an ID like `CC003` that never changes once released. Cite it
-    in a review comment, link to its documentation, suppress it per-rule.
-
--   :material-shield-check:{ .lg .middle } __Built to be trusted__
-
-    ---
-
-    SLSA Level 3 build provenance with artifact attestation you can verify
-    before installing. A failure names the rule, quotes the offending value,
-    and says how to fix it.
-
-</div>
+diagnostic so findings can be discussed, cited, and tracked. And enforced where
+it is cheapest — the check that runs in CI is the same one that runs in your
+`commit-msg` hook, where a malformed subject costs a second to fix rather than a
+full CI cycle and a force-push.
 
 ## What it checks
 
@@ -346,19 +329,6 @@ graph TB
 </div>
 
 And [many more](https://github.com/commit-check/commit-check-action/network/dependents).
-
-## Ready in two minutes
-
-```console
-$ pip install commit-check
-$ commit-check --message --branch
-```
-
-No configuration file needed to start — sensible defaults apply immediately, and
-you tighten them when you are ready.
-
-[Get started :octicons-arrow-right-24:](getting-started.md){ .md-button .md-button--primary }
-[Rules reference](rules.md){ .md-button }
 
 ---
 
