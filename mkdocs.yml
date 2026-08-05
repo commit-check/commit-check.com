@@ -139,6 +139,15 @@ plugins:
 hooks:
   - scripts/mkdocs_hooks.py
 
+# Two groups, split by what the reader is doing: Guides are pages you follow to
+# get something done, Reference is what you look a fact up in. The pages are
+# ordered within each group by how often they are needed.
+#
+# There was a third group, "About", holding migration, troubleshooting and the
+# changelog — none of which is about the project. Troubleshooting was the
+# problem: it is the page you want when a build has just gone red, and nobody
+# looks under "About" for that. It has exactly one inbound link in the whole
+# site, so the nav was doing nearly all the work of making it findable.
 nav:
   - Home: index.md
   - Getting started: getting-started.md
@@ -146,12 +155,11 @@ nav:
       - Integrations: guides/integrations.md
       - Policy guides: guides/policies.md
       - Command-line recipes: example.md
+      - Troubleshooting: troubleshoot.md
+      - Migrating from v1: migration.md
   - Reference:
       - Rules: rules.md
       - Configuration: configuration.md
-  - About:
-      - Migrating from v1: migration.md
-      - Troubleshooting: troubleshoot.md
       - Changelog: changelog.md
   - Blog:
       - blog/index.md
