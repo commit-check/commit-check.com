@@ -40,7 +40,6 @@ whatever your AI agent is committing on your behalf.
         hooks:
           - id: check-message
           - id: check-branch
-          - id: check-author-email
     ```
 
 === "GitHub Actions"
