@@ -60,7 +60,7 @@ pull request.
 You do not need a config file to begin. With no `cchk.toml`, Commit Check
 applies lenient, sensible defaults: commit messages should follow
 [Conventional Commits](https://www.conventionalcommits.org/) and branch names
-should follow the [Conventional Branch](https://conventional-branch.github.io/)
+should follow the [Conventional Branch](https://conventionalbranch.org/)
 convention. That is enough to get value on day one.
 
 ```bash

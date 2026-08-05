@@ -9,7 +9,12 @@ description: Enforce commit message, branch naming, author and signoff standards
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
 
-# Commit Check
+<!-- The visible page title is the hero's, rendered full-width by
+     overrides/home.html. This heading is hidden, and exists only because
+     Material injects a title of its own — the nav label, "Home" — into any
+     page whose content has none, which would compete with the hero. -->
+
+# Commit Check { .cc-page-title }
 
 ## One config, enforced everywhere
 

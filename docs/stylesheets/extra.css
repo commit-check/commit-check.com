@@ -1,50 +1,75 @@
+/* Landing-page layout and a few typographic corrections.
+
+   The brand palette lives in assets/extra.css, which loads first and is the
+   single source for --md-primary-*, --md-accent-* and the link colour. */
+
 th {
     background-color: var(--md-default-fg-color--lightest);
 }
 
-/* The brand palette lives in assets/extra.css, which loads first and is the
-   single source for --md-primary-*, --md-accent-* and the link colour. Only
-   the hero's own colours are declared here. */
-:root > * {
-    --commit-check-logo-color-blue: #2c9ccd;
-    --commit-check-logo-color-yellow: #ffffff;
-}
+/* Hero --------------------------------------------------------------------
+   Rendered by overrides/home.html, which puts it outside the width-capped
+   content column so the background reaches the window edges on its own. Moving
+   it into the page content caps it at the column and needs a `calc(50% - 50vw)`
+   full-bleed hack to escape again; keeping it in the template avoids that.
 
-/* Hero section styling */
+   Its <h1> is the page's visible title; .cc-page-title below is the hidden
+   counterpart that keeps Material from injecting a second one. */
 .hero {
     text-align: center;
-    padding: 4rem 0;
+    padding: 4rem 1rem;
     background: var(--md-primary-fg-color);
     color: var(--md-primary-bg-color);
 }
 
+/* Material renders a title into any page whose content has none, using the nav
+   label — "Home" here, competing with the hero above it. The page carries this
+   heading purely to suppress that. */
+.md-typeset .cc-page-title {
+    display: none;
+}
+
+/* With the title hidden, the "edit this page" pencil is left floating alone in
+   the corner. A landing page is not one anybody edits. */
+.md-content__inner:has(> .cc-page-title) .md-content__button {
+    display: none;
+}
+
+/* Scales down rather than overflowing the viewport: at a flat 3rem the title
+   was wider than a phone screen and clipped at both ends. */
 .hero h1 {
-    font-size: 3rem;
+    font-size: clamp(2rem, 8vw, 3rem);
     font-weight: 700;
     margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     text-align: center;
     color: unset;
+}
+
+/* The permalink anchor every heading gets is noise on a hero title. */
+.hero h1 .headerlink {
+    display: none;
 }
 
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.9;
-    width: 65%;
+    width: min(96%, 34rem);
     margin-left: auto;
     margin-right: auto;
 }
 
 .hero .twemoji {
-	--md-icon-size: 1.125em;
-	display: inline-flex;
-	height: var(--md-icon-size);
-	vertical-align: text-top;
+    --md-icon-size: 1.125em;
+
+    display: inline-flex;
+    height: var(--md-icon-size);
+    vertical-align: text-top;
 }
 
 .hero .md-button {
-    background: var(--commit-check-logo-color-yellow);
+    background: var(--cc-hero-button-bg);
     color: black;
     border: none;
     border-radius: unset;
@@ -63,28 +88,7 @@ th {
     color: black;
 }
 
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Card enhancements */
-.md-typeset .grid.cards > .card-content {
-    background: var(--md-default-bg-color);
-    border: 1px solid var(--md-default-fg-color--lightest);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.md-typeset .grid.cards > .card-content:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    border-color: var(--md-primary-fg-color);
-}
-
-/* Community section styling */
+/* Community section -------------------------------------------------------- */
 .community-section {
     background: var(--md-default-fg-color--lightest);
     padding: 3rem 2rem;
@@ -113,10 +117,10 @@ th {
 
 .md-button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Trusted by section styling */
+/* Trusted-by section ------------------------------------------------------- */
 .trusted-by {
     text-align: center;
     padding: 3rem 0;
@@ -151,7 +155,7 @@ th {
 .logo-item:hover {
     transform: translateY(-4px);
     background: var(--md-default-bg-color);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .logo-item img {
@@ -173,303 +177,42 @@ th {
     color: var(--md-default-fg-color--light);
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 2rem;
-    padding: 0 2rem;
-}
-
-.stat {
-    text-align: center;
-}
-
-.stat strong {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--md-primary-fg-color);
-    margin-bottom: 0.5rem;
-}
-
-.stat span {
-    font-size: 0.9rem;
-    color: var(--md-default-fg-color--light);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Mobile responsiveness for trusted by section */
 @media screen and (max-width: 768px) {
     .logo-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         padding: 0 1rem;
     }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 0 1rem;
-    }
-
-    .stat strong {
-        font-size: 1.5rem;
-    }
 }
 
-/* Ensure tab items have proper contrast */
-.md-tabs__item {
-    background-color: transparent;
-}
-
-.md-tabs__link {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.md-tabs__link--active,
-.md-tabs__link:hover {
-    color: white;
-}
-
+/* Mobile navigation drawer -------------------------------------------------
+   Material leaves this at its own default indigo, which clashes with the
+   header right above it. */
 @media screen and (max-width: 76.2344em) {
     .md-nav--primary .md-nav__title[for="__drawer"] {
-        background-color: #4051b5;
+        background-color: var(--md-primary-fg-color);
     }
 }
 
+/* "important" admonition, which Material ships without a colour of its own. */
 .md-typeset .admonition.important,
 .md-typeset details.important {
     border-color: #00b8d4;
 }
 
-.md-typeset .important>.admonition-title::before,
-.md-typeset .important>summary::before {
+.md-typeset .important > .admonition-title::before,
+.md-typeset .important > summary::before {
     background-color: #00b8d4;
     -webkit-mask-image: var(--md-admonition-icon--info);
     mask-image: var(--md-admonition-icon--info);
 }
 
-.md-typeset .important>.admonition-title,
-.md-typeset .important>summary {
+.md-typeset .important > .admonition-title,
+.md-typeset .important > summary {
     background-color: #00b8d41a;
 }
 
-@keyframes heart {
-
-    0%,
-    40%,
-    80%,
-    to {
-        transform: scale(1)
-    }
-
-    20%,
-    60% {
-        transform: scale(1.15)
-    }
-}
-
-.md-typeset .mdx-heart {
-    animation: heart 1s infinite
-}
-
-.md-typeset .mdx-badge {
-    font-size: .85em
-}
-
-.md-typeset .mdx-badge--heart {
-    color: #ff4281;
-}
-
-.md-typeset .mdx-badge--heart.twemoji {
-    animation: heart 1s infinite
-}
-
-.md-typeset .mdx-badge--right {
-    float: right;
-    margin-left: .35em
-}
-
-[dir=ltr] .md-typeset .mdx-badge__icon {
-    border-top-left-radius: .1rem
-}
-
-[dir=rtl] .md-typeset .mdx-badge__icon {
-    border-top-right-radius: .1rem
-}
-
-[dir=ltr] .md-typeset .mdx-badge__icon {
-    border-bottom-left-radius: .1rem
-}
-
-[dir=rtl] .md-typeset .mdx-badge__icon {
-    border-bottom-right-radius: .1rem
-}
-
-.md-typeset .mdx-badge__icon {
-    background: var(--md-accent-fg-color--transparent);
-    padding: .2rem
-}
-
-.md-typeset .mdx-badge__icon:last-child {
-    border-radius: .1rem
-}
-
-[dir=ltr] .md-typeset .mdx-badge__text {
-    border-top-right-radius: .1rem
-}
-
-[dir=rtl] .md-typeset .mdx-badge__text {
-    border-top-left-radius: .1rem
-}
-
-[dir=ltr] .md-typeset .mdx-badge__text {
-    border-bottom-right-radius: .1rem
-}
-
-[dir=rtl] .md-typeset .mdx-badge__text {
-    border-bottom-left-radius: .1rem
-}
-
-.md-typeset .mdx-badge__text {
-    box-shadow: 0 0 0 1px inset var(--md-accent-fg-color--transparent);
-    padding: .2rem .3rem
-}
-
-.md-typeset .mdx-social {
-    height: min(27rem, 80vw);
-    position: relative
-}
-
-.md-typeset .mdx-social:hover .mdx-social__image {
-    background-color: #e4e4e40d
-}
-
-.md-typeset .mdx-social__layer {
-    margin-top: 4rem;
-    position: absolute;
-    transform-style: preserve-3d;
-    transition: .25s cubic-bezier(.7, 0, .3, 1)
-}
-
-.md-typeset .mdx-social__layer:hover .mdx-social__label {
-    opacity: 1
-}
-
-.md-typeset .mdx-social__layer:hover .mdx-social__image {
-    background-color: #7f7f7ffc
-}
-
-.md-typeset .mdx-social__layer:hover~.mdx-social__layer {
-    opacity: 0
-}
-
-.md-typeset .mdx-social__image {
-    box-shadow: -.25rem .25rem .5rem #0000000d;
-    transform: rotate(-40deg) skew(15deg, 15deg) scale(.7);
-    transition: all .25s
-}
-
-.md-typeset .mdx-social__image img {
-    display: block
-}
-
-.md-typeset .mdx-social__label {
-    background-color: var(--md-default-fg-color--light);
-    color: var(--md-default-bg-color);
-    display: block;
-    opacity: 0;
-    padding: .2rem .4rem;
-    position: absolute;
-    transition: all .25s
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:nth-child(6) {
-    transform: translateY(-30px)
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:nth-child(5) {
-    transform: translateY(-20px)
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:nth-child(4) {
-    transform: translateY(-10px)
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:nth-child(3) {
-    transform: translateY(0)
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:nth-child(2) {
-    transform: translateY(10px)
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:first-child {
-    transform: translateY(20px)
-}
-
-.md-typeset .mdx-social:hover .mdx-social__layer:nth-child(0) {
-    transform: translateY(30px)
-}
-
-.md-banner {
-    color: var(--md-footer-fg-color--lighter)
-}
-
-.md-banner strong {
-    white-space: nowrap
-}
-
-.md-banner a,
-.md-banner strong {
-    color: var(--md-footer-fg-color)
-}
-
-.md-banner a:focus,
-.md-banner a:hover {
-    color: currentcolor
-}
-
-.md-banner a:focus .twemoji,
-.md-banner a:hover .twemoji {
-    background-color: var(--md-footer-fg-color);
-    box-shadow: none
-}
-
-.md-banner .twemoji {
-    border-radius: 100%;
-    box-shadow: inset 0 0 0 .05rem currentcolor;
-    display: inline-block;
-    height: 1.2rem;
-    padding: .25rem;
-    transition: all .25s;
-    vertical-align: bottom;
-    width: 1.2rem
-}
-
-.md-banner .twemoji svg {
-    display: block;
-    max-height: none
-}
-
-/* annotation buttons' pulse animation */
+/* Annotation markers are round, matching the numbered badges they pair with. */
 a.md-annotation__index {
     border-radius: 2.2ch;
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 var(--md-accent-fg-color);
-        transform: scale(.95)
-    }
-
-    75% {
-        box-shadow: 0 0 0 .625em transparent;
-        transform: scale(1)
-    }
-
-    to {
-        box-shadow: 0 0 0 0 transparent;
-        transform: scale(.95)
-    }
 }

@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{# The landing page sets `title: Commit Check` so its social card and search
+   entry are not labelled "Home". Material appends the site name to any page
+   that carries a meta title, which on this one page repeats it. #}
+{% block htmltitle %}
+  {% if page.is_homepage %}
+    <title>{{ config.site_name }}</title>
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
 {% block extrahead %}
   <link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/static/apple-touch-icon.png">
   <link rel="icon" type="image/x-icon" href="{{ base_url }}/static/favicon.ico">

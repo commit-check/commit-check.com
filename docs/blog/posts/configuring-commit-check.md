@@ -50,7 +50,7 @@ require_signed_off_by = false
 ignore_authors = ["dependabot[bot]", "renovate[bot]", "copilot[bot]"]
 
 [branch]
-# https://conventional-branch.github.io/
+# https://conventionalbranch.org
 conventional_branch = true
 allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix"]
 ```
