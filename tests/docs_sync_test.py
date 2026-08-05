@@ -32,6 +32,10 @@ def _read_doc(name: str) -> str:
 #: A pasted failure line, e.g. ``CC003 subject-imperative check failed ==> ...``
 _SAMPLE_FAILURE = re.compile(r"(CC\d{3}) (\S+) check failed ==>")
 
+#: A pasted ``--compact`` line, e.g. ``[FAIL] CC003 subject_imperative: ...``.
+#: Indented, because these samples sit inside content tabs.
+_COMPACT_FAILURE = re.compile(r"^\s*\[FAIL\] (CC\d{3}) ([^:\s]+):", re.M)
+
 
 def _rule_section(content: str, rule_id: str) -> str:
     """Return just the part of the rules page belonging to one rule."""
@@ -82,6 +86,33 @@ class TestRulesDocumentation:
                         f"'{printed}', the tool prints '{entry.name}'"
                     )
         assert not stale, "sample output is out of date:\n  " + "\n  ".join(stale)
+
+    def test_compact_sample_output_matches_what_the_tool_prints(self):
+        """Pasted ``--compact`` output names rules the way that format does.
+
+        The two text formats spell a check differently: the default output
+        prints the kebab-case name, and ``--compact`` prints the config key.
+        A sample of one therefore cannot be validated against the other, and
+        the guard above only matches the default format — so the compact
+        samples were checked by nothing at all. That is the blind spot that
+        let a pre-2.13 sample sit unnoticed in the troubleshooting page.
+
+        If the two formats are ever reconciled (see commit-check#528), this
+        is what will point at the samples that need rewriting.
+        """
+        by_id = {entry.rule_id: entry for entry in ALL_RULES}
+        stale = []
+        for page in DOCS.rglob("*.md"):
+            for rule_id, printed in _COMPACT_FAILURE.findall(page.read_text("utf-8")):
+                entry = by_id.get(rule_id)
+                if entry and printed != entry.check:
+                    stale.append(
+                        f"{page.relative_to(DOCS)}: {rule_id} shown as "
+                        f"'{printed}', --compact prints '{entry.check}'"
+                    )
+        assert not stale, (
+            "compact sample output is out of date:\n  " + "\n  ".join(stale)
+        )
 
     def test_every_rule_explains_itself(self):
         """Each rule section must answer what it does and why it matters."""
