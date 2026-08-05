@@ -185,6 +185,22 @@ th {
     }
 }
 
+/* Both tinted bands above bleed past the content column with a negative
+   margin. Material sets the root font to 125%, so -1.5rem is 30px — but below
+   its 76.25em breakpoint the column only has a 16px gutter to give back. The
+   bands hung 14px off the right edge, which made the whole page scroll
+   sideways on every phone and tablet. Match the gutter there instead.
+
+   (76.25em is Material's own breakpoint. Media-query em units resolve against
+   the initial 16px font size rather than the 125% root, so this is 1220px.) */
+@media screen and (max-width: 76.25em) {
+    .trusted-by,
+    .community-section {
+        margin-left: -0.8rem;
+        margin-right: -0.8rem;
+    }
+}
+
 /* Mobile navigation drawer -------------------------------------------------
    Material leaves this at its own default indigo, which clashes with the
    header right above it. */

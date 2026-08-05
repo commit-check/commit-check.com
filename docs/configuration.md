@@ -1,195 +1,173 @@
 # Configuration
 
-`commit-check` reads its settings from four places, in this priority order
-(highest to lowest):
+Commit Check reads its settings from four places. When the same option is set
+in more than one, the first one listed wins:
 
-1. **Command-line arguments** (`--subject-imperative=true`)
-2. **Environment variables** (`CCHK_SUBJECT_IMPERATIVE=true`)
-3. **Configuration files** (`cchk.toml` or `commit-check.toml`)
+1. **Command-line arguments** — `--subject-imperative=true`
+2. **Environment variables** — `CCHK_SUBJECT_IMPERATIVE=true`
+3. **A configuration file** — `cchk.toml` or `commit-check.toml`
 4. **Built-in defaults**
 
-This flexibility allows you to:
+That ordering is what makes the layering useful: the file carries the policy
+the project agreed on, the environment overrides it for a single CI job, and a
+flag overrides both for a single run.
 
-* Use configuration files for project-wide settings
-* Override with environment variables in CI/CD pipelines
-* Override specific settings via CLI for one-off checks
-* Use without any configuration files (relies on defaults)
+!!! tip "Defaults are not "nothing""
 
-## Configuration Files
+    Two different things decide whether a rule fires: whether you asked for
+    that check at all, and what the option defaults to. A check only runs when
+    its flag is passed — `--message` never evaluates branch rules — but once a
+    check is running, these apply with no configuration file present:
 
-`commit-check` configuration files support the TOML format. See `cchk.toml` for an example configuration.
+    | Check | Enforced by default |
+    |---|---|
+    | `--message` | Conventional Commits ([CC001](rules.md#cc001)), subject lengths of 5–80 characters ([CC004](rules.md#cc004), [CC005](rules.md#cc005)), and an allow-list of ten commit types |
+    | `--branch` | Conventional Branch ([CC201](rules.md#cc201)) and an allow-list of twenty-one branch types |
+    | `--author-name` / `--author-email` | The built-in name and email patterns ([CC101](rules.md#cc101), [CC102](rules.md#cc102)) |
 
-!!! tip "Default Behavior"
+    Off until you turn them on: subject capitalization, imperative mood,
+    required body and signoff, and rebase requirements.
 
-    * When no configuration file exists, commit-check uses sensible defaults with minimal restrictions.
-    * Enforced by default: the Conventional Commits format ([CC001](rules.md#cc001)), the Conventional Branch format ([CC201](rules.md#cc201)), the subject length limits of 5–80 characters ([CC004](rules.md#cc004), [CC005](rules.md#cc005)), and the author name and email patterns ([CC101](rules.md#cc101), [CC102](rules.md#cc102)).
-    * **Off** by default: subject capitalization, imperative mood, body and signoff requirements, rebase requirements, and every `allow_*` restriction.
+    The `allow_*` options are a mix, so read them individually rather than
+    assuming: `allow_commit_types` and `allow_branch_types` are allow-lists
+    that restrict from the start, while `allow_merge_commits`,
+    `allow_revert_commits`, `allow_empty_commits`, `allow_fixup_commits`,
+    `allow_wip_commits` and `allow_force_push` all default to permitting
+    everything. The *Default* column in the
+    [rules reference](rules.md#rule-index) is the full picture.
 
-    See [rules](rules.md) for the default state of every rule.
+## Where the config file lives
 
-commit-check can be configured via a `cchk.toml` or `commit-check.toml` file.
+The file is TOML, and may be called `cchk.toml` or `commit-check.toml`. Commit
+Check searches four locations and uses the first that exists:
 
-The file should be placed in the root of your repository or in the `.github` folder.
-
-## Configuration File Locations
-
-commit-check searches for configuration files in the following order (first found is used):
-
-1. `cchk.toml` (root directory)
-2. `commit-check.toml` (root directory)
+1. `cchk.toml`
+2. `commit-check.toml`
 3. `.github/cchk.toml`
 4. `.github/commit-check.toml`
 
-!!! tip "GitHub Best Practice"
+Pass `--config` to point at one directly and skip the search:
 
-    Placing configuration files in the `.github` folder helps keep your repository root clean and follows GitHub conventions used by tools like Dependabot and Renovate.
+```console
+$ commit-check --config path/to/cchk.toml --message
+```
 
-!!! tip "IDE Autocompletion"
+!!! tip "Why `.github/`"
 
-    commit-check's TOML schema is published on [SchemaStore](https://www.schemastore.org/),
-    so editors like VS Code (via [Even Better TOML](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)),
-    PyCharm, and IntelliJ provide autocompletion, validation, and documentation
-    tooltips for `cchk.toml` out of the box — no manual schema path configuration needed.
+    Putting the file in `.github/` keeps the repository root uncluttered and
+    matches where Dependabot and Renovate already keep theirs. Commit Check
+    treats both locations identically.
 
-## Organization-Level Configuration (inherit_from)
+!!! tip "Editor autocompletion"
 
-For organizations that want to share a common base configuration across many repositories, commit-check supports an `inherit_from` directive at the top level of your TOML config file.
+    The TOML schema is published on [SchemaStore](https://www.schemastore.org/),
+    so VS Code (via
+    [Even Better TOML](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)),
+    PyCharm and IntelliJ offer completion, validation and inline documentation
+    for `cchk.toml` with nothing to configure.
 
-**How it works:**
+## Inheriting a shared config
 
-1. The `inherit_from` value can be a `github:` shorthand, a local file path, or an HTTPS URL.
-2. The parent (inherited) configuration is loaded first.
-3. Local settings in the current config file **override** the parent values.
-4. The `inherit_from` key itself is not passed to the validation engine.
+An organization can keep one base policy and have every repository build on it.
+Point `inherit_from` at the shared file; the parent loads first, and anything
+set locally overrides it. The key itself is never passed to the validation
+engine.
 
-**Example — inherit from a GitHub repository (recommended):**
-
-```toml
-# .github/cchk.toml
+```toml title=".github/cchk.toml"
 inherit_from = "github:my-org/.github:cchk.toml"
 
 [commit]
-subject_max_length = 72  # Overrides parent value
+subject_max_length = 72  # overrides whatever the parent set
 ```
 
-**GitHub shorthand format:**
+The value can be a GitHub shorthand, a local path or an HTTPS URL:
 
-* `github:owner/repo:path/to/cchk.toml` — uses `HEAD` (default branch)
-* `github:owner/repo@main:path/to/cchk.toml` — pins to the `main` branch
+| Form | Example |
+|---|---|
+| GitHub, default branch | `github:owner/repo:path/to/cchk.toml` |
+| GitHub, pinned branch | `github:owner/repo@main:path/to/cchk.toml` |
+| Local file | `../../shared/org-cchk.toml` |
+| HTTPS URL | `https://example.com/shared/cchk.toml` |
 
-**Example — inherit from a local file:**
+!!! note "Inheritance fails quietly"
 
-```toml
-# repo/.github/cchk.toml
-inherit_from = "../../shared/org-cchk.toml"
+    If the target is unreachable or the format is not recognized, Commit Check
+    ignores the inheritance and uses the local configuration alone. Plain HTTP
+    URLs are rejected outright. A repository that silently stops inheriting
+    still passes its own checks, so pin the branch when the policy matters.
 
-[commit]
-allow_wip_commits = true  # Override for this project only
-```
+## A worked example
 
-**Example — inherit from an HTTPS URL:**
+Every line below that differs from the built-in default is marked, so it is
+clear what this file is actually changing:
 
-```toml
-# .github/cchk.toml
-inherit_from = "https://example.com/shared/cchk.toml"
-```
-
-!!! note
-
-    If the `inherit_from` target is unreachable or the format is unrecognized, commit-check silently ignores the inheritance and uses only the local configuration. HTTP (non-TLS) URLs are rejected for security.
-
-## Example Configuration
-
-```toml
+```toml title="cchk.toml"
 [commit]
 # https://www.conventionalcommits.org
 conventional_commits = true
-# message_pattern = ""     # Optional - custom regex (overrides conventional_commits)
+# message_pattern = ""             # optional: a custom regex, replacing the above
 subject_capitalized = false
-subject_imperative = false
-subject_max_length = 80    # Default - set to your own limit
-subject_min_length = 5     # Default - set to your own minimum
+subject_imperative = true          # changed: off by default
+subject_max_length = 80
+subject_min_length = 5
+# changed: a subset of the default list, which also has perf, build and ci
 allow_commit_types = ["feat", "fix", "docs", "style", "refactor", "test", "chore"]
 allow_merge_commits = true
 allow_revert_commits = true
-allow_empty_commits = false
+allow_empty_commits = false        # changed: allowed by default
 allow_fixup_commits = true
-allow_wip_commits = false
+allow_wip_commits = false          # changed: allowed by default
 require_body = false
-# ignore_authors = []      # Optional - bypass checks for these commit/co-authors
 require_signed_off_by = false
-ai_attribution = "forbid"  # "ignore" (default) or "forbid" — rejects AI tool trailers
+ai_attribution = "forbid"          # changed: "ignore" by default
+# ignore_authors = []              # optional: bypass all commit checks for these authors
 
 [push]
-# Block force pushes when used as a pre-push hook or with --no-force-push
-allow_force_push = true  # Set to false to block force pushes
+allow_force_push = true            # set false to block force pushes
 
 [branch]
 # https://conventionalbranch.org
 conventional_branch = true
-# Optional: defaults are a superset of the Conventional Branch spec — the
-# spec types plus Conventional Commit types, AI agent prefixes and bot
-# prefixes (see the Options table below for the full list). Omit this
-# option to use the defaults, or set your own list for a strict subset.
-allow_branch_types = [
-    "feature",
-    "bugfix",
-    "hotfix",
-    "release",
-    "chore",
-    "feat",
-    "fix",
-    "build",
-    "ci",
-    "docs",
-    "perf",
-    "refactor",
-    "style",
-    "test",
-]
-# allow_branch_names = []  # Optional - additional standalone branch names (e.g., ["develop", "staging"])
-# require_rebase_target = "main"  # Optional - no rebase requirement by default
-# ignore_authors = []      # Optional - no authors ignored by default
+# changed: spec types only. The default is a superset — these plus the
+# Conventional Commit types, AI agent prefixes and bot prefixes — so setting
+# this at all narrows it. Omit the line to accept all of them.
+allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore"]
+# allow_branch_names = []          # optional: extra standalone names, e.g. ["develop"]
+# require_rebase_target = "main"   # optional: no rebase requirement by default
+# ignore_authors = []              # optional: as above, for branch checks
 ```
 
-## Command-Line Arguments
+!!! warning "`allow_*` options describe what is permitted"
 
-All configuration options can be specified via command-line arguments, which take precedence over environment variables and configuration files.
+    They read backwards from most linters. `allow_wip_commits = false` is the
+    setting that *rejects* WIP commits; leaving it at its default of `true`
+    lets them through.
 
-**Syntax:**
+## Command-line arguments
 
-* Boolean options: `--option-name=true` or `--option-name=false`
-* Integer options: `--option-name=80`
-* List options: `--option-name=value1,value2,value3` (comma-separated)
-* String options: `--option-name=value`
+Every option can be set as a flag, which is what makes a TOML file optional
+entirely — useful when the policy lives in `.pre-commit-config.yaml` instead.
 
-**Examples:**
+| Type | Form |
+|---|---|
+| Boolean | `--option-name=true` / `--option-name=false` |
+| Integer | `--option-name=80` |
+| List | `--option-name=value1,value2,value3` |
+| String | `--option-name=value` |
 
-```bash
-# Disable imperative mood check
-commit-check --message --subject-imperative=false
-
-# Set custom subject length limit
-commit-check --message --subject-max-length=72
-
-# Restrict allowed commit types
-commit-check --message --allow-commit-types=feat,fix,docs
-
-# Combine multiple options
-commit-check --message --subject-imperative=true --subject-max-length=50 --allow-commit-types=feat,fix
-
-# Branch configuration via CLI
-commit-check --branch --allow-branch-types=feature,bugfix,hotfix
+```console
+$ commit-check --message --subject-imperative=false
+$ commit-check --message --subject-max-length=72
+$ commit-check --message --allow-commit-types=feat,fix,docs
+$ commit-check --branch --allow-branch-types=feature,bugfix,hotfix
 ```
 
-**Pre-commit Hook Usage:**
+Used from a hook definition, with no config file anywhere in the repository:
 
-The primary use case for CLI arguments is configuring commit-check in `.pre-commit-config.yaml` without requiring a TOML file:
-
-```yaml
+```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.13.0
+    rev: v2.13.1
     hooks:
       - id: check-message
         args:
@@ -198,39 +176,19 @@ repos:
           - --allow-merge-commits=false
 ```
 
-## Environment Variables
+## Environment variables
 
-Configuration can also be set via environment variables with the `CCHK_` prefix. This is useful for CI/CD pipelines and temporary overrides.
+Any option can also be set through the environment, which is the practical way
+to vary policy per CI job without editing the file. Uppercase the option name,
+replace hyphens with underscores, and prefix `CCHK_`:
 
-**Naming Convention:**
-
-* Convert option name to uppercase
-* Replace hyphens with underscores
-* Add `CCHK_` prefix
-
-**Examples:**
-
-```bash
-# Set boolean options
-export CCHK_SUBJECT_IMPERATIVE=true
-export CCHK_SUBJECT_CAPITALIZED=false
-
-# Set integer options
-export CCHK_SUBJECT_MAX_LENGTH=72
-export CCHK_SUBJECT_MIN_LENGTH=10
-
-# Set list options (comma-separated)
-export CCHK_ALLOW_COMMIT_TYPES=feat,fix,docs,chore
-export CCHK_ALLOW_BRANCH_TYPES=feature,bugfix,hotfix
-
-# Set string options
-export CCHK_REQUIRE_REBASE_TARGET=main
-
-# Use in CI/CD
-CCHK_SUBJECT_MAX_LENGTH=100 commit-check --message
+```console
+$ export CCHK_SUBJECT_MAX_LENGTH=72
+$ export CCHK_ALLOW_COMMIT_TYPES=feat,fix,docs,chore
+$ CCHK_SUBJECT_MAX_LENGTH=100 commit-check --message
 ```
 
-**Complete Mapping:**
+The full mapping between the three forms:
 
 | TOML Config | Environment Variable | CLI Argument |
 |---|---|---|
@@ -259,29 +217,41 @@ CCHK_SUBJECT_MAX_LENGTH=100 commit-check --message
 | `ai_attribution = "forbid"` | `CCHK_AI_ATTRIBUTION=forbid` | `--ai-attribution=forbid` |
 | `ignore_authors = ["bot"]` (in branch section) | `CCHK_BRANCH_IGNORE_AUTHORS=bot,user` | `--branch-ignore-authors=bot,user` |
 
-## Configuration Priority Example
+## Which value wins
 
-When the same option is specified in multiple places, the priority determines which value is used:
+The four sources layer, so the same option can be set in several at once. Only
+the highest-priority one takes effect:
 
-```bash
-# In cchk.toml:
-# subject_max_length = 100
+```console
+$ grep subject_max_length cchk.toml
+subject_max_length = 100
 
-# Set via environment:
-export CCHK_SUBJECT_MAX_LENGTH=80
+$ export CCHK_SUBJECT_MAX_LENGTH=80
 
-# Override via CLI:
-commit-check --message --subject-max-length=50
-
-# Result: subject_max_length = 50 (CLI wins)
+$ commit-check --message --subject-max-length=50
 ```
 
-## Options Table Description
+The limit applied is 50 — the flag beats the environment, which beats the file.
+Nothing warns about the values that lost, which is worth remembering when a
+setting in the file appears to have no effect.
+
+## Every option
+
+Types are as TOML understands them. A default shown as `""` means the option is
+unset, which is never the same as the check being off — but it does not mean
+the same thing twice, so read the description rather than the cell:
+
+- `message_pattern` unset leaves `conventional_commits` to generate the
+  pattern. [CC001](rules.md#cc001) still runs.
+- `author_name_pattern` unset falls back to the built-in name pattern.
+  [CC101](rules.md#cc101) still runs.
+- `require_rebase_target` unset is the one case where the check really does not
+  run — there is no branch to compare against.
 
 | Section | Option | Type | Default | Description |
 |---|---|---|---|---|
 | commit | conventional_commits | bool | true | Enforce Conventional Commits specification. |
-| commit | message_pattern | str | "" (disabled) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
+| commit | message_pattern | str | "" (no custom pattern) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
 | commit | subject_capitalized | bool | false | Subject must start with a capital letter. |
 | commit | subject_imperative | bool | false | Subject must be in imperative mood. Forms of verbs can be found at [imperatives.py](https://github.com/commit-check/commit-check/blob/main/commit_check/imperatives.py) |
 | commit | subject_max_length | int | 80 | Maximum length of the subject line. |

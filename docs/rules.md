@@ -62,6 +62,8 @@ actively harmful for one that does not.
 
 Run with `-m` / `--message`.
 
+<div class="rules-index" markdown>
+
 | Code | Name | Message | Check | Default |
 |---|---|---|---|---|
 | [CC001](#cc001) | `message` | The commit message should follow Conventional Commits | `-m` | ✅ On |
@@ -78,27 +80,41 @@ Run with `-m` / `--message`.
 | [CC012](#cc012) | `require-signed-off-by` | Signed-off-by not found in latest commit | `-m` | ⚪ Off |
 | [CC013](#cc013) | `ai-attribution` | AI attribution policy violation | `-m` | ⚪ Off |
 
+</div>
+
 ### Author rules (`CC1xx`) { #author-rules }
+
+<div class="rules-index" markdown>
 
 | Code | Name | Message | Check | Default |
 |---|---|---|---|---|
 | [CC101](#cc101) | `author-name` | The committer name seems invalid | `-n` | ✅ On |
 | [CC102](#cc102) | `author-email` | The committer's email seems invalid | `-e` | ✅ On |
 
+</div>
+
 ### Branch rules (`CC2xx`) { #branch-rules }
 
 Run with `-b` / `--branch`.
+
+<div class="rules-index" markdown>
 
 | Code | Name | Message | Check | Default |
 |---|---|---|---|---|
 | [CC201](#cc201) | `branch` | The branch should follow Conventional Branch | `-b` | ✅ On |
 | [CC202](#cc202) | `merge-base` | Current branch is not rebased onto target branch | `-b` | ⚪ Off |
 
+</div>
+
 ### Push rules (`CC3xx`) { #push-rules }
+
+<div class="rules-index" markdown>
 
 | Code | Name | Message | Check | Default |
 |---|---|---|---|---|
 | [CC301](#cc301) | `no-force-push` | Force push is not allowed | `--no-force-push` | ⚪ Off |
+
+</div>
 
 ## Commit message rules
 

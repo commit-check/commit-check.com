@@ -1,53 +1,22 @@
-# Migration Guide
+# Migrating from v1
 
-This guide helps you migrate from commit-check v1.x (YAML configuration) to v2.0+ (TOML configuration).
+Version 2.0 replaced the YAML configuration with TOML. The change is mechanical
+— nothing about what Commit Check validates went away — but the two formats
+express policy very differently, and there is no automatic conversion.
 
-## Overview
+In v1 a config file was a list of checks, each carrying its own regex, error
+message and suggestion. You wrote the pattern; Commit Check ran it. In v2 the
+patterns are built in and the file selects and tunes them by name. A v1 file
+was mostly regex; a v2 file is mostly booleans.
 
-Version 2.0 introduces significant changes to commit-check:
+The practical consequence: you do not translate a v1 file line by line. You
+decide which rules you want and write those down, which is usually far shorter.
 
-* **Configuration format**: `.commit-check.yml` → `cchk.toml` or `commit-check.toml`
-* **Simplified architecture**: New validation engine with cleaner design
-* **Enhanced functionality**: Better error messages and more flexible configuration options
+## Converting the file
 
-## Quick Migration Steps
+Take a representative v1 config:
 
-1. **Backup your existing configuration**:
-
-```bash
-cp .commit-check.yml .commit-check.yml.backup
-```
-
-2. **Create new TOML configuration**:
-
-```bash
-touch cchk.toml  # or commit-check.toml
-```
-
-3. **Convert YAML to TOML format** (see examples below)
-
-4. **Test the new configuration**:
-
-```bash
-commit-check --help
-commit-check --message --branch --author-name --author-email --dry-run
-```
-
-5. **Remove old YAML file**:
-
-```bash
-rm .commit-check.yml.backup  # after confirming everything works
-```
-
-## Configuration Format Changes
-
-The configuration structure has changed from YAML to TOML format
-
-### YAML (v1.x) vs TOML (v2.0+)
-
-**Old YAML format** (`.commit-check.yml`):
-
-```yaml
+```yaml title=".commit-check.yml (v1)"
 checks:
 - check: message
     regex: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\([\w\-\.]+\))?(!)?: ([\w ])+([\s\S]*)|(Merge).*|(fixup!.*)'
@@ -64,7 +33,7 @@ checks:
     suggest: run command `git checkout -b type/branch_name`
 
 - check: author_name
-    regex: ^[A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u024F ,.\'-]+$|.*(\[bot])
+    regex: ^[A-Za-zÀ-ÖØ-öø-ÿĀ-ſƀ-ɏ ,.\'-]+$|.*(\[bot])
     error: The committer name seems invalid
     suggest: run command `git config user.name "Your Name"`
 
@@ -82,108 +51,141 @@ checks:
     regex: main # it can be master, develop, devel etc based on your project.
     error: Current branch is not rebased onto target branch
     suggest: Please ensure your branch is rebased with the target branch
-
-- check: imperative
-    regex: '' # Not used for imperative mood check
-    error: 'Commit message should use imperative mood (e.g., "Add feature" not "Added feature")'
-    suggest: 'Use imperative mood in commit message like "Add", "Fix", "Update", "Remove"'
 ```
 
-**New TOML format** (`cchk.toml` or `commit-check.toml`):
+Every one of those checks still exists. Named rather than spelled out, the
+whole file becomes:
 
-```toml
+```toml title="cchk.toml (v2)"
 [commit]
-# https://www.conventionalcommits.org
 conventional_commits = true
-subject_capitalized = false
-subject_imperative = true
-subject_max_length = 80
-subject_min_length = 5
-allow_commit_types = ["feat", "fix", "docs", "style", "refactor", "test", "chore", "ci"]
-allow_merge_commits = true
-allow_revert_commits = true
-allow_empty_commits = false
-allow_fixup_commits = true
-allow_wip_commits = false
-require_body = false
-require_signed_off_by = false
-ignore_authors = ["dependabot[bot]", "copilot[bot]"]
+require_signed_off_by = true
 
 [branch]
-# https://conventionalbranch.org
 conventional_branch = true
-allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix"]
 require_rebase_target = "main"
 ```
 
-### CLI Changes
+The regexes are gone because they were restating the built-in behaviour. So are
+`error` and `suggest`: Commit Check now supplies both, along with a stable rule
+ID and a link to the rule's documentation.
 
-The command-line interface has been simplified:
+!!! warning "Check your type lists before deleting the old file"
 
-**Old CLI** (v1.x):
+    "Restating the built-in behaviour" is nearly true, not exactly true, and
+    the gap is silent — the shorter file above accepts slightly less than the
+    v1 one it replaces. Two types in that v1 example are missing from the v2
+    defaults:
 
-```bash
-commit-check --config .commit-check.yml
-```
+    - `revert` as a commit type. `revert: drop the cache` passed under v1 and
+      is rejected by the default `allow_commit_types`. (Unrelated to
+      `allow_revert_commits`, which governs Git's own `Revert "..."` commits
+      and is on by default.)
+    - `task` as a branch type. `task/CC-42` passed under v1 and is rejected by
+      the default `allow_branch_types`.
 
-**New CLI** (v2.0+):
+    Keep them by naming the list you want, remembering that setting either
+    option replaces the default rather than adding to it:
 
-```bash
-commit-check --config cchk.toml  # or commit-check.toml
-# Or use defaults (no config file needed)
-commit-check --message --branch
-```
+    ```toml
+    [commit]
+    allow_commit_types = ["build", "chore", "ci", "docs", "feat", "fix",
+                          "perf", "refactor", "revert", "style", "test"]
 
-### Custom Regex (`message_pattern`)
+    [branch]
+    allow_branch_types = ["bugfix", "chore", "feature", "hotfix", "release", "task"]
+    ```
 
-If you relied on the custom `regex` field in v1.x to enforce a non-Conventional-Commits
-format (e.g. JIRA smart commits `PROJ-123: description`), use the `message_pattern`
-option in the `[commit]` section:
+    Compare your own v1 regex against
+    [every option](configuration.md#every-option) before deleting it — this is
+    the one part of the migration that fails quietly, months later, on a commit
+    that used to be fine.
 
-```toml
+### What each v1 check became
+
+| v1 `check:` | v2 option | Rule |
+|---|---|---|
+| `message` | `[commit] conventional_commits` | [CC001](rules.md#cc001) |
+| `branch` | `[branch] conventional_branch` | [CC201](rules.md#cc201) |
+| `author_name` | `[commit] author_name_pattern` | [CC101](rules.md#cc101) |
+| `author_email` | `[commit] author_email_pattern` | [CC102](rules.md#cc102) |
+| `commit_signoff` | `[commit] require_signed_off_by` | [CC012](rules.md#cc012) |
+| `merge_base` | `[branch] require_rebase_target` | [CC202](rules.md#cc202) |
+| `imperative` | `[commit] subject_imperative` | [CC003](rules.md#cc003) |
+
+The two `*_pattern` options are the exception to "no more regexes": they exist
+so an author policy stricter than the default stays expressible.
+
+### Keeping a custom message format
+
+If the v1 `regex` enforced something that is not Conventional Commits — JIRA
+smart commits, say — that is what `message_pattern` is for. Set it and it
+replaces the generated Conventional Commits pattern entirely:
+
+```toml title="cchk.toml"
 [commit]
 message_pattern = "^PROJ-\\d+: .+"
 ```
 
-When `message_pattern` is set (non-empty), it replaces the auto-generated Conventional
-Commits regex entirely, giving you full control over the accepted message format.
+## Converting the command line
 
-## Troubleshooting
+Only the config flag changed, and only because the file did:
 
-### Common Issues
-
-**Issue**: "Configuration file not found"
-
-**Solution**: Ensure your file is named `cchk.toml` or `commit-check.toml` and placed in the repository root or in the `.github` folder.
-
-**Issue**: "Invalid TOML syntax"
-
-**Solution**: Use a TOML validator or check the syntax. Common issues include:
-
-* Missing quotes around strings
-* Incorrect boolean values (use `true`/`false`, not `True`/`False`)
-* Invalid array syntax
-
-**Issue**: "Validation rules not working as expected"
-
-**Solution**: Check the [Configuration Documentation](configuration.md) for the correct option names and formats.
-
-### Validation and Testing
-
-After migration, test your configuration:
-
-```bash
-# Test commit message validation
-echo "feat: test commit message" | commit-check --message
-
-# Test branch validation
-commit-check --branch
-
-# Test with dry-run flag
-commit-check --message --branch --author-name --author-email --dry-run
+```console
+$ commit-check --config .commit-check.yml    # v1
+$ commit-check --config cchk.toml            # v2
 ```
 
-## Getting Help
+A config file is now optional. With none, the defaults apply immediately:
 
-* **Documentation**: Check the [Configuration Guide](configuration.md)
-* **Issues**: Report problems on [GitHub Issues](https://github.com/commit-check/commit-check/issues)
+```console
+$ commit-check --message --branch
+```
+
+## Doing the migration
+
+1. Keep the old file until you are done:
+
+    ```console
+    $ cp .commit-check.yml .commit-check.yml.backup
+    ```
+
+2. Write `cchk.toml` — in the repository root or in `.github/`. Use the table
+   above rather than translating regexes.
+
+3. Check it against real commits without failing anything, which is what
+   `--dry-run` is for:
+
+    ```console
+    $ commit-check --message --branch --author-name --author-email --dry-run
+    ```
+
+4. Try a message that should fail, so you know the policy is doing something:
+
+    ```console
+    $ echo "nonsense" | commit-check --message
+    ```
+
+    A passing run on a message that ought to fail usually means the config file
+    was not found — see
+    [where the config file lives](configuration.md#where-the-config-file-lives).
+
+5. Delete `.commit-check.yml` and the backup.
+
+## If something does not work
+
+**The config file is not found.** It has to be named `cchk.toml` or
+`commit-check.toml`, in the repository root or `.github/`. Any other name needs
+`--config`.
+
+**TOML fails to parse.** Usually unquoted strings, `True` instead of `true`, or
+a trailing comma in an array. Editors validate the file against the published
+schema — see
+[where the config file lives](configuration.md#where-the-config-file-lives).
+
+**A rule does not behave as expected.** Check the option name and its default in
+[every option](configuration.md#every-option); the `allow_*` options in
+particular describe what is *permitted*, so `false` is the strict setting.
+
+**Something else.** [Open an issue](https://github.com/commit-check/commit-check/issues)
+— include the output of `commit-check --message --format json`.

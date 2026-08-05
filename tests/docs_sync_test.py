@@ -14,6 +14,7 @@ Run them against the version the site documents::
 from __future__ import annotations
 
 import re
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any
 
@@ -91,6 +92,39 @@ class TestRulesDocumentation:
                 assert required in section, (
                     f"{entry.rule_id} ({entry.check}) section is missing {required}"
                 )
+
+
+#: A pre-commit revision pin, e.g. ``rev: v2.13.1``.
+_REV_PIN = re.compile(r"^\s*rev:\s*v(\d+\.\d+\.\d+)\s*$", re.M)
+
+
+class TestDocumentedRevisions:
+    """The revisions the install snippets pin are the released version.
+
+    Copy-pasteable snippets are the most-used thing on the site, and a pin is
+    invisible once it goes stale: the snippet keeps working, it just installs
+    an older release than the page around it describes. Nothing else here
+    reads these — the other guards compare reference tables against the
+    package — so a release would leave five pages pinned to the version
+    before it.
+    """
+
+    def test_pinned_revisions_match_the_released_version(self):
+        """Every ``rev:`` outside the blog names the installed version."""
+        installed = version("commit-check")
+        stale = []
+        for page in DOCS.rglob("*.md"):
+            # Blog posts are dated: they record what was current when they
+            # were written, and moving their pins forward would falsify them.
+            if "blog" in page.relative_to(DOCS).parts:
+                continue
+            for pinned in _REV_PIN.findall(page.read_text("utf-8")):
+                if pinned != installed:
+                    stale.append(
+                        f"{page.relative_to(DOCS)}: pins v{pinned}, "
+                        f"the released version is {installed}"
+                    )
+        assert not stale, "install snippets are out of date:\n  " + "\n  ".join(stale)
 
 
 _OPTIONS_ROW = re.compile(
