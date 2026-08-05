@@ -36,7 +36,7 @@ whatever your AI agent is committing on your behalf.
     ```yaml title=".pre-commit-config.yaml"
     repos:
       - repo: https://github.com/commit-check/commit-check
-        rev: v2.13.0
+        rev: v2.13.1
         hooks:
           - id: check-message
           - id: check-branch
@@ -270,75 +270,75 @@ graph TB
 
 <div class="logo-grid">
   <div class="logo-item">
-    <img src="https://github.com/apache.png" alt="Apache" title="Apache">
+    <img src="https://github.com/apache.png" alt="Apache" title="Apache" width="60" height="60" loading="lazy" decoding="async">
     <span>Apache</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/discovery-unicamp.png" alt="Discovery Unicamp" title="Discovery Unicamp">
+    <img src="https://github.com/discovery-unicamp.png" alt="Discovery Unicamp" title="Discovery Unicamp" width="60" height="60" loading="lazy" decoding="async">
     <span>Discovery Unicamp</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/TexasInstruments.png" alt="Texas Instruments" title="Texas Instruments">
+    <img src="https://github.com/TexasInstruments.png" alt="Texas Instruments" title="Texas Instruments" width="60" height="60" loading="lazy" decoding="async">
     <span>Texas Instruments</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/opencadc.png" alt="OpenCADC" title="OpenCADC">
+    <img src="https://github.com/opencadc.png" alt="OpenCADC" title="OpenCADC" width="60" height="60" loading="lazy" decoding="async">
     <span>OpenCADC</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/extrawest.png" alt="Extrawest" title="Extrawest">
+    <img src="https://github.com/extrawest.png" alt="Extrawest" title="Extrawest" width="60" height="60" loading="lazy" decoding="async">
     <span>Extrawest</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/Chainlift.png" alt="Chainlift" title="Chainlift">
+    <img src="https://github.com/Chainlift.png" alt="Chainlift" title="Chainlift" width="60" height="60" loading="lazy" decoding="async">
     <span>Chainlift</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/mila-iqia.png" alt="Mila" title="Mila">
+    <img src="https://github.com/mila-iqia.png" alt="Mila" title="Mila" width="60" height="60" loading="lazy" decoding="async">
     <span>Mila</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/RLinf.png" alt="RLinf" title="RLinf">
+    <img src="https://github.com/RLinf.png" alt="RLinf" title="RLinf" width="60" height="60" loading="lazy" decoding="async">
     <span>RLinf</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/istio-ecosystem.png" alt="Istio Ecosystem" title="Istio Ecosystem">
+    <img src="https://github.com/istio-ecosystem.png" alt="Istio Ecosystem" title="Istio Ecosystem" width="60" height="60" loading="lazy" decoding="async">
     <span>Istio Ecosystem</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/Juniper.png" alt="Juniper Networks" title="Juniper Networks">
+    <img src="https://github.com/Juniper.png" alt="Juniper Networks" title="Juniper Networks" width="60" height="60" loading="lazy" decoding="async">
     <span>Juniper Networks</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/PnX-SI.png" alt="French National Parks" title="French National Parks">
+    <img src="https://github.com/PnX-SI.png" alt="French National Parks" title="French National Parks" width="60" height="60" loading="lazy" decoding="async">
     <span>French National Parks</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/OpenDriveLab.png" alt="OpenDriveLab" title="OpenDriveLab">
+    <img src="https://github.com/OpenDriveLab.png" alt="OpenDriveLab" title="OpenDriveLab" width="60" height="60" loading="lazy" decoding="async">
     <span>OpenDriveLab</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/UT-Austin-RobIn.png" alt="UT Austin RobIn" title="UT Austin RobIn">
+    <img src="https://github.com/UT-Austin-RobIn.png" alt="UT Austin RobIn" title="UT Austin RobIn" width="60" height="60" loading="lazy" decoding="async">
     <span>UT Austin RobIn</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/WorldArena2.png" alt="WorldArena2" title="WorldArena2">
+    <img src="https://github.com/WorldArena2.png" alt="WorldArena2" title="WorldArena2" width="60" height="60" loading="lazy" decoding="async">
     <span>WorldArena2</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/moniqohq.png" alt="moniqo" title="moniqo">
+    <img src="https://github.com/moniqohq.png" alt="moniqo" title="moniqo" width="60" height="60" loading="lazy" decoding="async">
     <span>moniqo</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/elumobility.png" alt="elu mobility" title="elu mobility">
+    <img src="https://github.com/elumobility.png" alt="elu mobility" title="elu mobility" width="60" height="60" loading="lazy" decoding="async">
     <span>elu mobility</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/OpenEnergyPlatform.png" alt="Open Energy Platform" title="Open Energy Platform">
+    <img src="https://github.com/OpenEnergyPlatform.png" alt="Open Energy Platform" title="Open Energy Platform" width="60" height="60" loading="lazy" decoding="async">
     <span>Open Energy Platform</span>
   </div>
   <div class="logo-item">
-    <img src="https://github.com/collective.png" alt="Collective" title="Collective">
+    <img src="https://github.com/collective.png" alt="Collective" title="Collective" width="60" height="60" loading="lazy" decoding="async">
     <span>Collective</span>
   </div>
 </div>
