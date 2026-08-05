@@ -281,7 +281,7 @@ Configuration Format:
 
 * `.commit-check.yml` has been replaced with `cchk.toml` or `commit-check.toml`.
 * All YAML configurations must be migrated to TOML from this version onward.
-* See the [Migration Guide](migration.md) for step-by-step instructions.
+* See [Migrating from v1](migration.md) for step-by-step instructions.
 
 Removed Pre-commit Hooks and CLI Options:
 

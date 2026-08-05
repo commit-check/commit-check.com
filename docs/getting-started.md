@@ -187,3 +187,6 @@ $ gh attestation verify commit_check-*.whl --repo commit-check/commit-check
   plus the environment variable and CLI flag that override it.
 - **[Command-line recipes](example.md)** — checking a range, wiring up CI,
   reading the JSON output.
+- **[Troubleshooting](troubleshoot.md)** — a check failing that you did not
+  turn on, nothing running at all, and how to get a commit through when you
+  have to.
