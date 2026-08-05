@@ -48,6 +48,15 @@
   vertical-align: top;
 }
 
+/* In the rule index tables only, keep rule names and CLI flags on one line so
+   the tables stay scannable — without this, names like `subject-capitalized`
+   break across two lines even on a wide screen. Other tables hold long regexes
+   and allow-lists that must stay wrappable, hence the wrapper class rather
+   than a rule for every table. */
+.md-typeset .rules-index td code {
+  white-space: nowrap;
+}
+
 /* Sidebar section headings ("Getting started", "Reference", ...) */
 .md-nav__item--section > .md-nav__link {
   font-weight: 700;
