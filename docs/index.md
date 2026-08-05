@@ -2,14 +2,26 @@
 hide:
   - navigation
   - toc
-template: home.html
 title: Commit Check
 description: Enforce commit message, branch naming, author and signoff standards across your CLI, pre-commit hooks, CI, and AI agents.
 ---
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
 
+<!-- The hero lives here rather than in a template block because Material
+     injects a top-level heading of its own into any page whose content has
+     none. A hero rendered outside the content produced a second, competing
+     heading ("Home") on top of this one. -->
+
+<div class="hero" markdown>
+
 # Commit Check
+
+Clean commits. Clear standards.
+
+[Get started :material-rocket-launch-outline:](getting-started.md){ .md-button .md-button--primary }
+
+</div>
 
 ## One config, enforced everywhere
 
