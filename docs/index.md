@@ -195,28 +195,16 @@ One policy engine, multiple enforcement surfaces. Write your `cchk.toml` once �
 every surface reads the same file.
 
 ```mermaid
-graph TB
-    subgraph Policy["📄 cchk.toml"]
-        direction LR
-        Config[One policy file]
-    end
+graph LR
+    Config["cchk.toml"] --> Engine["commit-check"]
 
-    subgraph Engine["⚙️ commit-check<br/>(Python core)"]
-        direction LR
-        CLI[CLI & pre-commit]
-        API[Python API]
-    end
+    Engine --> Hook["CLI and pre-commit hook"]
+    Engine --> Action["commit-check-action"]
+    Engine --> MCP["commit-check-mcp"]
 
-    subgraph Surfaces["🚀 Enforcement surfaces"]
-        Action[commit-check-action<br/>GitHub Action]
-        MCP[commit-check-mcp<br/>MCP Server]
-    end
-
-    Config --> Engine
-    CLI --> Action
-    API --> MCP
-    Action --> CI[CI Pipeline]
-    MCP --> Agent[AI Coding Agent]
+    Hook --> Dev["Your laptop"]
+    Action --> CI["CI pipeline"]
+    MCP --> Agent["AI coding agent"]
 ```
 
 <div class="grid cards" markdown>
