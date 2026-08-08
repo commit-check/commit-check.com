@@ -253,7 +253,7 @@ the same thing twice, so read the description rather than the cell:
 | commit | conventional_commits | bool | true | Enforce Conventional Commits specification. |
 | commit | message_pattern | str | "" (no custom pattern) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
 | commit | subject_capitalized | bool | false | Subject must start with a capital letter. |
-| commit | subject_imperative | bool | false | Subject must be in imperative mood. Forms of verbs can be found at [imperatives.py](https://github.com/commit-check/commit-check/blob/main/commit_check/imperatives.py) |
+| commit | subject_imperative | bool | false | Subject must be in imperative mood. Judged on the first word's form, so a verb no list contains is still accepted — see [CC003](rules.md#cc003). |
 | commit | subject_max_length | int | 80 | Maximum length of the subject line. |
 | commit | subject_min_length | int | 5 | Minimum length of the subject line. |
 | commit | allow_commit_types | list[str] | ["feat", "fix", "docs", "style", "refactor", "test", "chore", "perf", "build", "ci"] | Allowed commit types when conventional_commits is true. |

@@ -217,13 +217,14 @@ fix: handle an empty config file
 
 The rule reads the *form* of the first word, not a vocabulary, so it does not
 need to recognise your verb. Anything that is not a past tense, a gerund or a
-third person singular is accepted — including verbs no word list contains, and
+third-person singular is accepted — including verbs no word list contains, and
 subjects that lead with a noun (`fix: parser improvements`), which have no mood
 to get wrong.
 
-The trade is that it cannot see the difference between a real gerund and a noun
-that looks like one. `fix: spelling in the docs` is reported, because `spelling`
-is a gerund whichever way it is being used here.
+The trade is that a word's form does not always tell you how it is being used.
+`fix: spelling in the docs` is reported: `spelling` is a noun there, but it
+wears the `-ing` of a gerund, and a rule that reads the ending cannot tell the
+two apart.
 
 **Options**
 
