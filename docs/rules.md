@@ -213,12 +213,22 @@ Use instead:
 fix: handle an empty config file
 ```
 
+**What it does not do**
+
+The rule reads the *form* of the first word, not a vocabulary, so it does not
+need to recognise your verb. Anything that is not a past tense, a gerund or a
+third-person singular is accepted — including verbs no word list contains, and
+subjects that lead with a noun (`fix: parser improvements`), which have no mood
+to get wrong.
+
+The trade is that a word's form does not always tell you how it is being used.
+`fix: spelling in the docs` is reported: `spelling` is a noun there, but it
+wears the `-ing` of a gerund, and a rule that reads the ending cannot tell the
+two apart.
+
 **Options**
 
 * `commit.subject_imperative` — set to `true` to enable this rule.
-
-The list of recognised non-imperative verb forms lives in
-[imperatives.py](https://github.com/commit-check/commit-check/blob/main/commit_check/imperatives.py).
 
 ### subject-max-length (CC004) { #cc004 }
 
