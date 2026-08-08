@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.14.0](#v2140) | CC003 judges imperative mood by a word's form, not by a list of verbs | [CC003](rules.md#cc003) |
 | [2.13.1](#v2131) | JSON output reports the checked value for passing checks | [Output for scripts and CI](example.md#output-for-scripts-and-ci) |
 | [2.13.0](#v2130) | Stable rule IDs in terminal output and JSON | [Rules reference](rules.md) |
 | [2.12.0](#v2120) | Author name and email patterns became configurable | [CC101](rules.md#cc101) · [CC102](rules.md#cc102) |
@@ -22,6 +23,37 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.14.0 (unreleased) { #v2140 }
+
+### Changed
+
+* **CC003 judges the word's form, not its membership in a list** — the rule
+  used to accept a subject only when its first word appeared in a list of
+  known imperative verbs, so any verb the list had not heard of was reported
+  as a mood error. Growing the list never fixed that; each release recognised
+  a few more verbs and the next contributor found the next gap.
+
+  It now works the other way round. A first word is rejected only when it
+  carries non-imperative morphology — a past tense (`fixed`), a gerund
+  (`adding`) or a third person singular (`fixes`) — and accepted otherwise.
+  Measured across 59,140 subjects from `git.git`, a project that writes
+  strictly imperative subjects, the old list rejected 45.5% of them; the new
+  rule rejects 0.97%.
+
+  Nothing that passed before fails now. Two things that used to fail now pass:
+
+    * Subjects led by a correct verb no list contained — `reword the report
+      format`, `dedupe the helper`, `backfill an absent value`.
+    * Subjects led by a noun — `parser improvements`. CC003 checks mood, and a
+      noun phrase has none to get wrong.
+
+  The practical consequence is that **`IMPERATIVES` no longer needs additions**.
+  A verb missing from it can no longer cause a failure, so there is no reason
+  to send a patch adding the verb you just used.
+
+  See PR [#540](https://github.com/commit-check/commit-check/pull/540), which
+  closes issue [#526](https://github.com/commit-check/commit-check/issues/526).
 
 ## v2.13.1 (2026-08-05) { #v2131 }
 
