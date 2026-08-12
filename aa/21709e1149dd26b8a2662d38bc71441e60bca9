@@ -1,0 +1,21 @@
+docs/overrides/home.html
+  s_475aefa1863f62::t_7f566ce43b43d3 16-21
+mkdocs.yml
+  s_475aefa1863f62::t_9bf4edba30d00c 11-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "aa21709e1149dd26b8a2662d38bc71441e60bca9",
+  "prompts": {},
+  "sessions": {
+    "s_475aefa1863f62": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019ff789-f10b-7f11-ae45-88327912709d",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
