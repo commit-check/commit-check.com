@@ -8,12 +8,14 @@ site_description: >-
 site_author: shenxianpeng
 copyright: Copyright &copy; 2022 - 2026 Commit Check
 
-# The documentation covers a family of repositories, so the links point at the
-# organisation rather than at any single one. edit_uri is absolute for the same
-# reason: the pages live here, not in the repository they document.
-repo_url: https://github.com/commit-check/commit-check.com
-repo_name: commit-check/commit-check.com
-edit_uri: edit/main/docs/
+# The header links to the product repository, not to this documentation repo:
+# visitors who reach the site from a search or a link are users of commit-check
+# itself, and the star/fork counts and the "star" entry point belong to it. The
+# pages themselves live here, so edit_uri is an absolute URL pointing back at
+# this repository.
+repo_url: https://github.com/commit-check/commit-check
+repo_name: commit-check/commit-check
+edit_uri: https://github.com/commit-check/commit-check.com/edit/main/docs/
 
 docs_dir: docs
 
