@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.15.0](#v2150) | `--rev` names the commit under test; skipped checks are named on stderr | [Command-line recipes](example.md#checking-a-range-of-commits) |
 | [2.14.0](#v2140) | CC003 judges imperative mood by a word's form, not by a list of verbs | [CC003](rules.md#cc003) |
 | [2.13.1](#v2131) | JSON output reports the checked value for passing checks | [Output for scripts and CI](example.md#output-for-scripts-and-ci) |
 | [2.13.0](#v2130) | Stable rule IDs in terminal output and JSON | [Rules reference](rules.md) |
@@ -24,7 +25,49 @@ below and to the page that documents the feature properly.
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
-## v2.14.0 (unreleased) { #v2140 }
+## v2.15.0 (unreleased) { #v2150 }
+
+### Added
+
+* **`--rev REVISION` names the commit under test** — anything `git rev-parse`
+  understands: a SHA, `HEAD~2`, `HEAD^2`. Message checks read that commit's
+  message, and the author checks read **that commit's recorded author, never
+  the local git config** — an existing commit's identity is a fact about the
+  commit, not about whoever runs the check. Before `--rev`, CI could not
+  iterate a pull request's commits without checking each one out, and a
+  malformed author on any commit passed as long as the operator's own config
+  was valid. A revision that does not resolve is a one-line error before any
+  check runs; combining `--rev` with a message file or stdin is rejected,
+  since each would name a second subject for the same checks. See
+  [Checking a range of commits](example.md#checking-a-range-of-commits).
+
+### Fixed
+
+* **The CLI no longer hangs on an open, idle stdin** — stdin was read
+  whenever it was not a terminal, for every check type. Under CI runners and
+  process managers that hand the process a pipe nothing ever writes to or
+  closes, `commit-check --author-name` blocked forever: a stuck step, not a
+  failed one. The read is now gated on data actually being available, and
+  genuinely piped input still works unchanged.
+
+### Changed
+
+* **Skipped checks are named on stderr instead of passing in silence** — a
+  check that had nothing to judge (a merge subject under the subject rules,
+  an absent message) reports a skip, and text mode prints one line naming
+  every skipped check: `⊘ skipped (not validated): subject-max-length,
+  subject-min-length`. Exit codes are unchanged and stdout is untouched. The
+  case that motivated it: on a `pull_request` checkout `HEAD` is the
+  synthetic merge commit, so a bare `commit-check -m` used to exit `0`
+  having validated nothing it was asked about. See
+  [When a check is skipped](example.md#when-a-check-is-skipped).
+
+* **Only git's literal merge and fixup prefixes bypass the subject rules** —
+  the bypass matched any subject starting with the word "merge" in any case,
+  so an author's own `merge the parser tables` escaped judgement. Now only
+  the machine-written forms qualify: `Merge ` (and `fixup! ` for CC003).
+
+## v2.14.0 (2026-08-12) { #v2140 }
 
 ### Changed
 

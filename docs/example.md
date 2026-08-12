@@ -9,7 +9,8 @@ in [Configuration](configuration.md).
 
 ## Checking a commit message
 
-The message can come from the repository, a file, or standard input.
+The message can come from the repository, a file, standard input, or a named
+revision.
 
 === "From the repository"
 
@@ -32,6 +33,21 @@ The message can come from the repository, a file, or standard input.
     ```console
     $ echo "feat(auth): add OAuth2 login" | commit-check -m
     ```
+
+=== "From a revision"
+
+    `--rev` names the commit under test — anything `git rev-parse`
+    understands. A revision that does not resolve is a one-line error before
+    any check runs.
+
+    ```console
+    $ commit-check -m --rev HEAD~1
+    $ commit-check -m --rev 1a2b3c4
+    ```
+
+    A revision and a message file would name two different subjects for the
+    same checks, so passing both is rejected; stdin is likewise not consulted
+    while `--rev` is set.
 
 ### Trying a message before you write it
 
@@ -91,6 +107,17 @@ Either flag works alone. [CC101](rules.md#cc101) and
 [CC102](rules.md#cc102) describe what the built-in patterns accept and how to
 tighten them.
 
+Without `--rev`, these validate the *local git config* — whoever is about to
+commit — falling back to `HEAD`'s author only when no identity is configured.
+That is the right subject for a hook and the wrong one for CI: an existing
+commit's identity is a fact about the commit, not about the operator running
+the check. Add `--rev` and both checks read that commit's recorded author, and
+the config is never consulted:
+
+```console
+$ commit-check --author-name --author-email --rev HEAD
+```
+
 ## Blocking force pushes
 
 ```console
@@ -104,7 +131,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.13.4
+    rev: v2.14.0
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -165,11 +192,13 @@ and how CLI, environment and file settings override each other.
 
 ### Checking a range of commits
 
-Nothing built in, but the exit code makes it a one-liner:
+`--rev` makes each commit addressable without checking it out or piping its
+message, and it is the only way the author checks apply to the commit rather
+than to the local config:
 
 ```bash title="check-recent.sh"
 #!/usr/bin/env bash
-# Check the last N commit messages; exits non-zero if any fail.
+# Check the last N commits; exits non-zero if any fail.
 
 # Resolved before the loop rather than inside it: an unreadable range or a
 # directory that is not a repository would otherwise expand to nothing, and
@@ -178,13 +207,48 @@ shas=$(git rev-list -n "${1:-10}" HEAD) || exit 1
 
 status=0
 for sha in $shas; do
-  if ! git log -1 --format=%B "$sha" | commit-check -m --compact; then
+  if ! commit-check -m --author-name --author-email --rev "$sha" --compact; then
     echo "  ↑ $sha"
     status=1
   fi
 done
 exit $status
 ```
+
+On a `pull_request` checkout the same loop covers exactly the commits the PR
+adds — `HEAD` is GitHub's synthetic merge commit, whose first parent is the
+base branch and second the PR branch:
+
+```console
+$ git rev-list HEAD^1..HEAD^2
+```
+
+### When a check is skipped
+
+A check that had nothing to judge reports a **skip**, not a pass. The common
+case is a merge subject: `Merge branch 'x'` is git's writing, so
+[CC002](rules.md#cc002), [CC003](rules.md#cc003), [CC004](rules.md#cc004) and
+[CC005](rules.md#cc005) decline it rather than grade prose the author never
+wrote. Only git's literal `Merge ` prefix qualifies (plus `fixup! ` for
+CC003); a subject that merely starts with the lowercase word is judged like
+any other.
+
+Text mode names every skipped check in one line on stderr, leaving stdout and
+the exit code untouched — a skip is still not a failure:
+
+```console
+$ echo "Merge branch 'main' into topic" | commit-check -m --no-banner
+⊘ skipped (not validated): subject-max-length, subject-min-length
+```
+
+In JSON each skipped check carries `"status": "skip"`, distinct from `"pass"`.
+
+!!! warning "A green run can still have validated nothing"
+
+    On a `pull_request` checkout, `HEAD` is the synthetic merge commit — so a
+    bare `commit-check -m` exits `0` with every subject rule skipped. The
+    notice makes that visible; the fix is to check what you actually mean:
+    the PR title piped on stdin, or each branch commit via `--rev` as above.
 
 ### Reading the JSON
 
