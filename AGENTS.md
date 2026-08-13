@@ -2,7 +2,7 @@
 
 This file provides working guidelines for AI coding agents contributing to this repository.
 
-This repository is the documentation site for [commit-check](https://github.com/commit-check/commit-check). Everything here describes behaviour that lives in **another** repository, 
+This repository is the documentation site for [commit-check](https://github.com/commit-check/commit-check). Everything here describes behaviour that lives in **another** repository,
 so the pages go stale on their own: a release happens elsewhere and nothing in this repository changes. The rules below exist to catch that.
 
 ## Keep the site in step with the released version
@@ -19,7 +19,7 @@ so the pages go stale on their own: a release happens elsewhere and nothing in t
    A draft is not one, and you cannot tell by looking for a tag: a draft can be saved against a tag that already exists, and publishing to PyPI is a
    separate step from publishing the GitHub release. Read the published release, or ask PyPI as above — PyPI is what the pin check compares against, since that is what a reader installs.
 
-3. **Check the install pins.** The pre-commit snippets pin a revision with `rev:`, and a stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes.
+2. **Check the install pins.** The pre-commit snippets pin a revision with `rev:`, and a stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes.
    These are the only version-pinned snippets — the GitHub Action is referenced by its moving major tag (`commit-check-action@v2`) and `uvx commit-check-mcp` carries no version, so neither goes stale.
 
    ```console
@@ -28,7 +28,7 @@ so the pages go stale on their own: a release happens elsewhere and nothing in t
 
    Every one of those must name the released version. **Blog posts are excluded on purpose** — they are dated records of what was current when they were written, and moving their pins forward would falsify them. Never touch them.
 
-5. **Check the changelog.** `docs/changelog.md` must have an entry for the latest release, and that entry must carry its **release date**, not `(unreleased)`:
+3. **Check the changelog.** `docs/changelog.md` must have an entry for the latest release, and that entry must carry its **release date**, not `(unreleased)`:
 
    ```markdown
    ## v2.15.0 (2026-08-13) { #v2150 }
@@ -39,7 +39,7 @@ so the pages go stale on their own: a release happens elsewhere and nothing in t
    A notable release also needs a row in the **Highlights** table at the top, newest first, linking to its entry and to the page that documents the feature properly.
    A patch release that only fixes bugs does not need a row; a release that adds or changes user-visible behaviour does.
 
-6. **Anything out of step, fix it in the same change.** Do not open a follow-up issue and do not mention it in passing — bring it into step and say so in the pull request description.
+4. **Anything out of step, fix it in the same change.** Do not open a follow-up issue and do not mention it in passing — bring it into step and say so in the pull request description.
 
 ### Verify with the test suite
 
@@ -57,7 +57,7 @@ $ python -m pytest tests/ -q
 
 Install the **released** package, not a checkout of `main` — a development version reports something like `2.14.0.post1.dev6`, which matches no pin and tells you nothing.
 
-### The one-time pins may name an unreleased version
+### The one case where pins may name an unreleased version
 
 When the site is being prepared for a release that has not been published yet, the pins and the changelog date are written **ahead** of the tag. `test_pinned_revisions_match_the_released_version` fails for as long as that is true, because PyPI does not have the version yet. That is expected, and it is the only acceptable reason for that test to be red:
 
