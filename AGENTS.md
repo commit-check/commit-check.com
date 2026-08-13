@@ -16,7 +16,7 @@ This repository is the documentation site for [commit-check](https://github.com/
 
    The [releases page](https://github.com/commit-check/commit-check/releases) answers the same question. A **draft** release is not released — it has no tag and no PyPI package, so it is not the answer here.
 
-2. **Check the install pins.** Every copy-pasteable snippet pins a revision, and a stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes.
+2. **Check the install pins.** The pre-commit snippets pin a revision with `rev:`, and a stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes. These are the only version-pinned snippets — the GitHub Action is referenced by its moving major tag (`commit-check-action@v2`) and `uvx commit-check-mcp` carries no version, so neither goes stale.
 
    ```console
    $ grep -rn "rev: v" docs | grep -v docs/blog
@@ -41,11 +41,16 @@ This repository is the documentation site for [commit-check](https://github.com/
 The check above is automated, and the `docs-sync` job runs it on every pull request. Run it locally before you push:
 
 ```console
-$ python -m pip install pytest commit-check
-$ pytest tests/ -q
+$ python -m pip install --upgrade pytest commit-check
+$ python -m pytest tests/ -q
 ```
 
-`tests/docs_sync_test.py` reads the *installed* package and asserts the pins match it, along with every documented rule, option and default. Install the **released** package, not a checkout of `main` — a development version reports something like `2.14.0.post1.dev6`, which matches no pin and tells you nothing.
+`tests/docs_sync_test.py` reads the *installed* package and asserts the pins match it, along with every documented rule, option and default. Two details matter, and both are ways to check the wrong thing without noticing:
+
+- **`--upgrade` is not optional.** Without it, `pip` leaves an already-installed `commit-check` alone, so the run measures whatever was in the environment — quite possibly the release before the one you are checking against.
+- **Run it as `python -m pytest`, not `pytest`.** A bare `pytest` can resolve to a different environment than the `python` you just installed into, and the version it then imports is not the one you think.
+
+Install the **released** package, not a checkout of `main` — a development version reports something like `2.14.0.post1.dev6`, which matches no pin and tells you nothing.
 
 ### The one time pins may name an unreleased version
 
