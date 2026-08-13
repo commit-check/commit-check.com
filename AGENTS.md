@@ -14,7 +14,7 @@ This repository is the documentation site for [commit-check](https://github.com/
    $ curl -s https://pypi.org/pypi/commit-check/json | python -c "import json,sys; print(json.load(sys.stdin)['info']['version'])"
    ```
 
-   The [releases page](https://github.com/commit-check/commit-check/releases) answers the same question. A **draft** release is not released — it has no tag and no PyPI package, so it is not the answer here.
+   The [releases page](https://github.com/commit-check/commit-check/releases) answers the same question, provided you read only **published** releases. A draft is not one, and you cannot tell by looking for a tag: a draft can be saved against a tag that already exists, and publishing to PyPI is a separate step from publishing the GitHub release. Read the published release, or ask PyPI as above — PyPI is what the pin check compares against, since that is what a reader installs.
 
 2. **Check the install pins.** The pre-commit snippets pin a revision with `rev:`, and a stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes. These are the only version-pinned snippets — the GitHub Action is referenced by its moving major tag (`commit-check-action@v2`) and `uvx commit-check-mcp` carries no version, so neither goes stale.
 
