@@ -167,7 +167,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.14.0
+    rev: v2.15.0
     hooks:
       - id: check-message
         args:
