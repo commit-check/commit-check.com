@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.15.1](#v2151) | Color and rule-ID links appear only where they render; `NO_COLOR` honoured | [Color and links](example.md#color-and-links) |
 | [2.15.0](#v2150) | `--rev` names the commit under test; skipped checks are named on stderr | [Command-line recipes](example.md#checking-a-range-of-commits) |
 | [2.14.0](#v2140) | CC003 judges imperative mood by a word's form, not by a list of verbs | [CC003](rules.md#cc003) |
 | [2.13.1](#v2131) | JSON output reports the checked value for passing checks | [Output for scripts and CI](example.md#output-for-scripts-and-ci) |
@@ -24,6 +25,21 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.15.1 (2026-08-16) { #v2151 }
+
+### Fixed
+
+* **ANSI color is emitted only where it renders** — a terminal gets color;
+  piped and redirected output (a CI log, a file, another tool) gets plain text
+  instead of escape codes. `NO_COLOR` ([no-color.org](https://no-color.org))
+  set to any non-empty value disables color everywhere, and `FORCE_COLOR`
+  overrides the detection in both directions — `0` off, anything else on —
+  outranking `NO_COLOR`, the same way the wider tooling ecosystem resolves
+  the pair. Contributed by [@larsch](https://github.com/larsch).
+  See PRs [#551](https://github.com/commit-check/commit-check/pull/551) and
+  [#552](https://github.com/commit-check/commit-check/pull/552), and
+  [Color and links](example.md#color-and-links).
 
 ## v2.15.0 (2026-08-13) { #v2150 }
 

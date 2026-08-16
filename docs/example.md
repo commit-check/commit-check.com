@@ -131,7 +131,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.15.0
+    rev: v2.15.1
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -189,6 +189,22 @@ and how CLI, environment and file settings override each other.
     ```console
     $ commit-check -m --dry-run
     ```
+
+### Color and links
+
+Output adapts to where it is going. A terminal gets ANSI color, and on
+terminals that render OSC 8 hyperlinks the rule ID is itself a link to its
+documentation. Piped or redirected output — a CI log, a file — gets plain
+text with a `Docs:` line instead, so nothing is lost and no escape codes
+leak into places that read them as noise.
+
+To override the detection:
+
+| Variable | Effect |
+| --- | --- |
+| `NO_COLOR=1` | no color, wherever it runs ([no-color.org](https://no-color.org)) |
+| `FORCE_COLOR=1` / `FORCE_COLOR=0` | color on or off, outranking everything else |
+| `FORCE_HYPERLINK=1` / `FORCE_HYPERLINK=0` | linked rule IDs on or off |
 
 ### Checking a range of commits
 
