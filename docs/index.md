@@ -182,12 +182,39 @@ Commit Check is deliberately narrow: it validates *metadata*, not code.
   the [rules reference](rules.md) for what applies out of the box.
 
 It is a lightweight, open alternative to
-[GitHub Enterprise metadata restrictions](https://docs.github.com/en/enterprise-server@3.11/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
+[GitHub Enterprise metadata restrictions](https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
 and Bitbucket's paid
 [Yet Another Commit Checker](https://marketplace.atlassian.com/apps/1211854/yet-another-commit-checker),
 without requiring a particular forge or an enterprise plan. If you already run
 `ruff`, `eslint` or `golangci-lint` on your source, Commit Check is the
 equivalent for the commits that carry it.
+
+## The rules GitHub sells by the seat
+
+GitHub can enforce some of the same policies natively — but the useful ones sit
+behind its paid tiers, and the commit-metadata rules specifically behind the
+most expensive one:
+
+| Policy | Native GitHub | Commit Check |
+|---|---|---|
+| Commit message patterns | [Enterprise plan only](https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization) (~$21/user/month) | Every plan, free |
+| Author / committer email patterns | Enterprise plan only | Every plan, free |
+| Branch naming patterns | Enterprise plan only | Every plan, free |
+| Any ruleset on a private repository | [Pro or Team plan and up](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets) | Every plan, free |
+| Organization-wide rules | Team plan and up | [`inherit_from`](guides/integrations.md#across-an-organization), every plan |
+
+For a 20-person team on the GitHub Team plan, turning on native commit message
+rules means upgrading every seat from $4 to $21 — about **$340 a month** for a
+regex. The failure experience differs too: native rulesets speak
+[RE2](https://github.com/google/re2/wiki/Syntax) (no lookaheads) and report a
+bare mismatch, while Commit Check failures carry a rule ID, a concrete
+suggestion, and a link to [the rule's documentation](rules.md).
+
+One honest difference in the other direction: native rulesets can reject a
+push at the moment it happens; Commit Check enforces at commit time (the
+pre-commit hook), in CI, and at merge time (a required check). For a
+pull-request workflow the result is the same — a violating change does not
+land on the protected branch.
 
 ## Ecosystem
 
