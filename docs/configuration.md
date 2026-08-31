@@ -167,7 +167,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.15.1
+    rev: v2.16.0
     hooks:
       - id: check-message
         args:
@@ -216,6 +216,10 @@ The full mapping between the three forms:
 | `allow_force_push = true` | `CCHK_ALLOW_FORCE_PUSH=true` | `--no-force-push` (sets `allow_force_push` to `false`) |
 | `ai_attribution = "forbid"` | `CCHK_AI_ATTRIBUTION=forbid` | `--ai-attribution=forbid` |
 | `ignore_authors = ["bot"]` (in branch section) | `CCHK_BRANCH_IGNORE_AUTHORS=bot,user` | `--branch-ignore-authors=bot,user` |
+| `regex = "^v\\d+\\.\\d+\\.\\d+$"` (in tag section) | `CCHK_TAG_REGEX=^v\\d+\\.\\d+\\.\\d+$` | `--tag-regex=^v\\d+\\.\\d+\\.\\d+$` |
+| `max_size = "5MB"` (in files section) | `CCHK_FILES_MAX_SIZE=5MB` | `--files-max-size=5MB` |
+| `prohibited_patterns = ["*.pem"]` (in files section) | `CCHK_FILES_PROHIBITED_PATTERNS=*.pem,.env` | `--files-prohibited-patterns=*.pem,.env` |
+| `max_path_length = 250` (in files section) | `CCHK_FILES_MAX_PATH_LENGTH=250` | `--files-max-path-length=250` |
 
 ## Which value wins
 
@@ -274,3 +278,7 @@ the same thing twice, so read the description rather than the cell:
 | branch | require_rebase_target | str | "" (no requirement) | Target branch for rebase requirement. If not set, no rebase validation is performed. |
 | push | allow_force_push | bool | true | Allow force pushes. Set to `false` to block force pushes when used as a pre-push hook or with `--no-force-push`. |
 | branch | ignore_authors | list[str] | [] (none ignored) | List of authors to ignore (i.e., always allow). |
+| tag | regex | str | `^v?(?:0\|[1-9]\d*)\.(?:0\|[1-9]\d*)\.(?:0\|[1-9]\d*)(?:-(?:0\|[1-9]\d*\|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0\|[1-9]\d*\|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$` | Pattern a tag name must match. The default is the [official SemVer pattern](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string) with an optional leading `v`, so both `v1.2.3` and `1.2.3` pass. An empty value disables the pattern match. |
+| files | max_size | str | "" (disabled) | Largest a committed file may be, in bytes or with a `KB`/`MB`/`GB` suffix (binary units, so `5MB` is 5 × 1024²). Empty disables the rule. |
+| files | prohibited_patterns | list[str] | [] (empty list) | fnmatch patterns a committed path may not match, e.g. `["*.pem", ".env", "id_rsa*"]`. A bare pattern also matches the file name at any depth. Matching is case-sensitive on every platform, like git pathspecs. Empty disables the rule. |
+| files | max_path_length | int | 0 (disabled) | Longest a committed file path may be, in characters. `0` disables the rule. |

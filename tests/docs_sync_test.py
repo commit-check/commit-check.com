@@ -168,10 +168,13 @@ class TestDocumentedRevisions:
 
 
 _OPTIONS_ROW = re.compile(
-    r"^\|\s*(commit|branch|push)\s*"  # section
+    r"^\|\s*(commit|branch|push|files|tag)\s*"  # section
     r"\|\s*(\w+)\s*"  # option name
     r"\|\s*(bool|int|str|list\[str\])\s*"  # type
-    r"\|\s*(.+?)\s*\|",  # documented default
+    # A default may itself contain a pipe (a regex alternation, say), which a
+    # table cell can only carry escaped -- so the cell runs to the first
+    # *unescaped* pipe.
+    r"\|\s*((?:[^|\\]|\\.)+?)\s*\|",  # documented default
     re.M,
 )
 
@@ -193,7 +196,9 @@ def _documented_default(type_: str, cell: str) -> Any:
     Cells carry a human annotation after the value itself (``"" (disabled)``),
     so the value is read from the front of the cell and the rest ignored.
     """
-    cell = cell.strip()
+    # Undo the table escaping so the value compares against the runtime as
+    # the runtime holds it.
+    cell = cell.strip().replace("\\|", "|")
     if type_ == "bool":
         return cell.startswith("true")
     if type_ == "int":
