@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.16.0](#v2160) | Tag name validation, and file size, path and pattern policies | [CC401](rules.md#cc401) · [CC302–CC304](rules.md#push-rules) |
 | [2.15.1](#v2151) | Color and rule-ID links appear only where they render; `NO_COLOR` honoured | [Color and links](example.md#color-and-links) |
 | [2.15.0](#v2150) | `--rev` names the commit under test; skipped checks are named on stderr | [Command-line recipes](example.md#checking-a-range-of-commits) |
 | [2.14.0](#v2140) | CC003 judges imperative mood by a word's form, not by a list of verbs | [CC003](rules.md#cc003) |
@@ -25,6 +26,36 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.16.0 (2026-08-31) { #v2160 }
+
+### Added
+
+* **Tag names can be checked** — `--tag` (`-t`) validates the names of the tags
+  pointing at the commit under test against a pattern, defaulting to SemVer
+  with an optional leading `v`. GitHub can require a tag name to match a
+  regular expression only through its Enterprise-plan
+  [metadata restrictions](https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
+  — tag rulesets themselves are not gated that high; this brings the same
+  policy to every plan and forge. A commit with no tag is a skip, not a
+  failure: the rule governs how tags are named, and the absence of one is
+  not a naming violation. A `check-tag` pre-push hook validates exactly
+  what a push carries. See [CC401](rules.md#cc401).
+
+* **The files a commit touches can be policed** — `--files` (`-f`) checks file
+  size ([CC302](rules.md#cc302)), prohibited path patterns
+  ([CC303](rules.md#cc303)) and path length ([CC304](rules.md#cc304)). GitHub
+  sells the same three as push rules, on Team and Enterprise plans for private
+  repositories.
+
+    All three read only the paths and sizes recorded in a commit — never file
+    contents, which keeps content scanning where it belongs, with tools like
+    gitleaks. All three are off until their `[files]` setting carries a usable
+    value, and a value that cannot be used says so on stderr rather than
+    disabling its rule in silence.
+
+    A `check-files` pre-push hook checks every commit a push adds, not just the
+    tip; the Action and the App check every commit of a push or pull request.
 
 ## v2.15.1 (2026-08-16) { #v2151 }
 

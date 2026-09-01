@@ -29,7 +29,8 @@ Rule IDs are grouped by what they inspect:
 | `CC0xx` | [Commit message](#commit-message-rules) | The subject, body, and trailers of a commit message |
 | `CC1xx` | [Author](#author-rules) | The committer's configured name and email |
 | `CC2xx` | [Branch](#branch-rules) | The current branch's name and its position relative to a target branch |
-| `CC3xx` | [Push](#push-rules) | The push operation itself |
+| `CC3xx` | [Push and files](#push-rules) | The push operation, and the files a commit touches |
+| `CC4xx` | [Tag](#tag-rules) | The names of the tags pointing at the commit |
 
 Two things determine whether a rule runs:
 
@@ -106,13 +107,32 @@ Run with `-b` / `--branch`.
 
 </div>
 
-### Push rules (`CC3xx`) { #push-rules }
+### Push and file rules (`CC3xx`) { #push-rules }
+
+The file rules run with `-f` / `--files`. They read only the paths and sizes
+recorded in a commit — never file contents, which is a
+[different tool's job](#cc303).
 
 <div class="rules-index" markdown>
 
 | Code | Name | Message | Check | Default |
 |---|---|---|---|---|
 | [CC301](#cc301) | `no-force-push` | Force push is not allowed | `--no-force-push` | ⚪ Off |
+| [CC302](#cc302) | `file-size` | File exceeds the maximum size of `{max_size}` | `-f` | ⚪ Off |
+| [CC303](#cc303) | `file-pattern` | File path matches a prohibited pattern | `-f` | ⚪ Off |
+| [CC304](#cc304) | `path-length` | File path exceeds `{max_len}` characters | `-f` | ⚪ Off |
+
+</div>
+
+### Tag rules (`CC4xx`) { #tag-rules }
+
+Run with `-t` / `--tag`.
+
+<div class="rules-index" markdown>
+
+| Code | Name | Message | Check | Default |
+|---|---|---|---|---|
+| [CC401](#cc401) | `tag` | The tag name does not match the required pattern | `-t` | ✅ On |
 
 </div>
 
@@ -683,7 +703,7 @@ git push --force-with-lease
 * `branch.require_rebase_target` — the target branch, for example `"main"`.
   Unset by default, meaning no rebase requirement.
 
-## Push rules
+## Push and file rules
 
 ### no-force-push (CC301) { #cc301 }
 
@@ -720,3 +740,133 @@ git push --force-with-lease
 **Options**
 
 * `push.allow_force_push` — set to `false` to enable this rule.
+
+### file-size (CC302) { #cc302 }
+
+**What it does**
+
+Rejects a commit that adds or updates a file larger than `files.max_size`. The
+size read is the one recorded in the commit, not whatever the working tree
+holds now, so the verdict is the same wherever the check runs.
+
+**Why is this bad?**
+
+Git stores every version of a file forever. A large binary committed once stays
+in the pack for the life of the repository, and every clone downloads it —
+including the clones of people who will never open it. Removing the file later
+does not shrink history; only a rewrite does, and by then everyone has already
+pulled it. Large assets belong in Git LFS or an artifact store.
+
+**Example**
+
+```toml title="cchk.toml"
+[files]
+max_size = "5MB"
+```
+
+**Options**
+
+* `files.max_size` — largest a committed file may be, in bytes or with a
+  `KB`/`MB`/`GB` suffix. Empty (the default) disables this rule.
+
+### file-pattern (CC303) { #cc303 }
+
+**What it does**
+
+Rejects a commit that touches a path matching any `files.prohibited_patterns`
+entry. Patterns are fnmatch globs, matched against the full path *and* against
+the file name alone, so a bare `*.pem` catches the file at any depth. Matching
+is case-sensitive on every platform, like git pathspecs.
+
+**Why is this bad?**
+
+Some files are never meant to be in a repository: private keys, `.env` files,
+credential dumps, build output. A path rule is the cheapest possible guard —
+it costs one glob comparison and needs no knowledge of what is inside the file.
+This organization once shipped a GitHub App private key as a committed `.pem`;
+one line of configuration would have stopped that commit.
+
+A path rule is not secret scanning. It cannot see a token pasted into a `.txt`
+file, and it happily allows an empty `secrets.pem`. Pair it with a content
+scanner such as [gitleaks](https://github.com/gitleaks/gitleaks) — each catches
+what the other cannot.
+
+**Example**
+
+```toml title="cchk.toml"
+[files]
+prohibited_patterns = ["*.pem", "*.key", ".env", "id_rsa*"]
+```
+
+**Options**
+
+* `files.prohibited_patterns` — fnmatch patterns a committed path may not
+  match. Empty (the default) disables this rule.
+
+### path-length (CC304) { #cc304 }
+
+**What it does**
+
+Rejects a commit whose file paths exceed `files.max_path_length` characters.
+
+**Why is this bad?**
+
+Path length limits are a portability problem, not a style preference. Windows
+caps a path at 260 characters unless long paths are explicitly enabled, so a
+deeply nested file added on Linux can make the repository impossible to check
+out on a teammate's machine — and the failure surfaces at clone time, far from
+the commit that caused it.
+
+**Example**
+
+```toml title="cchk.toml"
+[files]
+max_path_length = 250
+```
+
+**Options**
+
+* `files.max_path_length` — longest a committed file path may be, in
+  characters. `0` (the default) disables this rule.
+
+## Tag rules
+
+### tag (CC401) { #cc401 }
+
+**What it does**
+
+Checks the names of the tags pointing at the commit under test against
+`tag.regex`. The default is the
+[official SemVer pattern](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string)
+with an optional leading `v`, so `v1.2.3` and `1.2.3` both pass while `v1.2`
+and `release-1.2.3` do not.
+
+A commit with no tag is a **skip**, not a failure: the rule governs how tags
+are named, and the absence of one is not a naming violation.
+
+**Why is this bad?**
+
+Tags are the public interface of a release. Package managers, changelog
+generators, and `pre-commit`'s own `rev:` all resolve a version string to a
+tag, and every one of them assumes a shape. A single `release-2.0` among a
+history of `v1.x.y` tags breaks version sorting silently — the tag still
+exists, it just stops being found.
+
+**Example**
+
+```bash
+git tag v1.2                  # not SemVer: no patch version
+git tag release-1.2.3         # not SemVer: prefixed
+```
+
+Use instead:
+
+```bash
+git tag v1.2.3
+git tag v1.2.3-rc.1
+```
+
+**Options**
+
+* `tag.regex` — the pattern a tag name must match. An empty value disables the
+  pattern match.
