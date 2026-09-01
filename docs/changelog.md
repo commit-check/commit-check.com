@@ -33,12 +33,14 @@ below and to the page that documents the feature properly.
 
 * **Tag names can be checked** — `--tag` (`-t`) validates the names of the tags
   pointing at the commit under test against a pattern, defaulting to SemVer
-  with an optional leading `v`. GitHub gates tag name patterns behind its
-  Enterprise-plan metadata restrictions; this brings the same policy to every
-  plan and forge. A commit with no tag is a skip, not a failure: the rule
-  governs how tags are named, and the absence of one is not a naming
-  violation. A `check-tag` pre-push hook validates exactly what a push
-  carries. See [CC401](rules.md#cc401).
+  with an optional leading `v`. GitHub can require a tag name to match a
+  regular expression only through its Enterprise-plan
+  [metadata restrictions](https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
+  — tag rulesets themselves are not gated that high; this brings the same
+  policy to every plan and forge. A commit with no tag is a skip, not a
+  failure: the rule governs how tags are named, and the absence of one is
+  not a naming violation. A `check-tag` pre-push hook validates exactly
+  what a push carries. See [CC401](rules.md#cc401).
 
 * **The files a commit touches can be policed** — `--files` (`-f`) checks file
   size ([CC302](rules.md#cc302)), prohibited path patterns
