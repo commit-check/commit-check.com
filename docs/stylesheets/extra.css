@@ -76,6 +76,31 @@ th {
     display: inline-block;
 }
 
+/* The hero's two calls to action. As inline-blocks they carried no gap, so a
+   viewport too narrow to hold them side by side stacked them flush against
+   each other — two square-cornered boxes of different widths touching, which
+   reads as one broken element rather than two buttons. */
+.hero .cc-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+}
+
+/* Once stacked they are a column, and a column of two different widths still
+   looks like a mistake. Give them one width the whole way down. */
+@media screen and (max-width: 32rem) {
+    .hero .cc-hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero .cc-hero-actions .md-button {
+        width: 100%;
+        max-width: 18rem;
+    }
+}
+
 .hero .md-button:hover {
     /* Was --commit-check-logo-color-green, which is not defined anywhere: the
        hover simply did nothing. */
