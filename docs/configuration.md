@@ -96,6 +96,40 @@ The value can be a GitHub shorthand, a local path or an HTTPS URL:
     URLs are rejected outright. A repository that silently stops inheriting
     still passes its own checks, so pin the branch when the policy matters.
 
+## Pull requests: every commit, or the squash message
+
+By default the [GitHub App](guides/integrations.md#as-a-github-app) checks
+every commit of a pull request on its own. A team that squash-merges does not
+keep those commits: what lands on the base branch is one commit whose message
+GitHub builds from the pull request. Checking the drafts instead of the result
+is the reason teams turn commit rules off, so the App can check the result:
+
+```toml title="cchk.toml"
+[pull_request]
+check = "squash"
+```
+
+With `check = "squash"` a pull request gets **one** Commit Check result on its
+head commit, and it is the message a squash merge would produce, built the way
+GitHub builds it from the repository's merge settings (**Settings → General →
+Pull Requests**):
+
+| Repository setting | Title checked | Body checked |
+|---|---|---|
+| Default to pull request title | The pull request title | The pull request description, the commit messages, or nothing, per the setting |
+| Default message, one commit | That commit's title | That commit's body |
+| Default message, several commits | The pull request title | The commit messages, one per bullet |
+
+The pull request number GitHub appends to the title (`… (#42)`) is part of what
+is checked, so a subject-length rule sees the real subject. Editing the title
+or description re-runs the check; pushes to the branch are not checked
+commit by commit. Author checks run on the head commit, the branch check on
+the head branch.
+
+`check = "commits"` is the default and the behaviour of the CLI, the
+pre-commit hook and the Action, which have no pull request to read. The
+setting is read by the App only.
+
 ## A worked example
 
 Every line below that differs from the built-in default is marked, so it is
@@ -282,3 +316,4 @@ the same thing twice, so read the description rather than the cell:
 | files | max_size | str | "" (disabled) | Largest a committed file may be, in bytes or with a `KB`/`MB`/`GB` suffix (binary units, so `5MB` is 5 × 1024²). Empty disables the rule. |
 | files | prohibited_patterns | list[str] | [] (empty list) | fnmatch patterns a committed path may not match, e.g. `["*.pem", ".env", "id_rsa*"]`. A bare pattern also matches the file name at any depth. Matching is case-sensitive on every platform, like git pathspecs. Empty disables the rule. |
 | files | max_path_length | int | 0 (disabled) | Longest a committed file path may be, in characters. `0` disables the rule. |
+| pull_request | check | str | "commits" | GitHub App only. `"commits"` checks every commit of a pull request on its own; `"squash"` checks the one message a squash merge would land, built from the repository's merge settings. See [Pull requests](#pull-requests-every-commit-or-the-squash-message). |
