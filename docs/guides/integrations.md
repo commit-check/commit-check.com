@@ -10,7 +10,7 @@ between what a developer sees locally and what is enforced on the pull request.
 | [GitHub Action](github-actions.md) | On every push and pull request, in CI | No | A workflow file in each repository |
 | [GitHub App](github-app.md) | On every push and pull request, hosted | No | Install once for the organization |
 | [Command line](../example.md) | Wherever you call it: a range of commits, a CI you write yourself | — | `pip install commit-check` |
-| [MCP server](https://github.com/commit-check/commit-check-mcp) | Before the commit exists, inside an AI coding agent | — | One entry in the agent's MCP config |
+| [MCP server](mcp.md) | Before the commit exists, inside an AI coding agent | — | One entry in the agent's MCP config |
 | [Organization config](organization.md) | Everywhere at once | — | One shared `cchk.toml`, whichever of the above runs it |
 
 ## Which one
@@ -62,6 +62,11 @@ Hosted. Install it once on an organization and every repository, including
 ones created later, gets a **Commit Check** result on each commit of every
 push and pull request, with no workflow file and no CI minutes.
 [Set it up →](github-app.md)
+
+## MCP server
+
+The same rules as tools for an AI coding agent, so the message is right before
+the commit exists. One entry in the agent's MCP settings. [Set it up →](mcp.md)
 
 ## Across an organization { #across-an-organization }
 
