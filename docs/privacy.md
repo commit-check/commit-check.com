@@ -39,8 +39,10 @@ the tool produced — never an author name or email, and never file content.
 
 - Your source code beyond the configuration file named above
 - Repositories the App is not installed on
-- Anything at all if the webhook signature does not verify — unsigned or
-  mis-signed deliveries are rejected before they are read
+- The contents of a delivery whose signature does not verify. GitHub signs
+  the raw request body, so the App has to receive that body to check the
+  signature; an unsigned or mis-signed delivery is rejected at that point,
+  before anything in it is parsed or acted on
 
 ## Where it runs
 
