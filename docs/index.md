@@ -255,6 +255,7 @@ graph LR
     **MCP server** — exposes the validations as structured tools for AI coding
     agents such as Claude Code, Cursor and Copilot.
 
+    [:octicons-arrow-right-24: Guide](guides/mcp.md)
     [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-mcp)
 
 </div>

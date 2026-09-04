@@ -165,6 +165,7 @@ nav:
       - GitHub Action: guides/github-actions.md
       - GitHub App: guides/github-app.md
       - Across an organization: guides/organization.md
+      - MCP server: guides/mcp.md
       - Policy guides: guides/policies.md
       - Command-line recipes: example.md
       - Troubleshooting: troubleshoot.md
@@ -176,5 +177,6 @@ nav:
       - Privacy: privacy.md
   - Compare:
       - GitHub's built-in rules: compare/github-rules.md
+      - Other tools: compare/tools.md
   - Blog:
       - blog/index.md
