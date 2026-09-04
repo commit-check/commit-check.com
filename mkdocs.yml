@@ -163,5 +163,6 @@ nav:
       - Rules: rules.md
       - Configuration: configuration.md
       - Changelog: changelog.md
+      - Privacy: privacy.md
   - Blog:
       - blog/index.md
