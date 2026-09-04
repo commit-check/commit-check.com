@@ -210,7 +210,10 @@ ones have to be added by hand.
   the defaults and the result is advisory: failures are reported in full, but
   the check is neutral and never blocks a merge until a config file is added.
 - Checks every commit in a pull request individually, fork pull requests
-  included; **Re-run** on the Checks tab re-checks a commit.
+  included; **Re-run** on the Checks tab re-checks a commit. A team that
+  squash-merges sets [`check = "squash"`](../configuration.md#pull-requests-every-commit-or-the-squash-message)
+  and gets one result per pull request instead: the message the squash merge
+  would land.
 - Skips bot commits (dependabot, renovate).
 - Uses no CI minutes: results appear in seconds.
 
