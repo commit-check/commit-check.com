@@ -1,15 +1,18 @@
 # GitHub App
 
 The hosted [Commit Check App](https://github.com/marketplace/commit-check)
-runs the same rules as the CLI with no workflow file and no CI minutes.
-Install it once, push, and every commit gets a **Commit Check** result that
-says what failed, the value that failed, and how to fix it.
+runs the same rule engine as the CLI, against the same config file, with no
+workflow file and no CI minutes. Install it once, push, and every commit gets
+a **Commit Check** result that says what failed, the value that failed, and
+how to fix it. Not every rule applies where the App runs; the
+[list](#which-rules) is below.
 
 [Install from the GitHub Marketplace](https://github.com/marketplace/commit-check){ .md-button .md-button--primary }
 
 Choosing between the App and the [GitHub Action](github-actions.md): see
 [Where to run it](integrations.md#app-or-action). Both read the same config and
-report the same rule IDs, so running both is fine.
+report the same rule IDs, so running both is fine; the Action also covers the
+one rule the App cannot enforce.
 
 ## Install
 
@@ -25,9 +28,12 @@ without a config file is checked with the defaults, advisory only (see
 
 ## What you get
 
-On every push and on every pull request, each commit gets a check run named
-**Commit Check** on the Checks tab, in the commit's status and in the merge
-box. The result reads the same way everywhere:
+On every push to a branch and on every pull request, each commit gets a check
+run named **Commit Check** on the Checks tab, in the commit's status and in the
+merge box. (Tag pushes and branch deletions carry nothing to check; commits by
+bots are skipped, and squash mode checks a pull request as one message — both
+[below](#bots-re-runs-and-commits-checked-twice).) The result reads the same
+way everywhere:
 
 - a one-line verdict — `All 4 checks passed`, or `2 of 4 checks failed`;
 - for a failure, a table of what failed, the value that failed and the rule
@@ -84,8 +90,10 @@ has the table of what is checked under each merge setting.
 The App reads the same file the CLI reads, as it stands at the head of the
 push or pull request, in the same four places: `cchk.toml`, `commit-check.toml`, `.github/cchk.toml`,
 `.github/commit-check.toml`. Every option on the
-[configuration page](../configuration.md) applies, precedence included; there is
-nothing App-specific to set.
+[configuration page](../configuration.md) that belongs to a rule the App runs
+applies, precedence included; the `[push]`, `[files]` and `[tag]` sections are
+read but have nothing to act on here. Nothing is App-specific to set, apart
+from the two sections below.
 
 [`inherit_from`](organization.md) works, with one limit: the shared file is
 fetched without credentials, so it has to be readable anonymously. A config in
@@ -96,8 +104,8 @@ its own file alone.
 ### Without a config file
 
 A repository with no config file has not chosen its rules, so its result is
-**advisory**: failures are reported in full, but the check is neutral, titled
-`2 of 4 checks would fail (not enforced)`, and never blocks a merge. Below the
+**advisory**: failures are reported in full, but the check is neutral — titled,
+say, `2 of 4 checks would fail (not enforced)` — and never blocks a merge. Below the
 fixes the report says why, and gives the smallest file that turns enforcement
 on:
 
