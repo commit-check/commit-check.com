@@ -194,6 +194,42 @@ repository has *Send write tokens to workflows from pull requests* enabled under
 The checks themselves still run on fork pull requests and still fail the build;
 only the commenting is affected.
 
+## As a GitHub App
+
+The hosted [Commit Check App](https://github.com/marketplace/commit-check)
+runs the same rules with no workflow file. Install it once on an organization
+and every repository, including ones created later, gets a **Commit Check**
+result on each commit of every push and pull request.
+
+[Install from the GitHub Marketplace](https://github.com/marketplace/commit-check){ .md-button .md-button--primary }
+
+- Reads the repository's `cchk.toml` or `commit-check.toml`, so an existing
+  config needs nothing App-specific; a repository without one gets the defaults.
+- Checks every commit in a pull request individually, fork pull requests
+  included; **Re-run** on the Checks tab re-checks a commit.
+- Skips bot commits (dependabot, renovate).
+- Uses no CI minutes: results appear in seconds.
+
+Free for public repositories and for everything on personal accounts. Private
+repositories in an organization are covered by the Team plan, which comes with
+a 14-day trial.
+
+### App or Action?
+
+| | GitHub App | GitHub Action |
+|---|---|---|
+| Setup | Install once for the organization | A workflow file in each repository |
+| Runs on | GitHub.com | GitHub.com and GitHub Enterprise Server, any runner |
+| Cost | No CI minutes | CI minutes |
+| Output | A check run per commit | Job summary, PR comment, `result` output |
+| Fits | Organization-wide coverage with no per-repository work | Custom workflows, self-hosted runners, GHES |
+
+Both read the same config and report the same rule IDs, so a team can run
+both: the App for coverage, the Action where a workflow needs the result.
+
+The App fetches commit metadata and the configuration file, nothing else, and
+stores nothing. See the [privacy page](../privacy.md).
+
 ## Across an organization
 
 Copying `cchk.toml` into forty repositories works until the day you want to

@@ -229,10 +229,12 @@ graph LR
 
     Engine --> Hook["CLI and pre-commit hook"]
     Engine --> Action["commit-check-action"]
+    Engine --> App["Commit Check GitHub App"]
     Engine --> MCP["commit-check-mcp"]
 
     Hook --> Dev["Your laptop"]
     Action --> CI["CI pipeline"]
+    App --> PR["Every push and pull request, hosted"]
     MCP --> Agent["AI coding agent"]
 ```
 

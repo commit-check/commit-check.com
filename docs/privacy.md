@@ -27,6 +27,11 @@ downloaded**, not even into the temporary directory's object store. The
 rules are evaluated, the result is posted as a check run, and the temporary
 directory is deleted before the event is considered handled.
 
+For a private repository owned by an organization, the App also asks GitHub
+which Marketplace plan that organization is on, to decide whether the Team
+plan applies. That request carries the organization's account id and nothing
+about the repository.
+
 ## What the App keeps
 
 Nothing. The App has no database and stores no repository content, commit
