@@ -17,12 +17,15 @@ else:
 | Checks | write | Posting the **Commit Check** result on each commit |
 | Pull requests | read | Listing the commits of a pull request |
 
-On every push and pull request event the App performs a shallow, sparse
-fetch of the commits under test into a temporary directory: the commit
-objects themselves and the configuration file, if any. **No other file in
-the repository is ever fetched.** The rules are evaluated, the result is
-posted as a check run, and the temporary directory is deleted before the
-event is considered handled.
+On every push and pull request event the App fetches the commits under
+test into a temporary directory. The fetch is shallow and filtered
+(`--filter=blob:none`), so what comes across the wire is the commit
+metadata — message, author, timestamps, the list of paths each commit
+touches — plus the contents of exactly one file: the configuration file,
+if the repository has one. **The contents of no other file are ever
+downloaded**, not even into the temporary directory's object store. The
+rules are evaluated, the result is posted as a check run, and the temporary
+directory is deleted before the event is considered handled.
 
 ## What the App keeps
 
