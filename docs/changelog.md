@@ -24,7 +24,7 @@ below and to the page that documents the feature properly.
 | [2.8.0](#v280) | Custom `message_pattern`; Python 3.9 dropped | [CC001](rules.md#cc001) |
 | [2.7.0](#v270) | Force push blocking | [CC301](rules.md#cc301) |
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
-| [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Integrations](guides/integrations.md#across-an-organization) |
+| [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
 ## v2.16.0 (2026-08-31) { #v2160 }

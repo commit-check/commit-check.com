@@ -98,7 +98,7 @@ The value can be a GitHub shorthand, a local path or an HTTPS URL:
 
 ## Pull requests: every commit, or the squash message
 
-By default the [GitHub App](guides/integrations.md#as-a-github-app) checks
+By default the [GitHub App](guides/github-app.md) checks
 every commit of a pull request on its own. A team that squash-merges does not
 keep those commits: what lands on the base branch is one commit whose message
 GitHub builds from the pull request. Checking the drafts instead of the result

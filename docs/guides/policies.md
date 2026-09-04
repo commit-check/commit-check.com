@@ -55,7 +55,7 @@ $ git rebase --signoff main
 !!! tip "Make it automatic"
 
     Signing off is easy to forget. Combine this rule with the
-    [pre-commit hook](integrations.md#as-a-pre-commit-hook) so a missing trailer
+    [pre-commit hook](pre-commit.md) so a missing trailer
     is caught at commit time, not at review time.
 
 ### Identity matters

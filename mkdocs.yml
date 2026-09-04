@@ -141,9 +141,15 @@ plugins:
 hooks:
   - scripts/mkdocs_hooks.py
 
-# Two groups, split by what the reader is doing: Guides are pages you follow to
-# get something done, Reference is what you look a fact up in. The pages are
-# ordered within each group by how often they are needed.
+# Grouped by what the reader is doing. "Where to run it" answers the first
+# question a reader has — hook, Action or App, and how they combine — so it sits
+# on its own, right after Getting started. Guides are pages you follow to get
+# something done, one per place the checks run; Reference is what you look a
+# fact up in; Compare is for readers weighing Commit Check against something
+# else. The pages are ordered within each group by how often they are needed.
+#
+# The guides once lived on a single Integrations page. They were split again
+# when the App's section outgrew it; the old per-page URLs came back with them.
 #
 # There was a third group, "About", holding migration, troubleshooting and the
 # changelog — none of which is about the project. Troubleshooting was the
@@ -153,8 +159,12 @@ hooks:
 nav:
   - Home: index.md
   - Getting started: getting-started.md
+  - Where to run it: guides/integrations.md
   - Guides:
-      - Integrations: guides/integrations.md
+      - Pre-commit hook: guides/pre-commit.md
+      - GitHub Action: guides/github-actions.md
+      - GitHub App: guides/github-app.md
+      - Across an organization: guides/organization.md
       - Policy guides: guides/policies.md
       - Command-line recipes: example.md
       - Troubleshooting: troubleshoot.md
@@ -164,5 +174,7 @@ nav:
       - Configuration: configuration.md
       - Changelog: changelog.md
       - Privacy: privacy.md
+  - Compare:
+      - GitHub's built-in rules: compare/github-rules.md
   - Blog:
       - blog/index.md

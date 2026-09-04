@@ -44,9 +44,9 @@ MOVED_URLS = {
     "getting-started/installation": "getting-started/",
     "getting-started/quickstart": "getting-started/",
     "getting-started/why": "",
-    "guides/pre-commit": "guides/integrations/",
-    "guides/github-actions": "guides/integrations/",
-    "guides/organization": "guides/integrations/",
+    # guides/pre-commit, guides/github-actions and guides/organization were
+    # folded into guides/integrations for a while and are real pages again;
+    # a stub here would overwrite them.
     "guides/signoff": "guides/policies/",
     "guides/ai-attribution": "guides/policies/",
     "what-is-new": "changelog/",

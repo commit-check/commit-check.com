@@ -1,227 +1,31 @@
-# Integrations
+# Where to run it
 
-Commit Check runs in three places, and all three read the same `cchk.toml`.
-That is the point: the rules cannot drift between what a developer sees locally
-and what CI enforces.
+Commit Check is one rule engine with several places to run it, and every one
+of them reads the same `cchk.toml`. That is the point: the rules cannot drift
+between what a developer sees locally and what is enforced on the pull request.
 
-| Where | Catches problems | Can be bypassed |
-|---|---|---|
-| [Pre-commit hook](#as-a-pre-commit-hook) | As the message is written | Yes — `--no-verify` |
-| [GitHub Actions](#in-github-actions) | On every pull request | No |
-| [Organization config](#across-an-organization) | Everywhere at once | — |
+| Where | Catches problems | Can be bypassed | Set up |
+|---|---|---|---|
+| [Pre-commit hook](pre-commit.md) | As the message is written | Yes — `--no-verify` | `.pre-commit-config.yaml` in each repository |
+| [GitHub Action](github-actions.md) | On every push and pull request, in CI | No | A workflow file in each repository |
+| [GitHub App](github-app.md) | On every push and pull request, hosted | No | Install once for the organization |
+| [Command line](../example.md) | Wherever you call it: a range of commits, a CI you write yourself | — | `pip install commit-check` |
+| [MCP server](https://github.com/commit-check/commit-check-mcp) | Before the commit exists, inside an AI coding agent | — | One entry in the agent's MCP config |
+| [Organization config](organization.md) | Everywhere at once | — | One shared `cchk.toml`, whichever of the above runs it |
 
-A hook gives fast feedback to people who want to follow the policy. The Action
-is what makes it a policy. Most projects want both.
+## Which one
 
-## As a pre-commit hook
+- **Every project wants a hook.** It is the cheapest place to enforce commit
+  policy: the developer finds out while they are still writing the message,
+  not after a CI round trip.
+- **A policy needs a check that cannot be skipped.** Anyone can pass
+  `--no-verify` to a hook. The Action and the App run where that is not
+  possible, and a required check keeps a violating change from merging.
+- **More than a handful of repositories wants one config.** `inherit_from`
+  lets every repository share a base policy and override only what it
+  genuinely needs, whichever of the above runs the checks.
 
-A pre-commit hook is the cheapest place to enforce commit policy: the developer
-finds out while they are still writing the message, not after a CI round trip.
-
-Add Commit Check to `.pre-commit-config.yaml`:
-
-```yaml title=".pre-commit-config.yaml"
-repos:
-  - repo: https://github.com/commit-check/commit-check
-    rev: v2.16.0
-    hooks:
-      - id: check-message
-      - id: check-branch
-      - id: check-author-name
-      - id: check-author-email
-```
-
-Then install the hooks. `check-message` runs at the `commit-msg` stage, so it
-needs its own install step:
-
-```console
-$ pre-commit install --hook-type commit-msg
-$ pre-commit install
-```
-
-That is it. The next malformed commit message is rejected before it exists.
-
-!!! warning "If `check-message` never runs"
-
-    It is almost always because `pre-commit install --hook-type commit-msg` was
-    not run — a plain `pre-commit install` only wires up the `pre-commit` stage.
-    More in [Troubleshooting](../troubleshoot.md).
-
-### Available hooks
-
-| Hook ID | Stage | Rules |
-|---|---|---|
-| `check-message` | `commit-msg` | [CC001–CC013](../rules.md#commit-message-rules) |
-| `check-branch` | `pre-commit` | [CC201–CC202](../rules.md#branch-rules) |
-| `check-author-name` | `pre-commit` | [CC101](../rules.md#cc101) |
-| `check-author-email` | `pre-commit` | [CC102](../rules.md#cc102) |
-| `check-no-force-push` | `pre-push` | [CC301](../rules.md#cc301) |
-
-`check-no-force-push` also needs its own install:
-
-```console
-$ pre-commit install --hook-type pre-push
-```
-
-### Configuring without a TOML file
-
-Options can be passed as hook arguments, which keeps everything in one file:
-
-```yaml title=".pre-commit-config.yaml"
-repos:
-  - repo: https://github.com/commit-check/commit-check
-    rev: v2.16.0
-    hooks:
-      - id: check-message
-        args:
-          - --subject-imperative=true
-          - --subject-max-length=72
-          - --allow-merge-commits=false
-```
-
-A `cchk.toml` is usually the better choice once you have more than a couple of
-options, because CI and the CLI read it too. See
-[Configuration](../configuration.md) for the precedence rules.
-
-### Skipping a hook
-
-Occasionally you need to get a commit through — a mid-rebase fixup, an
-automated migration. `pre-commit` supports this natively:
-
-```console
-$ SKIP=check-message git commit -m "wip"
-```
-
-!!! warning "Local hooks are not a policy boundary"
-
-    Anyone can pass `--no-verify`. Hooks exist to give fast feedback to people
-    who want to follow the policy, not to stop people who don't. Pair them with
-    the [GitHub Action](#in-github-actions), which runs where it cannot be
-    skipped.
-
-## In GitHub Actions
-
-Local hooks can be skipped. A CI check cannot, which makes GitHub Actions the
-place where your policy is actually a policy.
-
-```yaml title=".github/workflows/commit-check.yml"
-name: Commit Check
-
-on:
-  push:
-  pull_request:
-    branches: [main]
-
-jobs:
-  commit-check:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0        # (1)!
-      - uses: commit-check/commit-check-action@v2
-        with:
-          message: true
-          branch: true
-          author-name: true
-          author-email: true
-```
-
-1. Commit Check needs the full history to inspect every commit in the pull
-   request. Without this it only sees the most recent one.
-
-The Action reads the same `cchk.toml` as the CLI, so a repository that already
-has one needs no Action-specific configuration.
-
-### Commenting on the pull request
-
-Instead of making contributors open the job log, have the Action post what
-needs fixing directly on the PR:
-
-```yaml
-      - uses: commit-check/commit-check-action@v2
-        with:
-          message: true
-          branch: true
-          pr-comments: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-This needs extra permissions on the job:
-
-```yaml
-    permissions:
-      contents: read
-      pull-requests: write
-```
-
-### Reporting without failing
-
-While a team is adopting the policy, it is often better to report problems
-without blocking merges. `dry-run` always exits `0`:
-
-```yaml
-      - uses: commit-check/commit-check-action@v2
-        with:
-          message: true
-          dry-run: true
-```
-
-Turn it off once the history is clean.
-
-### Pull requests from forks
-
-A `pull_request` workflow triggered by a fork receives a **read-only**
-`GITHUB_TOKEN`, and `permissions: pull-requests: write` does not override that.
-`pr-comments` will therefore fail to post on fork pull requests unless the
-repository has *Send write tokens to workflows from pull requests* enabled under
-**Settings → Actions → General**.
-
-!!! warning "Do not reach for `pull_request_target` casually"
-
-    `pull_request_target` does get a write token, but it runs in the context of
-    the base repository with access to its secrets. Checking out and executing
-    the fork's code under that trigger is the "pwn request" pattern and hands
-    repository access to anyone who can open a pull request.
-
-    If you use it, check out the base branch only and never run code from the
-    pull request.
-
-The checks themselves still run on fork pull requests and still fail the build;
-only the commenting is affected.
-
-## As a GitHub App
-
-The hosted [Commit Check App](https://github.com/marketplace/commit-check)
-runs the same rules with no workflow file. Install it on an organization with
-**All repositories** selected and every repository, including ones created
-later, gets a **Commit Check** result on each commit of every push and pull
-request. With **Only select repositories**, only those are checked and new
-ones have to be added by hand.
-
-[Install from the GitHub Marketplace](https://github.com/marketplace/commit-check){ .md-button .md-button--primary }
-
-- Reads the repository's `cchk.toml` or `commit-check.toml`, so an existing
-  config needs nothing App-specific. A repository without one is checked with
-  the defaults and the result is advisory: failures are reported in full, but
-  the check is neutral and never blocks a merge until a config file is added.
-- Checks every commit in a pull request individually, fork pull requests
-  included; **Re-run** on the Checks tab re-checks a commit. A team that
-  squash-merges sets [`check = "squash"`](../configuration.md#pull-requests-every-commit-or-the-squash-message)
-  and gets one result per pull request instead: the message the squash merge
-  would land.
-- Skips bot commits (dependabot, renovate).
-- Uses no CI minutes: results appear in seconds.
-
-Free for public repositories and for everything on personal accounts. Private
-repositories in an organization are covered by the Team plan, which comes with
-a 14-day trial.
-
-### App or Action?
+### App or Action? { #app-or-action }
 
 | | GitHub App | GitHub Action |
 |---|---|---|
@@ -234,104 +38,33 @@ a 14-day trial.
 Both read the same config and report the same rule IDs, so a team can run
 both: the App for coverage, the Action where a workflow needs the result.
 
-The App fetches commit metadata and the configuration file, nothing else, and
-stores nothing. See the [privacy page](../privacy.md).
+## How they combine
 
-## Across an organization
+A hook gives fast feedback to people who want to follow the policy. The Action
+or the App is what makes it a policy. Most projects want both: the hook on
+every laptop, and one of the two on the pull request.
 
-Copying `cchk.toml` into forty repositories works until the day you want to
-change it. `inherit_from` lets each repository pull a shared base config and
-override only what it genuinely needs.
+## Pre-commit hook { #as-a-pre-commit-hook }
 
-### The shared config
+Runs at `commit-msg` and `pre-commit` time on the developer's machine, fetched
+by pre-commit itself, so there is nothing to install. Hooks can be skipped, by
+design. [Set it up →](pre-commit.md)
 
-Put the policy in a repository every project can read — GitHub's `.github`
-repository is the conventional home:
+## GitHub Action { #in-github-actions }
 
-```toml title="my-org/.github → cchk.toml"
-[commit]
-conventional_commits = true
-subject_imperative = true
-subject_max_length = 72
-allow_merge_commits = false
+A workflow file in the repository, on any runner, GitHub Enterprise Server
+included. Posts a job summary, can comment on the pull request, and exposes a
+`result` output for the rest of the workflow. [Set it up →](github-actions.md)
 
-[branch]
-conventional_branch = true
-allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore"]
-```
+## GitHub App { #as-a-github-app }
 
-### Inheriting it
+Hosted. Install it once on an organization and every repository, including
+ones created later, gets a **Commit Check** result on each commit of every
+push and pull request, with no workflow file and no CI minutes.
+[Set it up →](github-app.md)
 
-Each repository then needs one line:
+## Across an organization { #across-an-organization }
 
-```toml title="any-repo → .github/cchk.toml"
-inherit_from = "github:my-org/.github:cchk.toml"
-```
-
-Local settings win, so a project with a different constraint overrides just that
-one option:
-
-```toml title="a-repo-with-longer-subjects → .github/cchk.toml"
-inherit_from = "github:my-org/.github:cchk.toml"
-
-[commit]
-subject_max_length = 100      # everything else comes from the org config
-```
-
-### Pinning the version
-
-By default the shorthand resolves to the parent repository's default branch,
-which means a change to the org config takes effect everywhere on the next run.
-That is usually what you want. When it isn't, pin to a ref:
-
-```toml
-inherit_from = "github:my-org/.github@v1:cchk.toml"
-```
-
-### Other sources
-
-=== "GitHub shorthand"
-
-    ```toml
-    inherit_from = "github:my-org/.github:cchk.toml"
-    ```
-
-=== "Local path"
-
-    ```toml
-    inherit_from = "../../shared/org-cchk.toml"
-    ```
-
-    Useful in a monorepo, where the shared config is already checked out.
-
-=== "HTTPS URL"
-
-    ```toml
-    inherit_from = "https://example.com/shared/cchk.toml"
-    ```
-
-    Plain HTTP is rejected.
-
-!!! warning "Inheritance fails open"
-
-    If the parent config is unreachable — a network blip, a renamed file, a
-    private repository — Commit Check silently falls back to the local config
-    rather than failing the build. This keeps CI green during an outage, but it
-    also means a typo in `inherit_from` is easy to miss. Verify the merged
-    result when you first set it up:
-
-    ```console
-    $ commit-check --message --format json
-    ```
-
-### Rolling it out
-
-Turning on a strict policy across an organization at once produces a wall of
-red. A gentler sequence:
-
-1. Ship the org config with [`dry-run`](#reporting-without-failing) enabled in
-   CI, so violations are reported but nothing blocks.
-2. Look at what actually fails. Some rules will turn out to be wrong for some
-   teams — that is information, not an obstacle.
-3. Turn off `dry-run` for repositories whose history is already clean.
-4. Tighten the shared config over time.
+One `cchk.toml` in the organization's `.github` repository; each repository
+inherits it with one line and overrides only what it must.
+[Set it up →](organization.md)
