@@ -59,7 +59,7 @@ git commit --amend --no-edit --no-verify
 
     `SKIP` and `--no-verify` only affect the hooks on your machine. If the same
     policy runs in CI — through the
-    [GitHub Action](guides/integrations.md#in-github-actions), say — it will
+    [GitHub Action](guides/github-actions.md), say — it will
     check the commit again when you push, and reject it there. To exempt a
     commit everywhere, change the policy rather than the invocation: turn the
     rule off in `cchk.toml`, or add the author to

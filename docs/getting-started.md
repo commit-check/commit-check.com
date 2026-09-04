@@ -38,8 +38,8 @@ name.
 
     Commit Check supports Python 3.10 through 3.14, on Linux, macOS and Windows.
 
-Running it as a [pre-commit hook](guides/integrations.md#as-a-pre-commit-hook)
-or a [GitHub Action](guides/integrations.md#in-github-actions) needs no
+Running it as a [pre-commit hook](guides/pre-commit.md)
+or a [GitHub Action](guides/github-actions.md) needs no
 installation step at all — both fetch it for you.
 
 ## 2. Watch it reject something
@@ -181,6 +181,8 @@ $ gh attestation verify commit_check-*.whl --repo commit-check/commit-check
 
 ## Where to go next
 
+- **[Where to run it](guides/integrations.md)** — pre-commit hook, GitHub
+  Action, GitHub App: which to use, and how they combine.
 - **[Rules reference](rules.md)** — every rule, what it does, why it matters,
   and how to configure it.
 - **[Configuration](configuration.md)** — every option, its type and default,

@@ -1,7 +1,7 @@
 # Command-line recipes
 
 Ways to invoke the checks directly. For wiring them into a workflow, see
-[Integrations](guides/integrations.md) instead — that covers the setup this page
+[Where to run it](guides/integrations.md) instead — that covers the setup this page
 assumes you already have.
 
 Every option, and the environment variable and TOML key that set it, is listed

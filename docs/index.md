@@ -167,7 +167,7 @@ The [rules reference](rules.md#rule-index) marks which rules start on.
     Inherit a base config from a shared repository, then let each project
     override only what it needs.
 
-    [:octicons-arrow-right-24: Integrations](guides/integrations.md#across-an-organization)
+    [:octicons-arrow-right-24: Across an organization](guides/organization.md)
 
 </div>
 
@@ -191,32 +191,10 @@ equivalent for the commits that carry it.
 
 ## The rules GitHub sells by the seat
 
-GitHub can enforce some of the same policies natively — but the useful ones sit
-behind its paid tiers, and the commit-metadata rules specifically behind the
-most expensive one:
-
-| Policy | Native GitHub | Commit Check |
-|---|---|---|
-| Commit message patterns | [Enterprise plan only](https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization) (from [$21/user/month](https://github.com/pricing)) | Every plan, free |
-| Author / committer email patterns | Enterprise plan only | Every plan, free |
-| Branch naming patterns | Enterprise plan only | Every plan, free |
-| Branch/tag rulesets on a private repository | [Pro or Team plan and up](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets); push rulesets Team and up | Every plan, free |
-| Organization-wide rules | Team plan and up, enforced centrally | [Shared config via `inherit_from`](guides/integrations.md#across-an-organization) — each repo opts in, local settings override |
-
-For a 20-person team on the GitHub Team plan, turning on native commit message
-rules means upgrading every seat from $4 to $21 at current list pricing —
-about **$340 a month** for a regex. The failure experience differs too: native
-rulesets speak [RE2](https://github.com/google/re2/wiki/Syntax) (no lookaheads)
-and report a bare mismatch, while Commit Check failures carry a rule ID, a
-concrete suggestion, and a link to [the rule's documentation](rules.md).
-
-One honest difference in the other direction: GitHub's rules run server-side
-and refuse the ref update itself, so nothing lands on the protected branch no
-matter how it is pushed. Commit Check's pre-commit hook is fast local feedback
-a developer can bypass (`git commit --no-verify`); its enforcement boundary is
-CI and a required check, which keeps a violating change from merging. For a
-pull-request workflow the outcome is the same — the protected branch never
-receives it.
+GitHub can enforce some of the same policies natively, but the commit-metadata
+rules sit behind its Enterprise plan, and they report a bare regex mismatch
+where Commit Check reports a rule ID, a suggestion and a link. The
+[comparison](compare/github-rules.md) has the table and the arithmetic.
 
 ## Ecosystem
 
@@ -257,8 +235,18 @@ graph LR
     **GitHub Action** — CI integration that posts results as check runs, job
     summaries and pull request comments.
 
-    [:octicons-arrow-right-24: Guide](guides/integrations.md#in-github-actions)
+    [:octicons-arrow-right-24: Guide](guides/github-actions.md)
     [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-action)
+
+-   :material-check-decagram: __Commit Check App__
+
+    ---
+
+    **GitHub App** — hosted; install once on an organization and every push
+    and pull request gets a check run, with no workflow file and no CI minutes.
+
+    [:octicons-arrow-right-24: Guide](guides/github-app.md)
+    [:octicons-arrow-right-24: Marketplace](https://github.com/marketplace/commit-check)
 
 -   :material-robot: __commit-check-mcp__
 
