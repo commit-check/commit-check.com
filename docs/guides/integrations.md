@@ -206,7 +206,9 @@ ones have to be added by hand.
 [Install from the GitHub Marketplace](https://github.com/marketplace/commit-check){ .md-button .md-button--primary }
 
 - Reads the repository's `cchk.toml` or `commit-check.toml`, so an existing
-  config needs nothing App-specific; a repository without one gets the defaults.
+  config needs nothing App-specific. A repository without one is checked with
+  the defaults and the result is advisory: failures are reported in full, but
+  the check is neutral and never blocks a merge until a config file is added.
 - Checks every commit in a pull request individually, fork pull requests
   included; **Re-run** on the Checks tab re-checks a commit.
 - Skips bot commits (dependabot, renovate).
