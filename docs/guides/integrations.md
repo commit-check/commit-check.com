@@ -197,9 +197,11 @@ only the commenting is affected.
 ## As a GitHub App
 
 The hosted [Commit Check App](https://github.com/marketplace/commit-check)
-runs the same rules with no workflow file. Install it once on an organization
-and every repository, including ones created later, gets a **Commit Check**
-result on each commit of every push and pull request.
+runs the same rules with no workflow file. Install it on an organization with
+**All repositories** selected and every repository, including ones created
+later, gets a **Commit Check** result on each commit of every push and pull
+request. With **Only select repositories**, only those are checked and new
+ones have to be added by hand.
 
 [Install from the GitHub Marketplace](https://github.com/marketplace/commit-check){ .md-button .md-button--primary }
 
@@ -220,7 +222,7 @@ a 14-day trial.
 |---|---|---|
 | Setup | Install once for the organization | A workflow file in each repository |
 | Runs on | GitHub.com | GitHub.com and GitHub Enterprise Server, any runner |
-| Cost | No CI minutes | CI minutes |
+| Cost | No CI minutes | A runner per run; metered minutes on private repositories |
 | Output | A check run per commit | Job summary, PR comment, `result` output |
 | Fits | Organization-wide coverage with no per-repository work | Custom workflows, self-hosted runners, GHES |
 
