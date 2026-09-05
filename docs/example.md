@@ -276,3 +276,30 @@ CC001
 Each failed check carries the rule ID, the offending value, the suggestion and
 a link to its documentation — the same information the text output prints, in a
 form other tools can consume.
+
+When the correction is mechanical — a type written `Fix` where `fix` is
+allowed, a letter out of place, a missing colon, a `WIP:` marker, a missing
+`Signed-off-by` trailer, a branch typed `Feature/x` — the check also carries
+the corrected value in `fix`, and `suggest` names it:
+
+```console
+$ echo "Fix: add streaming support" | commit-check -m --format json | jq '.checks[0]'
+```
+
+```json
+{
+  "rule_id": "CC001",
+  "check": "message",
+  "status": "fail",
+  "value": "Fix: add streaming support",
+  "error": "The commit message should follow Conventional Commits. See https://www.conventionalcommits.org",
+  "suggest": "Use \"fix: add streaming support\"",
+  "fix": "fix: add streaming support",
+  "docs_url": "https://commit-check.com/rules/#cc001"
+}
+```
+
+`fix` is empty whenever the correction takes a judgment — a subject with no
+type at all, one over the length limit, a verb that is not imperative — and
+`suggest` then keeps the rule's general advice. A tool can apply a non-empty
+`fix` as it stands; a person only ever needs `suggest`.
