@@ -21,18 +21,19 @@ On every push and pull request event the App fetches the commits under
 test into a temporary directory. The fetch is shallow and filtered
 (`--filter=blob:none`), so what comes across the wire is the commit
 metadata — message, author, timestamps, the list of paths each commit
-touches — plus the contents of exactly one file: the configuration file,
-if the repository has one. **The contents of no other file are ever
-downloaded**, not even into the temporary directory's object store. The
-rules are evaluated, the result is posted as a check run, and the temporary
-directory is deleted before the event is considered handled.
+touches — plus the contents of the repository's configuration file, if it
+has one. **Configuration files are the only file contents the App ever
+reads**, and the only ones that ever reach the temporary directory, its
+object store included. The rules are evaluated, the result is posted as a
+check run, and the temporary directory is deleted before the event is
+considered handled.
 
-For a repository that has no configuration file of its own, the App reads
-its owner's shared configuration file from the owner's `.github` repository
-(an organization's or a user's), at the same paths, with the same permission. When a
-configuration file inherits from another repository with a `github:`
-address, the App fetches that one file too. Configuration files are the only
-file contents the App ever reads.
+Two more configuration files can be read, and nothing else. For a repository
+that has no configuration file of its own, the App reads its owner's shared
+one from the owner's `.github` repository (an organization's or a user's),
+at the same paths, with the same permission. When a configuration file
+inherits from another repository with a `github:` address, the App fetches
+that one file too.
 
 For a private repository owned by an organization, the App also asks GitHub
 which Marketplace plan that organization is on, to decide whether the Team
@@ -71,4 +72,4 @@ else.
 Questions about this page or the App's data handling:
 [open an issue](https://github.com/commit-check/commit-check/issues).
 
-_Last updated: 2026-09-03._
+_Last updated: 2026-09-05._
