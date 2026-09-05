@@ -22,10 +22,10 @@ ones have to be added by hand. A personal account works the same way.
 
 There is nothing to add to a repository. A repository that already has a
 `cchk.toml` or `commit-check.toml` is checked against it from the next push. One
-without a config file takes the organization's, if the organization keeps one
-in its `.github` repository (see [Across an organization](#across-an-organization)),
-and otherwise is checked with the defaults, advisory only (see
-[Without a config file](#without-a-config-file)).
+without a config file takes the account's shared one, if the organization or
+user keeps a `cchk.toml` in its `.github` repository (see
+[Across an organization](#across-an-organization)), and otherwise is checked
+with the defaults, advisory only (see [Without a config file](#without-a-config-file)).
 
 ## What you get
 
@@ -105,13 +105,14 @@ inheritance [fails open](organization.md#other-sources).
 
 ### Without a config file
 
-A repository with no config file first looks to its organization: a
-`cchk.toml` in the organization's `.github` repository is applied as if it were
-the repository's own, and the report says so in its last lines. That is
-enforcement, not advice — the organization chose the rules.
+A repository with no config file first looks to its account: a `cchk.toml` in
+the owner's `.github` repository — organizations and personal accounts both
+have one — is applied as if it were the repository's own, and the report says
+so in its last lines. That is enforcement, not advice — the owner chose the
+rules.
 
-A repository with no config file **and** no organization default has not chosen
-its rules, so its result is **advisory**: failures are reported in full, but the check is neutral — titled,
+A repository with no config file **and** no shared one has not chosen its
+rules, so its result is **advisory**: failures are reported in full, but the check is neutral — titled,
 say, `2 of 4 checks would fail (not enforced)` — and never blocks a merge. Below the
 fixes the report says why, and gives the smallest file that turns enforcement
 on:
@@ -164,7 +165,8 @@ Installing on the organization with **All repositories** covers every
 repository. Keeping their rules in step takes one file: a `cchk.toml` in the
 organization's `.github` repository (root or `.github/`, either name). Every
 repository without a config file of its own is checked against it, new
-repositories included, with nothing added to any of them. A repository that
+repositories included, with nothing added to any of them. A personal account's
+`.github` repository works the same way for that account's repositories. A repository that
 needs something different commits its own file, which takes the
 organization's place, or starts from it with one
 [`inherit_from`](organization.md) line and overrides what it must.
@@ -206,8 +208,8 @@ staying silent. **Re-run** it; if it keeps failing,
 [open an issue](https://github.com/commit-check/commit-check/issues) with the
 text of the report.
 
-**The organization's config is not being applied.** The App has to be
-installed on the `.github` repository too (it is, with **All repositories**),
+**The shared config is not being applied.** The App has to be installed on
+the `.github` repository too (it is, with **All repositories**),
 the file has to be at one of the four paths, and the repository must have no
 config file of its own — one that does uses its own. A `github:` `inherit_from`
 the App cannot fetch falls back to the CLI, which fails open; check the

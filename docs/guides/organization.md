@@ -30,7 +30,8 @@ Where the [GitHub App](github-app.md) is installed on the organization, that
 file is already in force: a repository with no `cchk.toml` of its own is
 checked against the organization's, including repositories created tomorrow,
 and the check run's last line says so. The App reads the file with its own
-credentials, so the `.github` repository can be private. A repository that
+credentials, so the `.github` repository can be private. A personal account's
+`.github` repository does the same for that account's repositories. A repository that
 commits its own config uses that instead — to build on the shared one rather
 than replace it, inherit it, below.
 
