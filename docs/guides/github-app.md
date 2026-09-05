@@ -11,8 +11,7 @@ how to fix it. Not every rule applies where the App runs; the
 
 Choosing between the App and the [GitHub Action](github-actions.md): see
 [Where to run it](integrations.md#app-or-action). Both read the same config and
-report the same rule IDs, so running both is fine; the Action also covers the
-one rule the App cannot enforce.
+report the same rule IDs, so running both is fine.
 
 ## Install
 
@@ -48,14 +47,15 @@ way everywhere:
 
 The App runs the commit message, author and branch rules — [CC001–CC013](../rules.md#commit-message-rules),
 [CC101–CC102](../rules.md#author-rules) and [CC201–CC202](../rules.md#branch-rules) —
-with the commit's own branch as the branch under test. Two things it does not do:
+with the commit's own branch as the branch under test. One thing it does not
+do: the push, file and tag rules ([CC301–CC304](../rules.md#push-rules),
+[CC401](../rules.md#tag-rules)) run where a push or a tag happens, in the
+[pre-commit hooks](pre-commit.md) and the CLI.
 
-- The push, file and tag rules ([CC301–CC304](../rules.md#push-rules),
-  [CC401](../rules.md#tag-rules)) run where a push or a tag happens: the
-  [pre-commit hooks](pre-commit.md) and the CLI.
-- [CC202](../rules.md#cc202) (`require_rebase_target`) needs the target branch's
-  history, which the App does not fetch, so in the App it passes every commit.
-  Enforce it in the [Action](github-actions.md) or a hook.
+[CC202](../rules.md#cc202) (`require_rebase_target`) is decided from GitHub's
+own comparison of the head with the target branch rather than from the clone,
+which holds only the commits under test. A failure says how many commits
+behind the target the branch is.
 
 ### Pull requests
 
