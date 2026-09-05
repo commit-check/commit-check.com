@@ -78,8 +78,12 @@ Before every commit, validate the message with the commit-check MCP tool
 ```
 
 The result the agent gets back is the same structured verdict the CLI prints
-with `--format json`: a status, and for each check its value, the error and a
-suggestion. That is enough for the agent to correct the message on its own.
+with `--format json`: a status, and for each check its value, the error, a
+suggestion and — when the correction is unambiguous — the corrected value in
+`fix`. A type written `Fix` comes back as `"fix": "fix: add x"`, ready to
+apply; a subject with no type at all leaves `fix` empty, and the agent works
+from the suggestion instead. See [Reading the JSON](../example.md#reading-the-json).
+The key is always present; an older commit-check leaves it empty.
 
 ## The tools
 
