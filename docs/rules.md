@@ -20,6 +20,17 @@ explanation, suggestion, and documentation link:
 [FAIL] CC003 subject_imperative: docs: revamped the profile
 ```
 
+When the correction is mechanical, the suggestion names it instead of
+repeating the rule — and `--format json` carries the corrected value in a
+`fix` field (see [Reading the JSON](example.md#reading-the-json)):
+
+```text
+CC001 message check failed ==> Fix: add x
+The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
+Suggest: Use "fix: add x"
+Docs: https://commit-check.com/rules/#cc001
+```
+
 ## How to read this page
 
 Rule IDs are grouped by what they inspect:
