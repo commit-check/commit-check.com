@@ -21,9 +21,11 @@ is covered; with **Only select repositories**, only those are checked and new
 ones have to be added by hand. A personal account works the same way.
 
 There is nothing to add to a repository. A repository that already has a
-`cchk.toml` or `commit-check.toml` is checked against it from the next push; one
-without a config file is checked with the defaults, advisory only (see
-[Without a config file](#without-a-config-file)).
+`cchk.toml` or `commit-check.toml` is checked against it from the next push. One
+without a config file takes the account's shared one, if the organization or
+user keeps a `cchk.toml` in its `.github` repository (see
+[Across an organization](#across-an-organization)), and otherwise is checked
+with the defaults, advisory only (see [Without a config file](#without-a-config-file)).
 
 ## What you get
 
@@ -95,16 +97,22 @@ applies, precedence included; the `[push]`, `[files]` and `[tag]` sections are
 read but have nothing to act on here. Nothing is App-specific to set, apart
 from the two sections below.
 
-[`inherit_from`](organization.md) works, with one limit: the shared file is
-fetched without credentials, so it has to be readable anonymously. A config in
-a private `.github` repository is not, and inheritance
-[fails open](organization.md#other-sources) — the repository is checked against
-its own file alone.
+[`inherit_from`](organization.md) works, and a `github:` target is fetched with
+the App's own credentials, so a shared config in a private `.github` repository
+is reachable from the App even though the CLI, which fetches anonymously,
+cannot read it. A target the App cannot fetch either is left to the CLI, where
+inheritance [fails open](organization.md#other-sources).
 
 ### Without a config file
 
-A repository with no config file has not chosen its rules, so its result is
-**advisory**: failures are reported in full, but the check is neutral — titled,
+A repository with no config file first looks to its account: a `cchk.toml` in
+the owner's `.github` repository — organizations and personal accounts both
+have one — is applied as if it were the repository's own, and the report says
+so in its last lines. That is enforcement, not advice — the owner chose the
+rules.
+
+A repository with no config file **and** no shared one has not chosen its
+rules, so its result is **advisory**: failures are reported in full, but the check is neutral — titled,
 say, `2 of 4 checks would fail (not enforced)` — and never blocks a merge. Below the
 fixes the report says why, and gives the smallest file that turns enforcement
 on:
@@ -154,11 +162,19 @@ in the box above.
 ## Across an organization
 
 Installing on the organization with **All repositories** covers every
-repository; keeping their rules in step is
-[`inherit_from`](organization.md): one shared `cchk.toml` in the
-organization's `.github` repository, one line in each repository that inherits
-it. The [Across an organization](organization.md) guide walks through it,
-including how to roll a policy out without a wall of red.
+repository. Keeping their rules in step takes one file: a `cchk.toml` in the
+organization's `.github` repository (root or `.github/`, either name). Every
+repository without a config file of its own is checked against it, new
+repositories included, with nothing added to any of them. A personal account's
+`.github` repository works the same way for that account's repositories. A repository that
+needs something different commits its own file, which takes the
+organization's place, or starts from it with one
+[`inherit_from`](organization.md) line and overrides what it must.
+
+The App reads the shared file with its own credentials, so a private
+`.github` repository works. The [Across an organization](organization.md)
+guide walks through the file, inheritance, and how to roll a policy out
+without a wall of red.
 
 ## Plans
 
@@ -192,6 +208,9 @@ staying silent. **Re-run** it; if it keeps failing,
 [open an issue](https://github.com/commit-check/commit-check/issues) with the
 text of the report.
 
-**A shared config is not being applied.** `inherit_from` fails open, and the
-App fetches the shared file anonymously. Make the file readable, or check the
+**The shared config is not being applied.** The App has to be installed on
+the `.github` repository too (it is, with **All repositories**),
+the file has to be at one of the four paths, and the repository must have no
+config file of its own — one that does uses its own. A `github:` `inherit_from`
+the App cannot fetch falls back to the CLI, which fails open; check the
 [organization guide](organization.md#other-sources) for the sources it accepts.

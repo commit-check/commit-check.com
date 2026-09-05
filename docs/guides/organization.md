@@ -1,8 +1,11 @@
 # Across an organization
 
 Copying `cchk.toml` into forty repositories works until the day you want to
-change it. `inherit_from` lets each repository pull a shared base config and
-override only what it genuinely needs.
+change it. One shared config fixes that, two ways: the [GitHub App](github-app.md)
+applies the organization's file to every repository that has none of its own,
+with nothing added to any repository; and `inherit_from` lets a repository that
+does have a config start from the shared one and override only what it
+genuinely needs.
 
 ## The shared config
 
@@ -20,6 +23,20 @@ allow_merge_commits = false
 conventional_branch = true
 allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore"]
 ```
+
+## With the App: nothing to add
+
+Where the [GitHub App](github-app.md) is installed on the organization, that
+file is already in force: a repository with no `cchk.toml` of its own is
+checked against the organization's, including repositories created tomorrow,
+and the check run's last line says so. The App reads the file with its own
+credentials, so the `.github` repository can be private. A personal account's
+`.github` repository does the same for that account's repositories. A repository that
+commits its own config uses that instead — to build on the shared one rather
+than replace it, inherit it, below.
+
+The hook, the CLI and the Action do not know about the organization's file
+unless a repository points at it, which is what the next section is for.
 
 ## Inheriting it
 
