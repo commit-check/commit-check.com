@@ -131,7 +131,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.16.0
+    rev: v2.17.0
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -303,3 +303,17 @@ $ echo "Fix: add streaming support" | commit-check -m --format json | jq '.check
 type at all, one over the length limit, a verb that is not imperative — and
 `suggest` then keeps the rule's general advice. A tool can apply a non-empty
 `fix` as it stands; a person only ever needs `suggest`.
+
+A rule listed under [`warn`](configuration.md#report-a-rule-without-enforcing-it)
+reports with `"status": "warn"` instead of `"fail"`. The top-level `status` is
+`fail` only when an enforced rule failed, and a top-level `warnings` counts
+the warned checks, so a tool that tests `status == "fail"` is unaffected and
+one that wants the warnings knows where to look:
+
+```console
+$ commit-check -m -b --format json | jq '{status, warnings}'
+{
+  "status": "pass",
+  "warnings": 1
+}
+```

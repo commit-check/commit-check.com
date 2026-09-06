@@ -36,7 +36,7 @@ whatever your AI agent is committing on your behalf.
     ```yaml title=".pre-commit-config.yaml"
     repos:
       - repo: https://github.com/commit-check/commit-check
-        rev: v2.16.0
+        rev: v2.17.0
         hooks:
           - id: check-message
           - id: check-branch

@@ -130,12 +130,51 @@ the head branch.
 pre-commit hook and the Action, which have no pull request to read. The
 setting is read by the App only.
 
+## Report a rule without enforcing it
+
+A rule is normally on or off. `warn` gives it a third setting: run, report the
+finding in full, and never fail the run. It is a top-level key, so it goes
+before the first section, and it names a check or its rule ID in any case:
+
+```toml title="cchk.toml"
+warn = ["branch", "CC003"]
+
+[commit]
+subject_imperative = true
+
+[branch]
+conventional_branch = true
+```
+
+A warned rule prints the same block as a failure with `warning` in place of
+`failed`, no rejection banner, and one closing line saying the run is not
+failed by it; with `--compact` it is one `[WARN]` line. A one-line notice on
+stderr names the warned rules, so a hook that exits `0` after red-looking
+output is not mistaken for a broken hook. The exit code counts only enforced
+rules. In `--format json` the check's `status` is `warn`, the top-level
+`status` stays `pass` unless an enforced rule failed, and `warnings` counts
+them — see [Reading the JSON](example.md#reading-the-json).
+
+A name that matches no rule is a configuration error that lists the known
+rules, so a typo cannot leave a rule silently enforced. Rules not listed
+behave as before.
+
+This is how a team adopts a rule gradually: turn it on as a warning, watch
+what it catches for a week, then drop it from `warn` once the history is
+clean. It is also how a [shared config](guides/organization.md) carries both
+kinds of rule at once — the ones every repository must satisfy, and the ones
+it is asking teams to move towards. A repository's own `warn` list replaces
+the shared one, as any inherited key does.
+
 ## A worked example
 
 Every line below that differs from the built-in default is marked, so it is
 clear what this file is actually changing:
 
 ```toml title="cchk.toml"
+# changed: report the branch rule without enforcing it (nothing is warned by default)
+warn = ["branch"]
+
 [commit]
 # https://www.conventionalcommits.org
 conventional_commits = true
@@ -201,7 +240,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.16.0
+    rev: v2.17.0
     hooks:
       - id: check-message
         args:
