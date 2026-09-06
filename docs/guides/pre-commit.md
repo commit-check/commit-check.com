@@ -8,7 +8,7 @@ Add Commit Check to `.pre-commit-config.yaml`:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.16.0
+    rev: v2.17.0
     hooks:
       - id: check-message
       - id: check-branch
@@ -55,7 +55,7 @@ Options can be passed as hook arguments, which keeps everything in one file:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.16.0
+    rev: v2.17.0
     hooks:
       - id: check-message
         args:

@@ -107,9 +107,15 @@ inherit_from = "github:my-org/.github@v1:cchk.toml"
 Turning on a strict policy across an organization at once produces a wall of
 red. A gentler sequence:
 
-1. Ship the org config with [`dry-run`](github-actions.md#reporting-without-failing) enabled in
-   CI, so violations are reported but nothing blocks.
+1. Ship the org config with the new rules listed under
+   [`warn`](../configuration.md#report-a-rule-without-enforcing-it), so
+   violations are reported in every hook, Action run and App check, and
+   nothing blocks. (The Action's
+   [`dry-run`](github-actions.md#reporting-without-failing) does the same
+   for every rule at once, in the Action only.)
 2. Look at what actually fails. Some rules will turn out to be wrong for some
    teams — that is information, not an obstacle.
-3. Turn off `dry-run` for repositories whose history is already clean.
+3. Drop a rule from `warn` once the repositories are clean. A repository that
+   is already clean can drop it early with a `warn` list of its own, which
+   replaces the shared one.
 4. Tighten the shared config over time.
