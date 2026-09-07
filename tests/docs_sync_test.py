@@ -133,6 +133,28 @@ class TestRulesDocumentation:
                     f"{entry.rule_id} ({entry.check}) section is missing {required}"
                 )
 
+    def test_prose_rule_counts_match_the_catalog(self):
+        """A page that counts the rules out loud must count them correctly.
+
+        The comparison table sells the engine on how much it covers, so a
+        stale number there is worse than no number: it is the one figure a
+        reader checks against the rules page. Every other test here proves a
+        rule is *documented*; none of them read a sentence that says how
+        many there are.
+        """
+        expected = len(ALL_RULES)
+        for path in sorted(DOCS.rglob("*.md")):
+            if path.parent.name == "posts":
+                continue  # blog posts are dated records; see AGENTS.md
+            for claimed in _PROSE_RULE_COUNT.findall(path.read_text(encoding="utf-8")):
+                assert int(claimed) == expected, (
+                    f"{path.relative_to(DOCS.parent)} claims {claimed} rules, "
+                    f"but the package defines {expected}"
+                )
+
+
+#: A prose claim about how many rules exist, e.g. ``24 documented rules``.
+_PROSE_RULE_COUNT = re.compile(r"(\d+) documented rules")
 
 #: A pre-commit revision pin, e.g. ``rev: v2.13.1``.
 _REV_PIN = re.compile(r"^\s*rev:\s*v(\d+\.\d+\.\d+)\s*$", re.M)
