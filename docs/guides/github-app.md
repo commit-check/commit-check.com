@@ -1,13 +1,13 @@
 # GitHub App
 
-The hosted [Commit Check App](https://github.com/marketplace/commit-check)
+The hosted [Commit Check App](https://github.com/apps/commit-check)
 runs the same rule engine as the CLI, against the same config file, with no
 workflow file and no CI minutes. Install it once, push, and every commit gets
 a **Commit Check** result that says what failed, the value that failed, and
 how to fix it. Not every rule applies where the App runs; the
 [list](#which-rules) is below.
 
-[Install from the GitHub Marketplace](https://github.com/marketplace/commit-check){ .md-button .md-button--primary }
+[Install the App](https://github.com/apps/commit-check){ .md-button .md-button--primary }
 
 Choosing between the App and the [GitHub Action](github-actions.md): see
 [Where to run it](integrations.md#app-or-action). Both read the same config and
@@ -178,11 +178,29 @@ without a wall of red.
 
 ## Plans
 
-Public repositories and everything on personal accounts are free, and stay
-free. Today that is every repository: private repositories in organizations
-are checked at no charge while the App is new, and a paid **Team** plan for
-them is planned. When it arrives, a repository it applies to gets a neutral
-check saying so — nothing is blocked — and this page will say so first.
+Public repositories are free on any account, and everything on a personal
+account is free, and both stay free. Only an organization's private
+repositories are paid:
+
+| Plan | Price | Covers |
+|---|---|---|
+| Open Source | Free | Public repositories, on any account |
+| Personal | Free | Private repositories on a personal account |
+| Team | $19 / month | Private repositories in an organization, 14-day free trial |
+
+The Team plan is not tiered by seat count. Twenty of you and twenty thousand of
+you pay the same, so growing the team never changes the bill.
+
+Today none of this is enforced: every repository is checked at no charge while
+the App is new. When the plan goes live, a private organization repository
+without it gets a neutral check saying so — nothing is blocked, nothing is
+rejected — and this page will say so before it happens.
+
+The [CLI](../getting-started.md), the [pre-commit hook](pre-commit.md),
+the [GitHub Action](github-actions.md) and the [MCP server](mcp.md) are MIT
+licensed and always free. If you would rather not pay for the App on an
+organization's private repositories, the Action reads the same config and
+reports the same rule IDs — it just costs you CI minutes instead.
 
 ## Privacy
 
