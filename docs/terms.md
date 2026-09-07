@@ -1,7 +1,7 @@
 # Terms of Service
 
-These terms cover the **Commit Check GitHub App** — the hosted service listed
-on the GitHub Marketplace. The command-line tool, the pre-commit hooks, the
+These terms cover the **Commit Check GitHub App** — the hosted service we run,
+which you install onto your GitHub account. The command-line tool, the pre-commit hooks, the
 GitHub Action and the MCP server are not covered here: they run inside your own
 environment and are governed by the [MIT
 licence](https://github.com/commit-check/commit-check/blob/main/LICENSE) of the
@@ -33,18 +33,23 @@ than exploiting it.
 
 ## Plans, billing and trials
 
-Public repositories are free on any account, and so is everything on a personal
-account. An organization's private repositories are covered by the Team plan.
-The current price is in the [pricing section](index.md#pricing) of this site
-and on the App's GitHub Marketplace listing, which is what your account is
-billed against.
+**Nothing is charged today.** The Marketplace listing is not published yet, so
+there is no plan to buy and every repository is checked at no charge. This
+section describes what will apply once it is; the
+[pricing section](index.md#pricing) and the
+[App guide](guides/github-app.md#plans) say the same, and will say so before
+anything changes.
 
-Billing, trials, renewals, cancellations and refunds are handled by GitHub
+Public repositories are free on any account, and so is everything on a personal
+account. An organization's private repositories will be covered by the Team
+plan, at the price shown in the pricing section.
+
+Billing, trials, renewals, cancellations and refunds will be handled by GitHub
 under the [GitHub Marketplace Terms of
 Service](https://docs.github.com/en/site-policy/github-terms/github-marketplace-terms-of-service),
-not by us. We never see your payment details. A paid plan comes with a 14-day
-free trial; cancelling is done from your GitHub account's billing settings and
-takes effect at the end of the current period.
+not by us — we never see your payment details. The Team plan comes with a
+14-day free trial; cancelling is done from your GitHub account's billing
+settings and takes effect at the end of the current period.
 
 If the price changes, the change applies to your account from the next
 renewal, and GitHub notifies you.
