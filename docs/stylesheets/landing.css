@@ -78,7 +78,21 @@
   border: 1px solid var(--md-default-fg-color--lightest);
   border-radius: 0.4rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+}
+
+/* The transcript is real output, so its longest line is 93 characters and
+   cannot be shortened without making it a fake. In the hero it has to be
+   readable at a glance rather than scrolled to, so it soft-wraps -- which is
+   what an 80-column terminal does with that line anyway. The source in
+   index.md is untouched, so tests/docs_sync_test.py still checks the rule
+   name against the installed package.
+
+   Not `overflow: hidden` on the wrapper: an earlier version did that and
+   silently cut the line off at the border. */
+.md-typeset .cc-hero__demo pre > code {
+  font-size: 0.65rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .md-typeset .cc-hero__demo > p {
@@ -89,24 +103,34 @@
 
 /* ------------------------------------------------------------ full bleed -- */
 
-/* The two tinted bands reach past the content column with negative margins.
-   Nothing above them clips, so without this rule they widen the document
-   rather than bleeding to its edges -- measured at 2754px on a 1440px
-   viewport, i.e. a horizontal scrollbar on every screen size. `clip` rather
-   than `hidden` because `hidden` would make .md-main a scroll container and
-   break the sticky header and in-page anchors. */
+/* .cc-proof and .cc-community are tinted bands that span the whole window
+   while their text stays in the content column. They do it with the pair
+   below, and the units matter more than they look:
+
+     margin-inline:  calc(50% - 50vw)   pull each edge out to the window
+     padding-inline: calc(50vw - 50% + gutter)   put the text back
+
+   The percentages are load-bearing. `.md-content` is a flex item, so its
+   min-content width is the widest thing inside it; a viewport-unit margin
+   like `-100vw` counts towards that and stretched the column to 2754px on a
+   1440px viewport. The document itself did not scroll -- the width went into
+   the column, which then rendered its own content off the right edge. A
+   percentage margin resolves against the containing block and contributes
+   nothing to intrinsic width, so the column stays viewport-sized.
+
+   `overflow-x: clip` is the belt to that pair of braces: 100vw includes the
+   classic scrollbar, so the bands can still end a few pixels wide of the
+   viewport. `clip` rather than `hidden` because `hidden` would make .md-main
+   a scroll container and break the sticky header and in-page anchors. */
 .md-main {
   overflow-x: clip;
 }
 
 /* ---------------------------------------------------- social proof strip -- */
 
-/* Full-bleed tinted band. The negative margins escape .md-grid; the width is
-   restored at the breakpoint where the grid gains its own gutter, otherwise
-   the page scrolls sideways on a phone. */
 .cc-proof {
-  margin: 0 -100vw 3.2rem;
-  padding: 2rem calc(100vw + 0.8rem);
+  margin: 0 calc(50% - 50vw) 3.2rem;
+  padding: 2rem calc(50vw - 50% + 0.8rem);
   background: var(--md-code-bg-color);
   text-align: center;
 }
@@ -231,8 +255,8 @@
 /* ------------------------------------------------------------- community -- */
 
 .cc-community {
-  margin: 3.2rem -100vw 0;
-  padding: 2rem calc(100vw + 0.8rem) 2.4rem;
+  margin: 3.2rem calc(50% - 50vw) 0;
+  padding: 2rem calc(50vw - 50% + 0.8rem) 2.4rem;
   background: var(--md-code-bg-color);
 }
 
@@ -240,13 +264,11 @@
   margin-top: 0;
 }
 
-/* On a phone .md-grid has no gutter of its own, so the 0.8rem added above is
-   the only padding the band gets; below this width the content column already
-   sits flush and the extra padding would double up. */
-@media screen and (max-width: 76.1875em) {
-  .cc-proof,
-  .cc-community {
-    padding-left: calc(100vw + 0.4rem);
-    padding-right: calc(100vw + 0.4rem);
-  }
+/* ------------------------------------------------------------------ chrome -- */
+
+/* The "edit this page" pencil belongs on a documentation page. Here it is the
+   only control in the hero and it points at index.md, which is not what a
+   first-time reader wants to do next. */
+.cc-landing .md-content__button {
+  display: none;
 }
