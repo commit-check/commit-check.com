@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+
+{#
+  The landing page takes over the content area but deliberately leaves the
+  header alone.
+
+  Instant navigation swaps a fixed list of elements between documents
+  (see `bs()` in the theme bundle): announce, container, header-topic,
+  outdated, logo, skip. `{% block header %}` renders *outside*
+  `[data-md-component=container]`, so a header overridden here would not be
+  swapped on navigation: it would follow the reader onto every docs page,
+  and the docs header would follow them back here. The landing look is
+  applied to the stock header from `landing.css` instead, which is added to
+  and removed from `<head>` as the reader arrives and leaves — instant
+  navigation diffs the head, so that part does work.
+#}
+
+{% block extrahead %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ 'stylesheets/landing.css' | url }}">
+{% endblock %}
+
+{% block site_nav %}{% endblock %}
+
+{% block container %}
+  <div class="md-content cc-landing" data-md-component="content">
+    <article class="md-content__inner md-typeset">
+      {% block content %}
+        {% include "partials/content.html" %}
+      {% endblock %}
+    </article>
+  </div>
+{% endblock %}
