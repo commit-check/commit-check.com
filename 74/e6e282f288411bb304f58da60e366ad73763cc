@@ -1,0 +1,27 @@
+docs/guides/github-app.md
+  s_c628fd136d6dcf::t_df6a45630e61cb 3,10,181-201
+docs/index.md
+  s_c628fd136d6dcf::t_ebb13c7a5d1698 278-281,284,288-290,292,294-296,300-302,304-306,310-311,321-322,372-380
+docs/stylesheets/landing.css
+  s_c628fd136d6dcf::t_a70f1320237bd3 196-201
+docs/terms.md
+  s_c628fd136d6dcf::t_aca0a43544e223 1-94
+mkdocs.yml
+  s_c628fd136d6dcf::t_567c5b12cd5400 178
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "74e6e282f288411bb304f58da60e366ad73763cc",
+  "prompts": {},
+  "sessions": {
+    "s_c628fd136d6dcf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79c51ff2-b7fc-45b9-a1b6-66df3f74e91e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
