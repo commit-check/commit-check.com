@@ -248,8 +248,8 @@ One policy engine, five places to enforce it. Every one of them reads the same
 
     ---
 
-    Enforcement in CI that a contributor cannot skip, with per-rule outputs
-    later steps can gate on.
+    Runs in CI whether or not the hook ran. Make it a required check and a
+    violation cannot merge, with per-rule outputs later steps can gate on.
 
     [:octicons-arrow-right-24: Guide](guides/github-actions.md)
 
