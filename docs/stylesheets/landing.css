@@ -179,8 +179,12 @@
 
 /* ----------------------------------------------------------------- cards -- */
 
-.cc-cards > ul,
-.cc-pricing > ul {
+/* `.md-typeset ul:not([hidden])` in the theme sets `display: flow-root`, and
+   that `:not()` counts as an attribute selector -- so a plain `.cc-cards > ul`
+   loses the cascade and every card stacks full width. Matching the theme's
+   shape wins on specificity instead of relying on load order. */
+.md-typeset .cc-cards > ul:not([hidden]),
+.md-typeset .cc-pricing > ul:not([hidden]) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 0.8rem;

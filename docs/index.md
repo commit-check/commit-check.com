@@ -4,7 +4,7 @@ hide:
   - toc
 template: landing.html
 title: Commit Check
-description: One config file enforced in your commit-msg hook, in CI, on every pull request and in your AI agent. 22 rules for commit messages, branch names, author identity and signoff.
+description: One config file enforced in your commit-msg hook, in CI, on every pull request and in your AI agent. Rules for commit messages, branch names, author identity and signoff.
 ---
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
@@ -14,11 +14,11 @@ description: One config file enforced in your commit-msg hook, in CI, on every p
 
 # One config file. Every place your team commits.
 
-Laptop, CI, pull request, AI agent — the same `cchk.toml`, the same 22 rules,
+Laptop, CI, pull request, AI agent — the same `cchk.toml`, the same rules,
 the same diagnostics, with a fix you can paste.
 
 [Get started :octicons-arrow-right-24:](getting-started.md){ .md-button .md-button--primary }
-[Browse the 22 rules](rules.md){ .md-button }
+[Browse the rules](rules.md){ .md-button }
 
 </div>
 <div class="cc-hero__demo" markdown>
@@ -119,112 +119,48 @@ the line.
 
 </div>
 
-## The commits are already wrong. You find out later
+## Why check commit metadata at all
 
 <div class="cc-cards" markdown>
 
--   __Release notes get written by hand__
+-   __Changelog tools have nothing to group by__
 
     ---
 
-    Subjects that do not follow a pattern cannot be grouped, so the changelog
-    is assembled by a person reading the log.
+    `git-cliff` and `semantic-release` read the `type:` prefix on the subject
+    line to decide what a commit was. Without a consistent subject there is
+    nothing to read, and the release notes get written by hand from `git log`.
 
--   __`git bisect` lands on a merge commit__
-
-    ---
-
-    The change that broke the build is in one of two parents, or in the
-    conflict resolution. Bisect cannot tell you which.
-
--   __A commit is authored by `ec2-user`__
+-   __`git bisect` stops at a merge commit__
 
     ---
 
-    A build box with no `user.name` writes itself into the history, and
-    nobody can be asked about that change afterwards.
+    When the first bad commit is a merge, the change is in one of two parents
+    or in the conflict resolution. Bisect cannot narrow it any further.
 
--   __Nobody signed off, and it is six months later__
+-   __The author is `ec2-user`__
 
     ---
 
-    A missing `Signed-off-by` trailer is cheap to add at commit time and
-    expensive to add afterwards: the only fix left is rewriting history.
+    A build box with no `user.name` set writes itself into the history.
+    `git log --author` finds the commit; there is no person on the other end
+    of it.
+
+-   __A DCO check fails on a branch you already wrote__
+
+    ---
+
+    `Signed-off-by` costs one `-s` at commit time. Adding it afterwards means
+    `git rebase --signoff` across the whole branch and a force-push.
 
 </div>
 
-None of these are caught by a linter, a type checker, or a test suite. They are
-all caught by review — which means inconsistently, by whoever happens to be
-looking, and only after the work is done.
+None of these are caught by a linter, a type checker or a test suite. They are
+caught in review — which means inconsistently, and after the work is done.
 
-Commit Check catches them where it is cheapest: the check that runs in CI is the
-same one that runs in your `commit-msg` hook, where a malformed subject costs a
-second to fix rather than a full CI cycle and a force-push.
-
-## What the 22 rules cover
-
-<div class="cc-cards" markdown>
-
--   __Commit messages__
-
-    ---
-
-    Conventional Commits by default, or your own pattern. Subject length, mood,
-    capitalisation, required body, forbidden merge/fixup/WIP commits.
-
-    [:octicons-arrow-right-24: CC001–CC013](rules.md#commit-message-rules)
-
--   __Branch names__
-
-    ---
-
-    Conventional Branch naming, plus a rebase check that catches a branch
-    drifting behind its target before CI wastes a run on stale code.
-
-    [:octicons-arrow-right-24: CC201–CC202](rules.md#branch-rules)
-
--   __Committer identity__
-
-    ---
-
-    Catch commits authored by `ec2-user` on a build box, or require everyone to
-    contribute from a company address.
-
-    [:octicons-arrow-right-24: CC101–CC102](rules.md#author-rules)
-
--   __Signoff, files and tags__
-
-    ---
-
-    The `Signed-off-by` trailer for DCO, file size and path rules that keep a
-    `.pem` out of history, force-push safety, tag naming.
-
-    [:octicons-arrow-right-24: CC301–CC401](rules.md#push-and-file-rules)
-
--   __AI attribution__
-
-    ---
-
-    Whatever your project has decided about AI-assisted commits, enforce it
-    mechanically instead of relitigating it in review. Ten tools recognised.
-
-    [:octicons-arrow-right-24: Policy guides](guides/policies.md#ai-attribution)
-
--   __Org-wide policy__
-
-    ---
-
-    Inherit a base config from a shared repository, then let each project
-    override only what it needs.
-
-    [:octicons-arrow-right-24: Across an organization](guides/organization.md)
-
-</div>
-
-Most of them are off until you turn them on. Two are decisions rather than
-defects — whether merge commits belong in your history, and whether contributors
-must sign off — and they stay off until you make them. The
-[rules reference](rules.md#rule-index) marks which start on.
+The check that runs in CI is the same one that runs in your `commit-msg` hook.
+Fixing a subject line at commit time costs a second; fixing it after CI costs a
+full run and a force-push.
 
 ## What your team actually sees
 
