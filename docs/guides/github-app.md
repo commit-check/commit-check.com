@@ -178,27 +178,29 @@ without a wall of red.
 
 ## Plans
 
-Public repositories are free on any account, and stay free — that is the
-**Open Source** plan. Private repositories are covered by a paid plan, each
-with a 14-day free trial:
+Public repositories are free on any account, and everything on a personal
+account is free, and both stay free. Only an organization's private
+repositories are paid:
 
 | Plan | Price | Covers |
 |---|---|---|
 | Open Source | Free | Public repositories, on any account |
-| Personal | $4 / month | Private repositories on a personal account |
-| Team | $10 / month | Private repositories in an organization, up to 25 users |
-| Business | $50 / month | Private repositories in an organization, up to 200 users |
+| Personal | Free | Private repositories on a personal account |
+| Team | $19 / month | Private repositories in an organization, 14-day free trial |
+
+The Team plan is not tiered by seat count. Twenty of you and twenty thousand of
+you pay the same, so growing the team never changes the bill.
 
 Today none of this is enforced: every repository is checked at no charge while
-the App is new. When the plans go live, a private repository without one gets a
-neutral check saying so — nothing is blocked, nothing is rejected — and this
-page will say so before it happens.
+the App is new. When the plan goes live, a private organization repository
+without it gets a neutral check saying so — nothing is blocked, nothing is
+rejected — and this page will say so before it happens.
 
 The [CLI](../getting-started.md), the [pre-commit hook](pre-commit.md),
 the [GitHub Action](github-actions.md) and the [MCP server](mcp.md) are MIT
-licensed and always free. If you would
-rather not pay for the App on a private repository, the Action reads the same
-config and reports the same rule IDs — it just costs you CI minutes instead.
+licensed and always free. If you would rather not pay for the App on an
+organization's private repositories, the Action reads the same config and
+reports the same rule IDs — it just costs you CI minutes instead.
 
 ## Privacy
 

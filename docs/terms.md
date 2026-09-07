@@ -33,10 +33,11 @@ than exploiting it.
 
 ## Plans, billing and trials
 
-Public repositories are free on any account. Private repositories are covered
-by a paid plan. Current prices are in the [pricing section](index.md#pricing)
-of this site and on the App's GitHub Marketplace listing, which is what your
-account is billed against.
+Public repositories are free on any account, and so is everything on a personal
+account. An organization's private repositories are covered by the Team plan.
+The current price is in the [pricing section](index.md#pricing) of this site
+and on the App's GitHub Marketplace listing, which is what your account is
+billed against.
 
 Billing, trials, renewals, cancellations and refunds are handled by GitHub
 under the [GitHub Marketplace Terms of
@@ -45,7 +46,7 @@ not by us. We never see your payment details. A paid plan comes with a 14-day
 free trial; cancelling is done from your GitHub account's billing settings and
 takes effect at the end of the current period.
 
-If a plan's price changes, the change applies to your account from the next
+If the price changes, the change applies to your account from the next
 renewal, and GitHub notifies you.
 
 ## Availability

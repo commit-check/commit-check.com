@@ -287,23 +287,18 @@ hosted GitHub App, the one surface we run for you.
 
     Public repositories, on any account.
 
--   __Personal__ · $4 / month
+-   __Personal__ · Free
 
     ---
 
-    Private repositories on a personal account. 14-day free trial.
+    Private repositories on a personal account.
 
--   __Team__ · $10 / month
-
-    ---
-
-    Private repositories in an organization, up to 25 users. 14-day free trial.
-
--   __Business__ · $50 / month
+-   __Team__ · $19 / month
 
     ---
 
-    Private repositories in an organization, up to 200 users. 14-day free trial.
+    Private repositories in an organization, however many of you there are.
+    14-day free trial.
 
 </div>
 
@@ -318,7 +313,8 @@ GitHub can enforce some of the same policies natively, but the commit-metadata
 rules sit behind its Enterprise plan. For a twenty-person team that is the
 difference between $4 and $21 a seat — about $340 a month for a regular
 expression, which reports a bare mismatch where Commit Check reports a rule ID,
-a suggestion and a link. Ten dollars is what the same twenty people cost here.
+a suggestion and a link. Nineteen dollars is what the same twenty people cost
+here — and the same twenty thousand.
 [The arithmetic and the honest caveats](compare/github-rules.md).
 
 ## Questions
