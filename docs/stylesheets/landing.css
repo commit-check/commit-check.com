@@ -87,6 +87,18 @@
   color: var(--md-default-fg-color--light);
 }
 
+/* ------------------------------------------------------------ full bleed -- */
+
+/* The two tinted bands reach past the content column with negative margins.
+   Nothing above them clips, so without this rule they widen the document
+   rather than bleeding to its edges -- measured at 2754px on a 1440px
+   viewport, i.e. a horizontal scrollbar on every screen size. `clip` rather
+   than `hidden` because `hidden` would make .md-main a scroll container and
+   break the sticky header and in-page anchors. */
+.md-main {
+  overflow-x: clip;
+}
+
 /* ---------------------------------------------------- social proof strip -- */
 
 /* Full-bleed tinted band. The negative margins escape .md-grid; the width is
