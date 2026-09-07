@@ -1,0 +1,23 @@
+docs/guides/github-app.md
+  s_c628fd136d6dcf::t_236903d214ccee 181-183,188-192,195-197,201-203
+docs/index.md
+  s_c628fd136d6dcf::t_317a07a146dbdd 290,294,296,300-301,316-317
+docs/terms.md
+  s_c628fd136d6dcf::t_c5d7ecb63e94d8 36-40,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "72621ddc8e41080f59375850e3a16d0f75d3f3fd",
+  "prompts": {},
+  "sessions": {
+    "s_c628fd136d6dcf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79c51ff2-b7fc-45b9-a1b6-66df3f74e91e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
