@@ -133,28 +133,40 @@ class TestRulesDocumentation:
                     f"{entry.rule_id} ({entry.check}) section is missing {required}"
                 )
 
-    def test_prose_rule_counts_match_the_catalog(self):
-        """A page that counts the rules out loud must count them correctly.
+    def test_no_page_hardcodes_a_rule_count(self):
+        """No page states how many rules there are.
 
-        The comparison table sells the engine on how much it covers, so a
-        stale number there is worse than no number: it is the one figure a
-        reader checks against the rules page. Every other test here proves a
-        rule is *documented*; none of them read a sentence that says how
-        many there are.
+        A count in prose is a fact with a shelf life: it is correct on the
+        day it is written and wrong the next time a rule is added, and
+        nothing about the sentence invites anyone to re-check it. The
+        comparison table used to claim 24 when the package defined 22. The
+        rules page is generated from the catalog and is the only honest
+        place to answer "how many"; everywhere else says what the rules
+        cover, not how many there are.
+
+        Blog posts and the changelog are exempt. Both are dated records of
+        what was true when they were written -- the same reason the version
+        pins skip them (see AGENTS.md) -- so "adds two rules" is a fact
+        about a release, not a claim about today.
         """
-        expected = len(ALL_RULES)
+        offenders = []
         for path in sorted(DOCS.rglob("*.md")):
-            if path.parent.name == "posts":
-                continue  # blog posts are dated records; see AGENTS.md
-            for claimed in _PROSE_RULE_COUNT.findall(path.read_text(encoding="utf-8")):
-                assert int(claimed) == expected, (
-                    f"{path.relative_to(DOCS.parent)} claims {claimed} rules, "
-                    f"but the package defines {expected}"
+            if path.parent.name == "posts" or path.name == "changelog.md":
+                continue
+            for match in _PROSE_RULE_COUNT.finditer(path.read_text(encoding="utf-8")):
+                offenders.append(
+                    f"{path.relative_to(DOCS.parent)}: {match.group(0)!r}"
                 )
+        assert not offenders, (
+            "these pages hardcode a rule count, which goes stale silently -- "
+            "say what the rules cover and link to the rules page instead:\n  "
+            + "\n  ".join(offenders)
+        )
 
 
-#: A prose claim about how many rules exist, e.g. ``24 documented rules``.
-_PROSE_RULE_COUNT = re.compile(r"(\d+) documented rules")
+#: A prose claim about how many rules exist, e.g. ``24 documented rules``
+#: or ``the same 22 rules``.
+_PROSE_RULE_COUNT = re.compile(r"\b\d+\s+(?:documented\s+)?rules?\b")
 
 #: A pre-commit revision pin, e.g. ``rev: v2.13.1``.
 _REV_PIN = re.compile(r"^\s*rev:\s*v(\d+\.\d+\.\d+)\s*$", re.M)

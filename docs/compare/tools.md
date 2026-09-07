@@ -16,7 +16,7 @@ for the current state. GitHub's own rulesets are on
 | [commitcheck](https://github.com/marketplace/commitcheck) | A hosted App that applies one regular expression, set in its web admin | Commit message, pull request title or description, by regex | GitHub App | Free for public repositories; $25 a month for private ones |
 | [DCO app](https://github.com/apps/dco) and [DCO-2](https://github.com/cncf/dco2) | The sign-off check the Linux kernel and the CNCF use, with a remediation flow for missing sign-offs | `Signed-off-by` trailers | GitHub App | Free, open source |
 | [PRLint](https://github.com/ewolfe/prlint), [PR Title Checker](https://github.com/marketplace/actions/pr-title-checker) | Regular expressions over pull request fields | Title, body, labels, branch | App / Action | Free, open source |
-| **Commit Check** | One rule engine with [22 documented rules](../rules.md), run as a hook, a CLI, an Action, a hosted App or an MCP tool | Commit message, branch name, author name and email, sign-off, AI attribution, force pushes, file size and paths, tag names; the squash message of a pull request | All of the above | Free, open source; the App's private organization repositories move to a paid plan later |
+| **Commit Check** | One rule engine, [documented rule by rule](../rules.md), run as a hook, a CLI, an Action, a hosted App or an MCP tool | Commit message, branch name, author name and email, sign-off, AI attribution, force pushes, file size and paths, tag names; the squash message of a pull request | All of the above | Free, open source; the App's private organization repositories move to a paid plan later |
 
 ## What is different about Commit Check
 

@@ -2,267 +2,42 @@
 hide:
   - navigation
   - toc
-template: home.html
+template: landing.html
 title: Commit Check
-description: Enforce commit message, branch naming, author and signoff standards across your CLI, pre-commit hooks, CI, and AI agents.
+description: One config file enforced in your commit-msg hook, in CI, on every pull request and in your AI agent. Rules for commit messages, branch names, author identity and signoff.
 ---
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
 
-<!-- The visible page title is the hero's, rendered full-width by
-     overrides/home.html. This heading is hidden, and exists only because
-     Material injects a title of its own — the nav label, "Home" — into any
-     page whose content has none, which would compete with the hero. -->
+<div class="cc-hero" markdown>
+<div class="cc-hero__copy" markdown>
 
-# Commit Check { .cc-page-title }
+# One config file. Every place your team commits.
 
-## One config, enforced everywhere
-
-Write the policy once. The same rules run on a developer's laptop, in CI, and in
-whatever your AI agent is committing on your behalf.
-
-=== "Command line"
-
-    ```console
-    $ commit-check --message --branch
-    CC003 subject-imperative check failed ==> docs: revamped the profile
-    Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug')
-    Suggest: Change the first verb to imperative form
-    Docs: https://commit-check.com/rules/#cc003
-    ```
-
-=== "pre-commit"
-
-    ```yaml title=".pre-commit-config.yaml"
-    repos:
-      - repo: https://github.com/commit-check/commit-check
-        rev: v2.17.0
-        hooks:
-          - id: check-message
-          - id: check-branch
-    ```
-
-=== "GitHub Actions"
-
-    ```yaml title=".github/workflows/commit-check.yml"
-    - uses: commit-check/commit-check-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        message: true
-        branch: true
-        pr-comments: ${{ github.event_name == 'pull_request' }}
-    ```
-
-=== "AI agents"
-
-    ```json title="MCP server"
-    {
-      "mcpServers": {
-        "commit-check": {
-          "command": "uvx",
-          "args": ["commit-check-mcp"]
-        }
-      }
-    }
-    ```
-
-## Start with two commands
-
-```console
-$ pip install commit-check
-$ commit-check --message --branch
-```
-
-No configuration file needed to start — sensible defaults apply immediately, and
-you tighten them when you are ready. Releases carry
-[SLSA Level 3](https://slsa.dev) build provenance, so you can verify an artifact
-came from this repository's pipeline before you install it.
+Laptop, CI, pull request, AI agent — the same `cchk.toml`, the same rules,
+the same diagnostics, with a fix you can paste.
 
 [Get started :octicons-arrow-right-24:](getting-started.md){ .md-button .md-button--primary }
-[Rules reference](rules.md){ .md-button }
-
-## Why it exists
-
-Git history is a database that every team writes to and almost nobody validates.
-
-The cost shows up later, and indirectly. Release notes get written by hand
-because commit subjects cannot be grouped. A `git bisect` ends on a merge
-commit, where the change that broke the build could be in either parent or in
-the resolution. A commit is attributed to `ec2-user` because a build box had no
-`user.name`. A branch has its history rewritten months later because none of its
-commits carried a `Signed-off-by` trailer.
-
-None of these are caught by a linter, a type checker, or a test suite. They are
-all caught by review — which means inconsistently, by whoever happens to be
-looking, and only after the work is done.
-
-Commit Check makes them mechanical instead, and catches them where it is
-cheapest: the check that runs in CI is the same one that runs in your
-`commit-msg` hook, where a malformed subject costs a second to fix rather than a
-full CI cycle and a force-push.
-
-It treats commit metadata the way linters treat code — a policy written down
-once, enforced identically everywhere, with a stable identifier for every
-diagnostic so findings can be discussed, cited, and tracked.
-
-Not all of that policy is on to begin with. Two of the four problems above are
-decisions rather than defects — whether merge commits belong in your history,
-and whether contributors must sign off — and they stay off until you make them.
-The [rules reference](rules.md#rule-index) marks which rules start on.
-
-## What it checks
-
-<div class="grid cards" markdown>
-
--   :material-message-text-outline:{ .lg .middle } __Commit messages__
-
-    ---
-
-    Conventional Commits by default, or your own pattern. Subject length, mood,
-    capitalisation, required body, forbidden merge/fixup/WIP commits.
-
-    [:octicons-arrow-right-24: CC001–CC013](rules.md#commit-message-rules)
-
--   :material-source-branch:{ .lg .middle } __Branch names__
-
-    ---
-
-    Conventional Branch naming, plus rebase checks that catch a branch drifting
-    behind its target before CI wastes a run on stale code.
-
-    [:octicons-arrow-right-24: CC201–CC202](rules.md#branch-rules)
-
--   :material-account-check-outline:{ .lg .middle } __Committer identity__
-
-    ---
-
-    Catch commits authored by `ec2-user` on a build box, or require everyone to
-    contribute from a company address.
-
-    [:octicons-arrow-right-24: CC101–CC102](rules.md#author-rules)
-
--   :material-file-sign:{ .lg .middle } __Signoff and DCO__
-
-    ---
-
-    Require the `Signed-off-by` trailer locally, so contributors find out before
-    CI rejects the pull request.
-
-    [:octicons-arrow-right-24: Policy guides](guides/policies.md#require-signoff-dco)
-
--   :material-robot-outline:{ .lg .middle } __AI attribution__
-
-    ---
-
-    Whatever your project has decided about AI-assisted commits, enforce it
-    mechanically instead of relitigating it in review.
-
-    [:octicons-arrow-right-24: Policy guides](guides/policies.md#ai-attribution)
-
--   :material-office-building-outline:{ .lg .middle } __Org-wide policy__
-
-    ---
-
-    Inherit a base config from a shared repository, then let each project
-    override only what it needs.
-
-    [:octicons-arrow-right-24: Across an organization](guides/organization.md)
+[Browse the rules](rules.md){ .md-button }
 
 </div>
+<div class="cc-hero__demo" markdown>
 
-## What it is not
-
-Commit Check is deliberately narrow: it validates *metadata*, not code.
-
-- **Not a code linter.** It never reads your source files.
-- **Not a replacement for review.** It enforces the mechanical rules so review
-  can spend its attention on the change itself.
-- **Not opinionated by default.** Most rules are off until you turn them on. See
-  the [rules reference](rules.md) for what applies out of the box.
-
-It is a lightweight, open alternative to
-[GitHub Enterprise metadata restrictions](https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
-and Bitbucket's paid
-[Yet Another Commit Checker](https://marketplace.atlassian.com/apps/1211854/yet-another-commit-checker),
-without requiring a particular forge or an enterprise plan. If you already run
-`ruff`, `eslint` or `golangci-lint` on your source, Commit Check is the
-equivalent for the commits that carry it.
-
-## The rules GitHub sells by the seat
-
-GitHub can enforce some of the same policies natively, but the commit-metadata
-rules sit behind its Enterprise plan, and they report a bare regex mismatch
-where Commit Check reports a rule ID, a suggestion and a link. The
-[comparison](compare/github-rules.md) has the table and the arithmetic.
-
-## Ecosystem
-
-One policy engine, multiple enforcement surfaces. Write your `cchk.toml` once —
-every surface reads the same file.
-
-```mermaid
-graph LR
-    Config["cchk.toml"] --> Engine["commit-check"]
-
-    Engine --> Hook["CLI and pre-commit hook"]
-    Engine --> Action["commit-check-action"]
-    Engine --> App["Commit Check GitHub App"]
-    Engine --> MCP["commit-check-mcp"]
-
-    Hook --> Dev["Your laptop"]
-    Action --> CI["CI pipeline"]
-    App --> PR["Every push and pull request, hosted"]
-    MCP --> Agent["AI coding agent"]
+```console
+$ echo 'Fix: add streaming support' | commit-check --message
+CC001 message check failed ==> Fix: add streaming support
+The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
+Suggest: Use "fix: add streaming support"
+Docs: https://commit-check.com/rules/#cc001
 ```
 
-<div class="grid cards" markdown>
-
--   :fontawesome-brands-python: __commit-check__
-
-    ---
-
-    **Core engine** — Python CLI, library and pre-commit hooks. Runs every
-    validation the other surfaces expose.
-
-    [:octicons-arrow-right-24: Getting started](getting-started.md)
-    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check)
-
--   :material-github: __commit-check-action__
-
-    ---
-
-    **GitHub Action** — CI integration that posts results as check runs, job
-    summaries and pull request comments.
-
-    [:octicons-arrow-right-24: Guide](guides/github-actions.md)
-    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-action)
-
--   :material-check-decagram: __Commit Check App__
-
-    ---
-
-    **GitHub App** — hosted; install once on an organization and every push
-    and pull request gets a check run, with no workflow file and no CI minutes.
-
-    [:octicons-arrow-right-24: Guide](guides/github-app.md)
-    [:octicons-arrow-right-24: Marketplace](https://github.com/marketplace/commit-check)
-
--   :material-robot: __commit-check-mcp__
-
-    ---
-
-    **MCP server** — exposes the validations as structured tools for AI coding
-    agents such as Claude Code, Cursor and Copilot.
-
-    [:octicons-arrow-right-24: Guide](guides/mcp.md)
-    [:octicons-arrow-right-24: Repo](https://github.com/commit-check/commit-check-mcp)
+It does not just say no. When the correction is unambiguous, it hands you
+the line.
 
 </div>
+</div>
 
-## Used by
-
-<div class="trusted-by" markdown>
+<div class="cc-proof" markdown>
 
 **Commit Check runs in repositories across these organizations, and in
 [many more](https://github.com/commit-check/commit-check-action/network/dependents).**
@@ -344,9 +119,245 @@ graph LR
 
 </div>
 
----
+## Why check commit metadata at all
 
-<div class="community-section" markdown>
+<div class="cc-cards" markdown>
+
+-   __Changelog tools have nothing to group by__
+
+    ---
+
+    `git-cliff` and `semantic-release` read the `type:` prefix on the subject
+    line to decide what a commit was. Without a consistent subject there is
+    nothing to read, and the release notes get written by hand from `git log`.
+
+-   __`git bisect` stops at a merge commit__
+
+    ---
+
+    When the first bad commit is a merge, the change is in one of two parents
+    or in the conflict resolution. Bisect cannot narrow it any further.
+
+-   __The author is `ec2-user`__
+
+    ---
+
+    A build box with no `user.name` set writes itself into the history.
+    `git log --author` finds the commit; there is no person on the other end
+    of it.
+
+-   __A DCO check fails on a branch you already wrote__
+
+    ---
+
+    `Signed-off-by` costs one `-s` at commit time. Adding it afterwards means
+    `git rebase --signoff` across the whole branch and a force-push.
+
+</div>
+
+None of these are caught by a linter, a type checker or a test suite. They are
+caught in review — which means inconsistently, and after the work is done.
+
+The check that runs in CI is the same one that runs in your `commit-msg` hook.
+Fixing a subject line at commit time costs a second; fixing it after CI costs a
+full run and a force-push.
+
+## What your team actually sees
+
+On a pull request, every finding carries a rule ID, the value that failed, and
+what to do about it — in the job summary, as annotations on the changed files,
+and as a single comment that is edited in place rather than added to.
+
+| Scope | Checked value | Failed checks |
+|---|---|---|
+| Commit 2/2 (5584f46) | `bad msg` | CC001 message |
+| Branch | `Feature/Add-Login` | CC201 branch |
+
+```text
+Commit message
+  ✔ PR title (feat: add login page)
+  ✔ Commit 1/2 (d87faca) (feat: add login page)
+  ✖ Commit 2/2 (5584f46) (1 failure)
+      CC001 message
+        value: bad msg
+        The commit message should follow Conventional Commits.
+        Suggest: Use <type>(<scope>): <description>
+Branch
+  ✖ Branch (1 failure)
+      CC201 branch
+        value: Feature/Add-Login
+        The branch should follow Conventional Branch.
+        Suggest: Rename the branch to "feature/Add-Login" (git branch -m feature/Add-Login)
+        Fix: feature/Add-Login
+```
+
+And in the merge box, where the decision actually gets made:
+
+<figure class="cc-shot" markdown>
+![The Commit Check check run in a pull request merge box, reporting 2 of 4 checks failed](assets/merge-box.png){ loading=lazy }
+<figcaption>The hosted GitHub App reports one check run per commit. The title
+names what failed, so nobody opens Details to learn whether it was the message,
+the branch or an author email.</figcaption>
+</figure>
+
+<figure class="cc-shot" markdown>
+![A terminal recording: a commit message and a branch name are rejected, then accepted once corrected](assets/demo.gif){ .cc-motion loading=lazy }
+![The same terminal at the end of the recording, both checks having run](assets/demo-poster.png){ .cc-still loading=lazy }
+<figcaption>The same engine on the command line. The recording is replaced by a
+still frame when your system asks for reduced motion.</figcaption>
+</figure>
+
+## Start with two commands
+
+```console
+$ pip install commit-check
+$ commit-check --message --branch
+```
+
+No configuration file needed to start — sensible defaults apply immediately, and
+you tighten them when you are ready. Releases carry
+[SLSA Level 3](https://slsa.dev) build provenance, so you can verify an artifact
+came from this repository's pipeline before you install it.
+
+## Pick where it runs
+
+One policy engine, five places to enforce it. Every one of them reads the same
+`cchk.toml`.
+
+<div class="cc-cards" markdown>
+
+-   __Command line__
+
+    ---
+
+    The engine itself. Any forge, any CI, plus a JSON mode and a Python API for
+    scripts and agents.
+
+    [:octicons-arrow-right-24: Getting started](getting-started.md)
+
+-   __pre-commit hook__
+
+    ---
+
+    The fastest feedback there is: the commit is rejected before it exists.
+    Opt-in by nature, so pair it with one of the enforced surfaces.
+
+    [:octicons-arrow-right-24: Guide](guides/pre-commit.md)
+
+-   __GitHub Action__
+
+    ---
+
+    Enforcement in CI that a contributor cannot skip, with per-rule outputs
+    later steps can gate on.
+
+    [:octicons-arrow-right-24: Guide](guides/github-actions.md)
+
+-   __GitHub App__
+
+    ---
+
+    No workflow file and no CI minutes. Install it once and every push and pull
+    request gets a check run.
+
+    [:octicons-arrow-right-24: Guide](guides/github-app.md)
+
+-   __MCP server__
+
+    ---
+
+    The validations as structured tools, so an AI coding agent checks its own
+    commit before it writes it.
+
+    [:octicons-arrow-right-24: Guide](guides/mcp.md)
+
+</div>
+
+## Pricing
+
+<div class="cc-pricing" markdown>
+
+-   __Free__
+
+    ---
+
+    The CLI, the pre-commit hook, the GitHub Action and the MCP server. MIT
+    licensed, no account, no limits.
+
+    The hosted GitHub App is free too on public repositories and personal
+    accounts.
+
+-   __Team__
+
+    ---
+
+    The hosted GitHub App on an organization's private repositories, with a
+    14-day free trial.
+
+    [:octicons-arrow-right-24: See the plan on the Marketplace](https://github.com/marketplace/commit-check)
+
+</div>
+
+Nothing is blocked while you try it. Without a config file the App reports its
+findings but leaves the check run neutral, and it never rejects a push — the
+only way Commit Check blocks a merge is if you make it a required check
+yourself.
+
+GitHub can enforce some of the same policies natively, but the commit-metadata
+rules sit behind its Enterprise plan. For a twenty-person team that is the
+difference between $4 and $21 a seat — about $340 a month for a regular
+expression, which reports a bare mismatch where Commit Check reports a rule ID,
+a suggestion and a link. [The arithmetic and the honest caveats](compare/github-rules.md).
+
+## Questions
+
+??? question "Does it read my source code?"
+
+    No. The CLI validates commit metadata and never opens your files. The
+    hosted App uses a blob-filtered fetch and a sparse checkout that
+    materializes only the config files, so no other repository content is ever
+    downloaded. Content scanning is deliberately out of scope.
+
+??? question "Can a developer bypass it?"
+
+    The pre-commit hook, yes — `git commit --no-verify` is one flag, and that
+    is by design: a local hook is fast feedback, not a gate. The enforcement
+    boundary is CI. Make the Action or the App a required status check and a
+    violating change cannot merge, however it was committed.
+
+??? question "Will turning it on block everyone tomorrow?"
+
+    No. Without a config file the App reports in full but leaves the check
+    neutral, and it never rejects a push. Most rules are off until you turn
+    them on — the [rules reference](rules.md#rule-index) marks which start on.
+
+??? question "What about the history I already have?"
+
+    Only new commits are checked. Nothing asks you to rewrite what is already
+    merged.
+
+??? question "Does it only work on GitHub?"
+
+    The CLI and the pre-commit hook run anywhere Git does — GitLab, Gitea,
+    Bitbucket, a local machine. The Action and the App are GitHub-specific
+    because they integrate with GitHub's check runs.
+
+??? question "Do I need Node.js?"
+
+    No. On a modern Python there are no runtime dependencies at all.
+
+??? question "Which Python versions are supported?"
+
+    3.10 through 3.14. CI runs the suite on all five, across Linux, macOS and
+    Windows — fifteen combinations on every change.
+
+??? question "How do I know the package I installed is the one you built?"
+
+    Releases carry [SLSA Level 3](https://slsa.dev) build provenance. The
+    GitHub Action verifies the attestation with `gh attestation verify` before
+    it installs anything, and fails the step if verification does not pass.
+
+<div class="cc-community" markdown>
 
 ## Questions, bugs, contributions
 
@@ -360,8 +371,8 @@ something is broken or missing — include the output of
 failed.
 
 **Send a pull request** to any of the
-[repositories](https://github.com/commit-check). The engine, the Action and the
-MCP server are separate — [Ecosystem](#ecosystem) above shows which is which.
+[repositories](https://github.com/commit-check). The engine, the Action, the App
+and the MCP server are separate projects.
 
 [Discussions :fontawesome-brands-github:](https://github.com/commit-check/commit-check/discussions){ .md-button .md-button--primary }
 [Issues :fontawesome-brands-github:](https://github.com/commit-check/commit-check/issues){ .md-button }

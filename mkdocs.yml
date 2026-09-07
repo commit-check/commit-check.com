@@ -4,7 +4,7 @@ site_name: Commit Check
 site_url: !ENV [SITE_URL, 'https://commit-check.com/']
 site_description: >-
   Enforce commit message, branch naming, author and signoff standards —
-  one policy, across your CLI, pre-commit hooks, CI, and AI agents.
+  one config file, across your CLI, pre-commit hooks, CI, and AI agents.
 site_author: shenxianpeng
 copyright: Copyright &copy; 2022 - 2026 Commit Check
 
