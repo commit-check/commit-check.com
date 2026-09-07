@@ -193,6 +193,12 @@
   list-style: none;
 }
 
+/* Four plans have to fit one row inside Material's 61rem content column:
+   4 x 15rem plus the gaps overflows it and wraps to an unbalanced 3 + 1. */
+.md-typeset .cc-pricing > ul:not([hidden]) {
+  grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+}
+
 .md-typeset .cc-cards > ul > li,
 .md-typeset .cc-pricing > ul > li {
   margin: 0;

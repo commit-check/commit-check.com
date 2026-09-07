@@ -175,6 +175,7 @@ nav:
       - Configuration: configuration.md
       - Changelog: changelog.md
       - Privacy: privacy.md
+      - Terms of Service: terms.md
   - Compare:
       - GitHub's built-in rules: compare/github-rules.md
       - Other tools: compare/tools.md

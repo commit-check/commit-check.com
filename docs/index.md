@@ -275,28 +275,39 @@ One policy engine, five places to enforce it. Every one of them reads the same
 
 ## Pricing
 
+The CLI, the pre-commit hook, the GitHub Action and the MCP server are MIT
+licensed — no account, no limits, nothing to buy. The plans below are for the
+hosted GitHub App, the one surface we run for you.
+
 <div class="cc-pricing" markdown>
 
--   __Free__
+-   __Open Source__ · Free
 
     ---
 
-    The CLI, the pre-commit hook, the GitHub Action and the MCP server. MIT
-    licensed, no account, no limits.
+    Public repositories, on any account.
 
-    The hosted GitHub App is free too on public repositories and personal
-    accounts.
-
--   __Team__
+-   __Personal__ · $4 / month
 
     ---
 
-    The hosted GitHub App on an organization's private repositories, with a
-    14-day free trial.
+    Private repositories on a personal account. 14-day free trial.
 
-    [:octicons-arrow-right-24: See the plan on the Marketplace](https://github.com/marketplace/commit-check)
+-   __Team__ · $10 / month
+
+    ---
+
+    Private repositories in an organization, up to 25 users. 14-day free trial.
+
+-   __Business__ · $50 / month
+
+    ---
+
+    Private repositories in an organization, up to 200 users. 14-day free trial.
 
 </div>
+
+[:octicons-arrow-right-24: Install the App](https://github.com/apps/commit-check)
 
 Nothing is blocked while you try it. Without a config file the App reports its
 findings but leaves the check run neutral, and it never rejects a push — the
@@ -307,7 +318,8 @@ GitHub can enforce some of the same policies natively, but the commit-metadata
 rules sit behind its Enterprise plan. For a twenty-person team that is the
 difference between $4 and $21 a seat — about $340 a month for a regular
 expression, which reports a bare mismatch where Commit Check reports a rule ID,
-a suggestion and a link. [The arithmetic and the honest caveats](compare/github-rules.md).
+a suggestion and a link. Ten dollars is what the same twenty people cost here.
+[The arithmetic and the honest caveats](compare/github-rules.md).
 
 ## Questions
 
@@ -356,6 +368,15 @@ a suggestion and a link. [The arithmetic and the honest caveats](compare/github-
     Releases carry [SLSA Level 3](https://slsa.dev) build provenance. The
     GitHub Action verifies the attestation with `gh attestation verify` before
     it installs anything, and fails the step if verification does not pass.
+
+??? question "Who is behind this?"
+
+    Commit Check is written and maintained by
+    [Xianpeng Shen](https://github.com/shenxianpeng), who also runs the hosted
+    App. The engine, the Action, the App and the MCP server are open source
+    under the [commit-check](https://github.com/commit-check) organization —
+    if the hosted App ever stops, the [GitHub Action](guides/github-actions.md)
+    reads the same config and reports the same rule IDs.
 
 <div class="cc-community" markdown>
 
