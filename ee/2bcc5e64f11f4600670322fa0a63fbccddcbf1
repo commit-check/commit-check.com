@@ -1,0 +1,19 @@
+docs/terms.md
+  s_c628fd136d6dcf::t_52de1e3d8ee5c5 4-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "ee2bcc5e64f11f4600670322fa0a63fbccddcbf1",
+  "prompts": {},
+  "sessions": {
+    "s_c628fd136d6dcf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "79c51ff2-b7fc-45b9-a1b6-66df3f74e91e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
