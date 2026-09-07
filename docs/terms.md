@@ -1,9 +1,9 @@
 # Terms of Service
 
 These terms cover the **Commit Check GitHub App** — the hosted service we run,
-which you install onto your GitHub account. The command-line tool, the pre-commit hooks, the
-GitHub Action and the MCP server are not covered here: they run inside your own
-environment and are governed by the [MIT
+which you install onto your GitHub account. The command-line tool, the
+pre-commit hooks, the GitHub Action and the MCP server are not covered here:
+they run inside your own environment and are governed by the [MIT
 licence](https://github.com/commit-check/commit-check/blob/main/LICENSE) of the
 repository you got them from.
 
