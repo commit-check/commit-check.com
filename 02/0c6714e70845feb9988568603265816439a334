@@ -1,0 +1,31 @@
+docs/changelog.md
+  s_372643545cf36e::t_4dc3cea97a3bd6 14,32-102
+docs/configuration.md
+  s_372643545cf36e::t_a759b7e84d321a 195,243,291-292,349-351
+docs/example.md
+  s_372643545cf36e::t_5cade1eafbf02a 134
+docs/guides/policies.md
+  s_372643545cf36e::t_3a0592d9b03789 94-97,99-106,128-130,134-140,144-146,153-264
+docs/guides/pre-commit.md
+  s_372643545cf36e::t_647373518719f3 11,58
+docs/rules.md
+  s_372643545cf36e::t_fee8af4320d554 94-96,538-542,546-550,552-663,667
+docs/troubleshoot.md
+  s_372643545cf36e::t_5095ee12d74946 101-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "020c6714e70845feb9988568603265816439a334",
+  "prompts": {},
+  "sessions": {
+    "s_372643545cf36e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cf0a6471-ef8d-4f90-9d78-27576d4ecf86",
+        "model": "claude-opus-5"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
