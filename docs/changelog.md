@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.18.0](#v2180) | AI disclosure policy: three rules, and the correction written for you | [Policy guides](guides/policies.md#asking-for-disclosure-instead) · [CC014](rules.md#cc014) |
 | [2.17.0](#v2170) | Concrete corrections for mechanical slips; a `warn` level per rule | [Reading the JSON](example.md#reading-the-json) · [Report without enforcing](configuration.md#report-a-rule-without-enforcing-it) |
 | [2.16.0](#v2160) | Tag name validation, and file size, path and pattern policies | [CC401](rules.md#cc401) · [CC302–CC304](rules.md#push-rules) |
 | [2.15.1](#v2151) | Color and rule-ID links appear only where they render; `NO_COLOR` honoured | [Color and links](example.md#color-and-links) |
@@ -27,6 +28,77 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.18.0 (2026-09-13) { #v2180 }
+
+### Added
+
+* **AI attribution gained a third policy, `"disclose"`** — for the projects
+  that welcome AI assistance and ask to be told about it. It turns on three
+  rules, one per condition, so any of them can be demoted to a warning while
+  the others keep enforcing: the assistance is disclosed with one of
+  `ai_disclosure_trailers` ([CC014](rules.md#cc014), default `Assisted-by`
+  and `Generated-by`), the tool is not credited as a co-author
+  ([CC015](rules.md#cc015)), and it did not sign off the commit
+  ([CC016](rules.md#cc016)) — a sign-off certifies the DCO, which only a
+  person can do. A failing check carries the correction: the vendor's
+  co-author line rewritten as the project's disclosure trailer, keeping the
+  name the tool gave itself. `ai_disclosure_pattern` asks for a particular
+  format, such as `agent/model`. The default stays `"ignore"`, and an
+  `ai_attribution` value that is none of the three is now a configuration
+  error rather than a silently disabled check.
+  See PR [#575](https://github.com/commit-check/commit-check/pull/575) and
+  [Asking for disclosure instead](guides/policies.md#asking-for-disclosure-instead).
+
+* **A failed check names the value it rejected, and by how much** — a long
+  subject reports `Subject is 96 characters; it must be at most 80
+  characters` and how many to cut, a custom `message_pattern` is echoed back,
+  and the rejection banner says whether it was the commit, the branch, the
+  tag or the push that was rejected.
+  See PR [#571](https://github.com/commit-check/commit-check/pull/571).
+
+* **A specification named in an error links to it** on terminals that render
+  hyperlinks, so `Conventional Commits` and `Conventional Branch` are
+  clickable instead of trailing a URL. Piped output is unchanged.
+  See PR [#568](https://github.com/commit-check/commit-check/pull/568).
+
+### Changed
+
+* **`ai_attribution = "forbid"` now recognises the disclosure trailers too.**
+  `Assisted-by:` and `Generated-by:`, in the formats the Linux kernel, Fedora,
+  FluxCD and the ASF actually write them, are AI attribution like any other —
+  a project that forbids attribution was letting them through.
+  See PR [#575](https://github.com/commit-check/commit-check/pull/575) and
+  [CC013](rules.md#cc013).
+
+### Fixed
+
+* **[CC201](rules.md#cc201) anchors a branch name at both ends** — `main-backup`,
+  `master2` and `develop-x` passed as if they were `main`, `master` and
+  `develop`. They fail now.
+  See PR [#569](https://github.com/commit-check/commit-check/pull/569).
+
+* **[CC001](rules.md#cc001) exempts only the subjects git writes itself** —
+  `Merge `, `Revert "`, `fixup! `, `squash! ` and `amend! `. Author prose that
+  merely started that way, such as `Merged stuff` or `fixup!! nonsense`, was
+  exempt too.
+  See PR [#569](https://github.com/commit-check/commit-check/pull/569).
+
+* **A setting whose regex does not compile names the setting** and exits `2`,
+  the code for a broken configuration: `[commit] message_pattern is not a
+  valid regex: '^(unclosed'`. It used to surface as a bare Python error with
+  exit code `1`, the code a rejected commit gets.
+  See PR [#574](https://github.com/commit-check/commit-check/pull/574) and
+  [Exit codes](troubleshoot.md#exit-codes).
+
+* **A configuration error exits `2` and names the file it came from**, and
+  `--dry-run` runs the checks it was asked for instead of printing nothing
+  and exiting `0`.
+  See PR [#570](https://github.com/commit-check/commit-check/pull/570).
+
+* **An `inherit_from` that cannot be loaded says so on stderr** instead of
+  falling back to the local config in silence. The run still continues.
+  See PR [#569](https://github.com/commit-check/commit-check/pull/569).
 
 ## v2.17.0 (2026-09-06) { #v2170 }
 

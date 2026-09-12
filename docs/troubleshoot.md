@@ -98,6 +98,30 @@ commit-check --message --branch --author-name --author-email
 
 Each rule in the [rules reference](rules.md) lists the flag that activates it.
 
+## The run failed, but nothing was checked { #exit-codes }
+
+A wrapper that treats every non-zero exit as a rejected commit cannot tell a
+broken policy from a bad commit. Commit Check keeps them apart:
+
+| Exit code | Meaning |
+|---|---|
+| `0` | Every enforced check passed, or every check was skipped. |
+| `1` | A check failed. This is a verdict on the commit. |
+| `2` | The run could not start, so nothing was validated: bad usage, a `--rev` that does not resolve, a setting whose regex does not compile, or a config file that is missing, is not valid TOML, or names an unknown rule. |
+
+A configuration error names the file it came from:
+
+```text
+Error: .github/cchk.toml: Expected ']' at the end of a table declaration (at line 1, column 8)
+```
+
+A setting that can also come from a flag or a `CCHK_*` variable names itself
+instead, and echoes the value it could not use:
+
+```text
+Error: [commit] message_pattern is not a valid regex: '^(unclosed' (missing ), unterminated subpattern at position 1)
+```
+
 ## Something else
 
 If the failure does not match anything above, the JSON output shows exactly

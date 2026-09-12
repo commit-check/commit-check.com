@@ -91,6 +91,9 @@ Run with `-m` / `--message`.
 | [CC011](#cc011) | `require-body` | Commit body is required | `-m` | ⚪ Off |
 | [CC012](#cc012) | `require-signed-off-by` | Signed-off-by not found in latest commit | `-m` | ⚪ Off |
 | [CC013](#cc013) | `ai-attribution` | AI attribution policy violation | `-m` | ⚪ Off |
+| [CC014](#cc014) | `ai-disclosure` | AI assistance is not disclosed with an accepted trailer | `-m` | ⚪ Off |
+| [CC015](#cc015) | `ai-co-author` | An AI tool is credited as a co-author | `-m` | ⚪ Off |
+| [CC016](#cc016) | `ai-signoff` | An AI tool signed off the commit | `-m` | ⚪ Off |
 
 </div>
 
@@ -532,25 +535,136 @@ git commit --amend --signoff
 
 **What it does**
 
-Rejects commits carrying the signatures that AI coding tools add to commit
-messages — trailers naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
-Aider, Windsurf, Tabby, and generic AI model patterns.
+Rejects a commit whose message carries any AI attribution: a co-author or
+sign-off line naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
+Aider, Windsurf or Tabby, a disclosure trailer such as `Assisted-by:` or
+`Generated-by:`, a vendor's own mark such as `🤖 Generated with Claude Code`,
+and generic AI model names.
 
 **Why is this bad?**
 
-Whether AI-assisted commits are acceptable is a policy question, and projects
-have landed on different answers: the Linux kernel added an `Assisted-by:`
-trailer, while others disallow the practice outright. This rule exists for
-projects that have made that decision and want it enforced mechanically rather
-than relitigated in every code review.
+Some projects want their history to carry no AI attribution at all — the
+[Kubernetes contributor guide](https://www.kubernetes.dev/docs/guide/pull-requests/)
+takes that position, asking for disclosure in the pull request instead. This
+rule exists for projects that have made that decision and want it enforced
+mechanically rather than relitigated in every review.
 
-It is off by default, and the default policy is `"ignore"`. Enable it only if
-your project has a stated position.
+**Example**
+
+```text
+CC013 ai-attribution check failed ==> Claude Code
+AI attribution is forbidden in this project — detected: Claude Code
+Suggest: This project does not accept AI attribution in commit messages. Remove the AI trailer lines and re-commit.
+```
 
 **Options**
 
-* `commit.ai_attribution` — `"forbid"` enables this rule, `"ignore"`
-  (the default) disables it.
+* `commit.ai_attribution` — `"forbid"` enables this rule. `"ignore"` (the
+  default) disables it; `"disclose"` replaces it with
+  [CC014](#cc014)–[CC016](#cc016).
+
+### ai-disclosure (CC014) { #cc014 }
+
+**What it does**
+
+Under `ai_attribution = "disclose"`, requires that a commit showing signs of
+AI assistance discloses it with one of the project's trailers — by default
+`Assisted-by:` or `Generated-by:`. A vendor's co-author line, an AI sign-off,
+a `🤖 Generated with` mark, or a disclosure written with some other trailer
+all count as signs; none of them counts as the disclosure.
+
+A trailer that is there but says nothing — no value, or a value that does not
+match `ai_disclosure_pattern` — fails too.
+
+**Why is this bad?**
+
+A project that allows AI assistance and asks for it to be disclosed has an
+honour-system rule until something checks it. The
+[Linux kernel](https://docs.kernel.org/process/coding-assistants.html),
+[Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) and
+FluxCD ask for `Assisted-by:`; the
+[Apache Software Foundation](https://www.apache.org/legal/generative-tooling.html)
+recommends `Generated-by:`. The tools, meanwhile, stamp their own format on
+the way out, so a contributor following the policy and one ignoring it produce
+commits that look much the same.
+
+**Example**
+
+```text
+CC014 ai-disclosure check failed ==> Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
+Suggest: Disclose the tool with "Assisted-by: Claude Opus 5"
+```
+
+The suggestion keeps the name the tool gave itself, and `--format json`
+carries the whole corrected message in `fix`.
+
+**Options**
+
+* `commit.ai_attribution` — set to `"disclose"` to enable this rule.
+* `commit.ai_disclosure_trailers` — the trailers that count as a disclosure.
+  The first one is what a correction is written with.
+* `commit.ai_disclosure_pattern` — a regex the disclosure's value must match,
+  for a project that wants a particular format.
+
+### ai-co-author (CC015) { #cc015 }
+
+**What it does**
+
+Under `ai_attribution = "disclose"`, rejects a commit that credits an AI tool
+as a person: a `Co-authored-by:` or `Co-developed-by:` trailer naming a
+recognised tool.
+
+**Why is this bad?**
+
+A co-author line is a claim about who wrote the change, and it travels: GitHub
+counts co-authors as contributors, and a squash merge carries the line into
+the default branch. Projects that welcome AI assistance still commonly draw
+the line here — [pip](https://github.com/pypa/pip/blob/main/AI_POLICY.md),
+`attrs` and Requests all say no AI in `Co-authored-by:` — because disclosure
+and authorship are different claims.
+
+**Example**
+
+```text
+CC015 ai-co-author check failed ==> Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+An AI tool is credited as a co-author: Claude Code
+Suggest: Use "Assisted-by: Claude Opus 5" in place of the co-author line
+```
+
+**Options**
+
+* `commit.ai_attribution` — set to `"disclose"` to enable this rule.
+* `commit.ai_disclosure_trailers` — listing `Co-authored-by` here says the
+  project accepts the tool as a co-author, and this rule then passes.
+
+### ai-signoff (CC016) { #cc016 }
+
+**What it does**
+
+Under `ai_attribution = "disclose"`, rejects a commit whose `Signed-off-by:`
+trailer names an AI tool.
+
+**Why is this bad?**
+
+A sign-off is a legal certification — the
+[Developer Certificate of Origin](https://developercertificate.org/) — and
+only a person can make it. The Linux kernel's guidance says so outright: AI
+agents must not add `Signed-off-by` tags, because they cannot certify the
+DCO. No trailer list may name `Signed-off-by`, so this rule cannot be turned
+off by accepting it as a disclosure.
+
+**Example**
+
+```text
+CC016 ai-signoff check failed ==> Signed-off-by: Claude <noreply@anthropic.com>
+An AI tool signed off the commit: Claude Code
+Suggest: Remove the AI sign-off, then sign off yourself (git commit --signoff)
+```
+
+**Options**
+
+* `commit.ai_attribution` — set to `"disclose"` to enable this rule.
 
 ## Author rules
 
