@@ -214,9 +214,10 @@ $ commit-check --message --branch
 ```
 
 No configuration file needed to start: the defaults check Conventional Commits,
-Conventional Branch and subject length, and you tighten them when you are ready. Releases carry
-[SLSA Level 3](https://slsa.dev) build provenance, so you can verify an artifact
-came from this repository's pipeline before you install it.
+Conventional Branch and subject length, and you tighten them when you are ready. Every release
+carries a signed [build provenance attestation](https://docs.github.com/en/actions/concepts/security/artifact-attestations),
+so you can verify an artifact came from this repository's pipeline before you
+install it.
 
 ## Pick where it runs
 
@@ -359,9 +360,12 @@ size.
 
 ??? question "How do I know the package I installed is the one you built?"
 
-    Releases carry [SLSA Level 3](https://slsa.dev) build provenance. The
-    GitHub Action verifies the attestation with `gh attestation verify` before
-    it installs anything, and fails the step if verification does not pass.
+    Every release carries a signed
+    [build provenance attestation](https://docs.github.com/en/actions/concepts/security/artifact-attestations)
+    naming the workflow in this repository that built it. Check a wheel
+    yourself with `gh attestation verify <file> --repo commit-check/commit-check`;
+    the GitHub Action runs the same check before it installs anything, and
+    fails the step if verification does not pass.
 
 ??? question "Who is behind this?"
 
