@@ -34,6 +34,14 @@ revision.
     $ echo "feat(auth): add OAuth2 login" | commit-check -m
     ```
 
+    Stdin carries the message and nothing else. Other checks in the same run
+    read the repository, as they do next to a message file, so this checks
+    the piped message and the current branch:
+
+    ```console
+    $ echo "feat(auth): add OAuth2 login" | commit-check -m --branch
+    ```
+
 === "From a revision"
 
     `--rev` names the commit under test — anything `git rev-parse`
