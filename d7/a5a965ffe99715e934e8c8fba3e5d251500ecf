@@ -1,0 +1,21 @@
+docs/getting-started.md
+  s_372643545cf36e::t_134c6c1bcc04e9 175-177
+docs/index.md
+  s_372643545cf36e::t_7bcf232e2cc97e 217-220,363-368
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d7a5a965ffe99715e934e8c8fba3e5d251500ecf",
+  "prompts": {},
+  "sessions": {
+    "s_372643545cf36e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cf0a6471-ef8d-4f90-9d78-27576d4ecf86",
+        "model": "claude-opus-5"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
