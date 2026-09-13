@@ -31,8 +31,7 @@ Suggest: Use "fix: add streaming support"
 Docs: https://commit-check.com/rules/#cc001
 ```
 
-It does not just say no. When the correction is unambiguous, it hands you
-the line.
+When the correction is unambiguous, it hands you the line.
 
 </div>
 </div>
@@ -214,8 +213,8 @@ $ pip install commit-check
 $ commit-check --message --branch
 ```
 
-No configuration file needed to start — sensible defaults apply immediately, and
-you tighten them when you are ready. Releases carry
+No configuration file needed to start: the defaults check Conventional Commits,
+Conventional Branch and subject length, and you tighten them when you are ready. Releases carry
 [SLSA Level 3](https://slsa.dev) build provenance, so you can verify an artifact
 came from this repository's pipeline before you install it.
 
@@ -239,7 +238,7 @@ One policy engine, five places to enforce it. Every one of them reads the same
 
     ---
 
-    The fastest feedback there is: the commit is rejected before it exists.
+    It rejects a bad commit before Git records it.
     Opt-in by nature, so pair it with one of the enforced surfaces.
 
     [:octicons-arrow-right-24: Guide](guides/pre-commit.md)
@@ -313,9 +312,9 @@ GitHub can enforce some of the same policies natively, but the commit-metadata
 rules sit behind its Enterprise plan. For a twenty-person team that is the
 difference between $4 and $21 a seat — about $340 a month for a regular
 expression, which reports a bare mismatch where Commit Check reports a rule ID,
-a suggestion and a link. Nineteen dollars is what the same twenty people cost
-here — and the same twenty thousand.
-[The arithmetic and the honest caveats](compare/github-rules.md).
+a suggestion and a link. The Team plan here is $19 a month whatever the team
+size.
+[The arithmetic, and the caveats](compare/github-rules.md).
 
 ## Questions
 
@@ -328,9 +327,8 @@ here — and the same twenty thousand.
 
 ??? question "Can a developer bypass it?"
 
-    The pre-commit hook, yes — `git commit --no-verify` is one flag, and that
-    is by design: a local hook is fast feedback, not a gate. The enforcement
-    boundary is CI. Make the Action or the App a required status check and a
+    The pre-commit hook, yes: `git commit --no-verify` is one flag, and a local
+    hook is there for fast feedback. The enforcement boundary is CI. Make the Action or the App a required status check and a
     violating change cannot merge, however it was committed.
 
 ??? question "Will turning it on block everyone tomorrow?"

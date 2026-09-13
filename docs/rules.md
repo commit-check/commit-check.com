@@ -400,8 +400,8 @@ Rejects commits with an empty message.
 
 **Why is this bad?**
 
-A commit with no subject cannot be searched for, summarised, or reviewed. It is
-a gap in the history that nobody can fill in later.
+A commit with no subject cannot be searched for, summarised, or reviewed, and
+once it is pushed, adding a message means rewriting history.
 
 **Options**
 

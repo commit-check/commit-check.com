@@ -14,8 +14,8 @@ require every commit to carry a `Signed-off-by` trailer. The Linux kernel and
 much of the CNCF work this way.
 
 A DCO bot rejecting a pull request after the fact is a poor experience: the
-contributor has to rewrite history for every commit in the branch. Checking
-locally fixes it before it becomes a problem.
+contributor has to rewrite history for every commit in the branch. A local check
+catches a missing sign-off at commit time, before there is anything to rewrite.
 
 ### Turn it on
 
@@ -157,7 +157,7 @@ Most projects that allow AI assistance ask to be told about it. The
 [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) and
 FluxCD want an `Assisted-by:` trailer; the
 [Apache Software Foundation](https://www.apache.org/legal/generative-tooling.html)
-recommends `Generated-by:`. The kernel adds a second rule: an AI agent must
+recommends `Generated-by:`. The kernel also says an AI agent must
 never add a `Signed-off-by:` line, because only a person can certify the
 [DCO](https://developercertificate.org/).
 
@@ -234,8 +234,8 @@ The Assisted-by value does not match the required pattern: ^\S+/\S+$
 Suggest: Write the Assisted-by value so that it matches ^\S+/\S+$ (set by ai_disclosure_pattern in the [commit] config)
 ```
 
-There is no correction for that one: which model, in which format, is not
-something the tool should guess.
+That failure carries no correction, because the tool should not guess which
+model or format you meant.
 
 ### Disclosure that is appreciated, not required
 

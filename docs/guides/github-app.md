@@ -108,7 +108,7 @@ inheritance [fails open](organization.md#other-sources).
 A repository with no config file first looks to its account: a `cchk.toml` in
 the owner's `.github` repository — organizations and personal accounts both
 have one — is applied as if it were the repository's own, and the report says
-so in its last lines. That is enforcement, not advice — the owner chose the
+so in its last lines. Its failures are enforced, because the owner chose those
 rules.
 
 A repository with no config file **and** no shared one has not chosen its
@@ -125,7 +125,8 @@ conventional_commits = true
 conventional_branch = true  # false if branch names are free-form
 ```
 
-Add it, push, and failures are failures. A pass is a pass either way.
+Once the file is pushed, a failure turns the check red instead of neutral. A
+passing result is the same with or without it.
 
 !!! warning "Required means nothing until there is a config"
 
@@ -156,8 +157,8 @@ in the branch's ruleset or branch protection, where the repository's plan
 allows one. With that in place a failing result blocks the merge button and a
 passing one clears it.
 
-The order matters: config file first, then the required check, for the reason
-in the box above.
+Add the config file first and the required check second, for the reason in
+the box above.
 
 ## Across an organization
 

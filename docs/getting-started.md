@@ -81,7 +81,7 @@ $ git commit --amend -m "fix(parser): handle empty input"
 $ commit-check --message
 ```
 
-No output and an exit code of `0`. Commit Check is quiet when it is happy.
+It prints nothing and exits with code `0`.
 
 ## 4. Check the branch too
 

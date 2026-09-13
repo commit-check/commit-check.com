@@ -1,8 +1,8 @@
 # Where to run it
 
 Commit Check is one rule engine with several places to run it, and every one
-of them reads the same `cchk.toml`. That is the point: the rules cannot drift
-between what a developer sees locally and what is enforced on the pull request.
+of them reads the same `cchk.toml`, so the rules cannot drift between what a
+developer sees locally and what is enforced on the pull request.
 
 | Where | Catches problems | Can be bypassed | Set up |
 |---|---|---|---|

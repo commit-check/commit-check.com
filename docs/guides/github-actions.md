@@ -1,7 +1,7 @@
 # GitHub Action
 
-Local hooks can be skipped. A CI check cannot, which makes GitHub Actions the
-place where your policy is actually a policy.
+Local hooks can be skipped. A CI check cannot, so the Action is where the
+policy is enforced.
 
 ```yaml title=".github/workflows/commit-check.yml"
 name: Commit Check
