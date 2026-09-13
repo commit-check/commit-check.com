@@ -1,7 +1,9 @@
 # GitHub Action
 
-Local hooks can be skipped. A CI check cannot, so the Action is where the
-policy is enforced.
+A local hook can be skipped with `git commit --no-verify`. The Action runs in
+CI whatever happened locally, and once it is a
+[required status check](#making-it-a-required-check) a pull request that
+fails it cannot merge.
 
 ```yaml title=".github/workflows/commit-check.yml"
 name: Commit Check
@@ -34,6 +36,13 @@ jobs:
 
 The Action reads the same `cchk.toml` as the CLI, so a repository that already
 has one needs no Action-specific configuration.
+
+## Making it a required check { #making-it-a-required-check }
+
+Until it is required, a failing Commit Check does not stop anyone from
+merging. Require it in the branch's ruleset or branch protection, where the
+repository's plan allows one. GitHub names an Action's check after its job, so
+with the workflow above the check to require is `commit-check`.
 
 ## Commenting on the pull request
 
