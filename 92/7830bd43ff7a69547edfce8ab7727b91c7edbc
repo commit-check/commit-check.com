@@ -1,0 +1,37 @@
+docs/configuration.md
+  s_372643545cf36e::t_5de17e87c1bd88 11,171
+docs/getting-started.md
+  s_372643545cf36e::t_8879a12dd36658 84
+docs/guides/github-actions.md
+  s_372643545cf36e::t_9f1a00e0df9df2 3-4
+docs/guides/github-app.md
+  s_372643545cf36e::t_f76dea4a9746ad 111,128-129,160-161
+docs/guides/integrations.md
+  s_372643545cf36e::t_222d4d5c31352b 4-5
+docs/guides/organization.md
+  s_372643545cf36e::t_afbe9b67d88fef 117
+docs/guides/policies.md
+  s_372643545cf36e::t_dee80dc4829de8 17-18,160,237-238
+docs/index.md
+  s_372643545cf36e::t_2d6ea029ed581d 34,216-217,241,315-317,330-331
+docs/migration.md
+  s_372643545cf36e::t_963f3a46145fd5 12
+docs/rules.md
+  s_372643545cf36e::t_9d76b071c35d55 403-404
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "927830bd43ff7a69547edfce8ab7727b91c7edbc",
+  "prompts": {},
+  "sessions": {
+    "s_372643545cf36e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cf0a6471-ef8d-4f90-9d78-27576d4ecf86",
+        "model": "claude-opus-5"
+      },
+      "human_author": "shenxianpeng <xianpeng.shen@gmail.com>"
+    }
+  }
+}
