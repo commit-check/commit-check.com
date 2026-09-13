@@ -9,7 +9,7 @@ message and suggestion. You wrote the pattern; Commit Check ran it. In v2 the
 patterns are built in and the file selects and tunes them by name. A v1 file
 was mostly regex; a v2 file is mostly booleans.
 
-The practical consequence: you do not translate a v1 file line by line. You
+So you do not translate a v1 file line by line. You
 decide which rules you want and write those down, which is usually far shorter.
 
 ## Converting the file

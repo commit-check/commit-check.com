@@ -114,7 +114,7 @@ red. A gentler sequence:
    [`dry-run`](github-actions.md#reporting-without-failing) does the same
    for every rule at once, in the Action only.)
 2. Look at what actually fails. Some rules will turn out to be wrong for some
-   teams — that is information, not an obstacle.
+   teams, and those teams can override them in their own config.
 3. Drop a rule from `warn` once the repositories are clean. A repository that
    is already clean can drop it early with a `warn` list of its own, which
    replaces the shared one.

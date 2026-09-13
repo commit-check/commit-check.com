@@ -81,7 +81,7 @@ $ git commit --amend -m "fix(parser): handle empty input"
 $ commit-check --message
 ```
 
-No output and an exit code of `0`. Commit Check is quiet when it is happy.
+It prints nothing and exits with code `0`.
 
 ## 4. Check the branch too
 
@@ -172,8 +172,9 @@ belongs:
 
 ## Verifying the download
 
-Releases are built with [SLSA Level 3](https://slsa.dev) provenance. To verify a
-release artifact came from this repository's build pipeline:
+Every release is published with a signed
+[build provenance attestation](https://docs.github.com/en/actions/concepts/security/artifact-attestations). To verify
+a release artifact came from this repository's build pipeline:
 
 ```console
 $ gh attestation verify commit_check-*.whl --repo commit-check/commit-check

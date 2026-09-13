@@ -8,8 +8,7 @@ in more than one, the first one listed wins:
 3. **A configuration file** — `cchk.toml` or `commit-check.toml`
 4. **Built-in defaults**
 
-That ordering is what makes the layering useful: the file carries the policy
-the project agreed on, the environment overrides it for a single CI job, and a
+The file carries the policy the project agreed on, the environment overrides it for a single CI job, and a
 flag overrides both for a single run.
 
 !!! tip "Defaults are not "nothing""
@@ -169,7 +168,7 @@ the shared one, as any inherited key does.
 ## A worked example
 
 Every line below that differs from the built-in default is marked, so it is
-clear what this file is actually changing:
+clear what this file changes:
 
 ```toml title="cchk.toml"
 # changed: report the branch rule without enforcing it (nothing is warned by default)
