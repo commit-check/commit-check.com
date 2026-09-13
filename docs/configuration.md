@@ -192,7 +192,7 @@ allow_fixup_commits = true
 allow_wip_commits = false          # changed: allowed by default
 require_body = false
 require_signed_off_by = false
-ai_attribution = "forbid"          # changed: "ignore" by default
+ai_attribution = "disclose"        # changed: "ignore" by default; see the AI policy guide
 # ignore_authors = []              # optional: bypass all commit checks for these authors
 
 [push]
@@ -240,7 +240,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.17.0
+    rev: v2.18.0
     hooks:
       - id: check-message
         args:
@@ -288,6 +288,8 @@ The full mapping between the three forms:
 | `require_rebase_target = "main"` | `CCHK_REQUIRE_REBASE_TARGET=main` | `--require-rebase-target=main` |
 | `allow_force_push = true` | `CCHK_ALLOW_FORCE_PUSH=true` | `--no-force-push` (sets `allow_force_push` to `false`) |
 | `ai_attribution = "forbid"` | `CCHK_AI_ATTRIBUTION=forbid` | `--ai-attribution=forbid` |
+| `ai_disclosure_trailers = ["Assisted-by"]` | `CCHK_AI_DISCLOSURE_TRAILERS=Assisted-by` | `--ai-disclosure-trailers=Assisted-by` |
+| `ai_disclosure_pattern = '^\S+/\S+$'` | `CCHK_AI_DISCLOSURE_PATTERN=^\S+/\S+$` | `--ai-disclosure-pattern='^\S+/\S+$'` |
 | `ignore_authors = ["bot"]` (in branch section) | `CCHK_BRANCH_IGNORE_AUTHORS=bot,user` | `--branch-ignore-authors=bot,user` |
 | `regex = "^v\\d+\\.\\d+\\.\\d+$"` (in tag section) | `CCHK_TAG_REGEX=^v\\d+\\.\\d+\\.\\d+$` | `--tag-regex=^v\\d+\\.\\d+\\.\\d+$` |
 | `max_size = "5MB"` (in files section) | `CCHK_FILES_MAX_SIZE=5MB` | `--files-max-size=5MB` |
@@ -344,7 +346,9 @@ the same thing twice, so read the description rather than the cell:
 | commit | author_email_pattern | str | `^.+@.+$` | Custom regex for the author email check. When empty, the built-in default pattern is used. This option only takes effect when the author_email check is enabled (`-e` / `--author-email`). |
 | commit | author_name_pattern | str | "" (built-in default) | Custom regex for the author name check. When empty, the built-in default pattern is used (it is not disabled). This option only takes effect when the author_name check is enabled (`-n` / `--author-name`). |
 | commit | require_signed_off_by | bool | false | Require "Signed-off-by" line in the commit message footer. |
-| commit | ai_attribution | str | "ignore" | AI attribution policy. `"forbid"` rejects any commit containing known AI tool signatures (Claude Code, Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, and generic AI model patterns). `"ignore"` disables the check. This feature is a response to the industry-wide discussion on AI disclosure in open source (Linux kernel `Assisted-by:` trailer, CPython, VS Code, Apache, Fedora policies). |
+| commit | ai_attribution | str | "ignore" | AI attribution policy. `"forbid"` rejects any commit carrying AI attribution — a co-author or sign-off line naming a known tool, a disclosure trailer, a vendor mark ([CC013](rules.md#cc013)). `"disclose"` accepts AI assistance that is disclosed with one of `ai_disclosure_trailers` ([CC014](rules.md#cc014)) and rejects the tool as a co-author ([CC015](rules.md#cc015)) or as a sign-off ([CC016](rules.md#cc016)). `"ignore"` disables the check. Any other value is a configuration error. |
+| commit | ai_disclosure_trailers | list[str] | ["Assisted-by", "Generated-by"] | The trailers that disclose AI assistance under `"disclose"`. The first one is what a correction is written with. Listing `Co-authored-by` says the project accepts the tool as a co-author, and CC015 then passes. `Signed-off-by` is refused: only a person can certify the DCO. |
+| commit | ai_disclosure_pattern | str | "" (any value) | A regex the disclosure trailer's value must match under `"disclose"`, e.g. `'^\S+/\S+$'` for an `agent/model` format. Empty accepts any value, but a trailer with no value at all is reported whatever the pattern is. |
 | branch | conventional_branch | bool | true | Enforce Conventional Branch specification. |
 | branch | allow_branch_types | list[str] | ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix", "build", "ci", "docs", "perf", "refactor", "style", "test", "ai", "claude", "codex", "copilot", "cursor", "dependabot", "renovate"] | Allowed branch types when `conventional_branch` is true. The default is a superset of the [Conventional Branch spec](https://conventionalbranch.org/): the spec types (`feature`, `bugfix`, `hotfix`, `release`, `chore`) plus the Conventional Commit types (`build`, `ci`, `docs`, `perf`, `refactor`, `style`, `test`), AI agent prefixes (`ai`, `claude`, `codex`, `copilot`, `cursor`) and bot prefixes (`dependabot`, `renovate`). For strict spec-only validation, set this option explicitly (e.g. `["feature", "bugfix", "hotfix", "release", "chore"]`). |
 | branch | allow_branch_names | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["develop", "staging"]). By default, master, main, HEAD, and PR-* are always allowed. |
