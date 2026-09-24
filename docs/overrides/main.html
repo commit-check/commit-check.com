@@ -2,10 +2,14 @@
 
 {# The landing page sets `title: Commit Check` so its social card and search
    entry are not labelled "Home". Material appends the site name to any page
-   that carries a meta title, which on this one page repeats it. #}
+   that carries a meta title, which on this one page repeats it.
+
+   The site name alone says nothing to someone who has not heard of it, and
+   it is what Google shows as the result's headline, so the landing page can
+   give its document title separately as `seo_title`. #}
 {% block htmltitle %}
   {% if page.is_homepage %}
-    <title>{{ config.site_name }}</title>
+    <title>{{ page.meta.seo_title or config.site_name }}</title>
   {% else %}
     {{ super() }}
   {% endif %}
