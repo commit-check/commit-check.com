@@ -62,7 +62,7 @@ description: Catch bad commits before they merge. Messages, branches, authors an
 </div>
 <ul class="cc-wrap cc-facts">
 <li>MIT licensed, no account needed</li>
-<li>Python 3.10 – 3.14 on Linux, macOS and Windows</li>
+<li>Python 3.10 – 3.15 on Linux, macOS and Windows</li>
 <li>Signed build provenance on every release</li>
 <li>CLI and hook work with any Git host</li>
 </ul>
@@ -488,8 +488,8 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 
 ??? question "Which Python versions are supported?"
 
-    3.10 through 3.14. CI runs the suite on all five, across Linux, macOS and
-    Windows — fifteen combinations on every change.
+    3.10 through 3.15. On every change, CI builds the wheel and installs it on
+    all six, across Linux, macOS and Windows — eighteen combinations.
 
 ??? question "How do I know the package I installed is the one you built?"
 

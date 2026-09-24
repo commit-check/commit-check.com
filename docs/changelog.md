@@ -29,6 +29,15 @@ below and to the page that documents the feature properly.
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
+## v2.18.1 (2026-09-24) { #v2181 }
+
+### Changed
+
+* **Python 3.15 is supported.** CI now builds and installs the wheel on 3.15
+  alongside 3.10–3.14, on Linux, macOS and Windows, and the package declares
+  it. Contributed by [@itzzdev09](https://github.com/itzzdev09).
+  See PR [#583](https://github.com/commit-check/commit-check/pull/583).
+
 ## v2.18.0 (2026-09-13) { #v2180 }
 
 ### Added
