@@ -36,7 +36,7 @@ name.
 
 !!! tip "Supported Python versions"
 
-    Commit Check supports Python 3.10 through 3.14, on Linux, macOS and Windows.
+    Commit Check supports Python 3.10 through 3.15, on Linux, macOS and Windows.
 
 Running it as a [pre-commit hook](guides/pre-commit.md)
 or a [GitHub Action](guides/github-actions.md) needs no
