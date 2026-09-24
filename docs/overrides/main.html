@@ -12,6 +12,9 @@
 {% endblock %}
 
 {% block extrahead %}
+  {# The display face for headings and the site name (--cc-display-font in
+     assets/extra.css). The theme loads the text and code faces itself. #}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..800&display=swap">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/static/apple-touch-icon.png">
   <link rel="icon" type="image/x-icon" href="{{ base_url }}/static/favicon.ico">
 {% endblock %}

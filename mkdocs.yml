@@ -35,14 +35,17 @@ theme:
   favicon: assets/favicon.svg
   icon:
     repo: fontawesome/brands/github
+  # Instrument Sans for text and JetBrains Mono for code; the display face,
+  # Bricolage Grotesque, is loaded in overrides/main.html because the theme
+  # only takes two families.
   font:
-    text: Inter
+    text: Instrument Sans
     code: JetBrains Mono
+  # Two states, not three. The first visit still follows the system through
+  # the media queries; after that every click visibly changes the page. A
+  # third "follow system" state made one click in three do nothing a reader
+  # could see, which read as a broken toggle.
   palette:
-    - media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/brightness-auto
-        name: Follow system theme
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: custom
@@ -79,6 +82,11 @@ extra_css:
   # Brand colours and typography, then the landing-page-specific layout.
   - assets/extra.css
   - stylesheets/extra.css
+
+# The landing page's two demos. Loaded everywhere, because instant navigation
+# does not run scripts that arrive with a page; it does nothing elsewhere.
+extra_javascript:
+  - javascripts/landing.js
 
 extra:
   social:
@@ -136,7 +144,8 @@ plugins:
   - social:
       enabled: !ENV [SOCIAL_CARDS, true]
       cards_layout_options:
-        background_color: "#2c9ccd"
+        background_color: "#0b1620"
+        color: "#ffffff"
 
 hooks:
   - scripts/mkdocs_hooks.py
