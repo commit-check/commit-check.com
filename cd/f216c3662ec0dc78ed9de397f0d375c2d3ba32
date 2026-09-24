@@ -1,0 +1,24 @@
+mkdocs.yml
+  s_39b40faf32868b::t_b855b1e7f94ed4 44-47
+docs/stylesheets/landing.css
+  s_39b40faf32868b::t_9f31da665933d9 2480-2529
+  s_39b40faf32868b::t_45b6f5a3129d83 2530-2535
+docs/assets/extra.css
+  s_39b40faf32868b::t_b855b1e7f94ed4 46-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "cdf216c3662ec0dc78ed9de397f0d375c2d3ba32",
+  "prompts": {},
+  "sessions": {
+    "s_39b40faf32868b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f0debcf5-afa4-4c60-b136-cd927a4ddf57",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Xianpeng Shen <xianpeng.shen@gmail.com>"
+    }
+  }
+}
