@@ -1,29 +1,84 @@
 /* Brand palette -----------------------------------------------------------
-   Material's "custom" primary/accent read these variables. */
+   Material's "custom" primary/accent read these variables.
+
+   Ink is the brand's dark and Signal Blue its accent. The header and footer
+   are Ink on every page, so the docs and the landing page share one frame;
+   Signal Blue is the same #2c9ccd the README badge has always used, so badges
+   already in the wild still match. */
 :root {
+  --cc-ink: #0b1620;
+  --cc-ink-raised: #13212c;
   --cc-brand: #2c9ccd;
   --cc-brand-dark: #1e85a8;
   --cc-brand-light: #5bb3d9;
-  /* The brand blue only reaches 4.2:1 on white; links need 4.5:1. */
+  /* The brand blue only reaches 3.1:1 on white; links need 4.5:1. */
   --cc-link: #176b89;
 
-  /* The hero sits on brand blue, so its button is white rather than branded. */
-  --cc-hero-button-bg: #ffffff;
-
-  --md-primary-fg-color: var(--cc-brand);
-  --md-primary-fg-color--light: var(--cc-brand-light);
-  --md-primary-fg-color--dark: var(--cc-brand-dark);
+  --md-primary-fg-color: var(--cc-ink);
+  --md-primary-fg-color--light: var(--cc-ink-raised);
+  --md-primary-fg-color--dark: #060d13;
   --md-accent-fg-color: var(--cc-brand-dark);
+
+  /* A literal stack: the theme defines --md-text-font-family below :root,
+     so a var() of it here would resolve to nothing. */
+  --cc-display-font: "Bricolage Grotesque", "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
+}
+
+/* The theme sets the footer colours per scheme, so they are overridden per
+   scheme too; on :root alone they would lose to the theme's own. */
+[data-md-color-scheme="default"],
+[data-md-color-scheme="slate"] {
+  --md-footer-bg-color: #081119;
+  --md-footer-bg-color--dark: #060d13;
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: var(--cc-brand);
+  /* Material tints every slate grey from one hue; 205 is Ink's. */
+  --md-hue: 205;
+  --md-default-bg-color: #0e1a23;
+  --md-primary-fg-color: var(--cc-ink);
   --md-accent-fg-color: var(--cc-brand-light);
   --md-typeset-a-color: var(--cc-brand-light);
 }
 
 [data-md-color-scheme="default"] {
   --md-typeset-a-color: var(--cc-link);
+}
+
+/* A primary button is Signal Blue with Ink text: white on this blue is 3.1:1,
+   under the 4.5:1 a button label needs; Ink on it is 5.9:1. */
+.md-typeset .md-button--primary {
+  background-color: var(--cc-brand);
+  border-color: var(--cc-brand);
+  color: var(--cc-ink);
+}
+
+.md-typeset .md-button--primary:focus,
+.md-typeset .md-button--primary:hover {
+  background-color: var(--cc-brand-light);
+  border-color: var(--cc-brand-light);
+  color: var(--cc-ink);
+}
+
+/* Display face for page titles, section headings and the site name. Body text
+   stays in the theme's text font. */
+.md-typeset h1,
+.md-typeset h2 {
+  font-family: var(--cc-display-font);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* The theme draws page titles in a light grey at weight 300; in the display
+   face they read as headings only at full strength. */
+.md-typeset h1 {
+  color: var(--md-default-fg-color);
+}
+
+.md-header__title {
+  font-family: var(--cc-display-font);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 /* Feature grid: uses Material's card grid, tightened up a little. */

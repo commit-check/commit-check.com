@@ -181,13 +181,13 @@ without a wall of red.
 
 Public repositories are free on any account, and everything on a personal
 account is free, and both stay free. Only an organization's private
-repositories are paid:
+repositories will be paid, on a Team plan that is not on sale yet:
 
 | Plan | Price | Covers |
 |---|---|---|
 | Open Source | Free | Public repositories, on any account |
 | Personal | Free | Private repositories on a personal account |
-| Team | $19 / month | Private repositories in an organization, 14-day free trial |
+| Team | Coming soon | Private repositories in an organization |
 
 The Team plan is not tiered by seat count. Twenty of you and twenty thousand of
 you pay the same, so growing the team never changes the bill.
