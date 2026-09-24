@@ -2477,3 +2477,59 @@
 [data-md-color-scheme="slate"] .md-typeset .cc-group--ink {
   border-color: #22404f;
 }
+
+/* --------------------------------------------------- hero, light scheme -- */
+
+/* In the light scheme the hero is light too, so the theme toggle changes what
+   is on screen at the top of the page. The terminal and the install command
+   stay dark: they stand for a terminal, which is dark in either theme. The
+   Action band and the closing band stay Ink in both schemes as a stage for
+   the demo. */
+[data-md-color-scheme="default"] .md-typeset .cc-hero {
+  background: #ffffff;
+  color: var(--cc-text);
+  box-shadow: inset 0 -1px 0 var(--cc-line);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-display {
+  color: var(--cc-text);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-accent {
+  /* Signal Blue is 3.1:1 on white, enough for display type (3:1 from 24px). */
+  color: var(--cc-blue);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-lede {
+  color: var(--cc-muted);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-lede code {
+  color: var(--cc-text);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-pill {
+  border-color: #b9dcec;
+  background: var(--cc-tint);
+  color: #135a74;
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero ul.cc-facts {
+  border-top-color: var(--cc-line);
+  color: var(--cc-muted);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-install {
+  border-color: var(--cc-ink);
+  background: var(--cc-ink);
+}
+
+[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-term {
+  box-shadow: 0 24px 60px rgba(11, 22, 32, 0.22);
+}
+
+/* The history-line motif's nodes are filled with the ground colour so the
+   lines pass behind them; on the light hero that ground is white. */
+[data-md-color-scheme="default"] .md-typeset .cc-hero__graph circle {
+  fill: #ffffff;
+}

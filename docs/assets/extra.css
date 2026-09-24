@@ -43,6 +43,27 @@
 
 [data-md-color-scheme="default"] {
   --md-typeset-a-color: var(--cc-link);
+  /* A light header in the light scheme, Ink in the dark one, so the header
+     answers the theme toggle like the rest of the page. */
+  --md-primary-fg-color: #ffffff;
+  --md-primary-fg-color--light: #f4f6f7;
+  --md-primary-fg-color--dark: #eef2f4;
+  --md-primary-bg-color: var(--cc-ink);
+  --md-primary-bg-color--light: #4f6270;
+}
+
+[data-md-color-scheme="default"] .md-header {
+  box-shadow: inset 0 -1px 0 #dce3e8;
+}
+
+/* The theme's search field is a translucent black meant for a coloured
+   header; on a white one it needs a solid tint instead. */
+[data-md-color-scheme="default"] .md-search__form {
+  background-color: #eef2f4;
+}
+
+[data-md-color-scheme="default"] .md-search__form:hover {
+  background-color: #e4e9ed;
 }
 
 /* A primary button is Signal Blue with Ink text: white on this blue is 3.1:1,

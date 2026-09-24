@@ -41,11 +41,11 @@ theme:
   font:
     text: Instrument Sans
     code: JetBrains Mono
+  # Two states, not three. The first visit still follows the system through
+  # the media queries; after that every click visibly changes the page. A
+  # third "follow system" state made one click in three do nothing a reader
+  # could see, which read as a broken toggle.
   palette:
-    - media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/brightness-auto
-        name: Follow system theme
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: custom
