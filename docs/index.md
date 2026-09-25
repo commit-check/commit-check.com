@@ -4,6 +4,7 @@ hide:
   - toc
 template: landing.html
 title: Commit Check
+seo_title: Commit Check — Commit message & branch name linter for Git
 description: Catch bad commits before they merge. Messages, branches, authors and AI attribution, checked from your commit hook to every pull request.
 ---
 
