@@ -1,6 +1,6 @@
 # commit-check.com
 
-[![Website](https://img.shields.io/static/v1?label=Website&message=commit-check.com&color=2c9ccd&logo=git&logoColor=white)](https://commit-check.com)
+[![Website](https://img.shields.io/badge/Website-commit--check.com-2c9ccd?labelColor=0b1620&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI%2bPHBhdGggZD0iTTIxIDM0TDMwIDQzTDQ3IDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQzlDQ0QiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8%2bPGNpcmNsZSBjeD0iMjEiIGN5PSIzNCIgcj0iNyIgZmlsbD0iIzBCMTYyMCIgc3Ryb2tlPSIjMkM5Q0NEIiBzdHJva2Utd2lkdGg9IjUiLz48L3N2Zz4K)](https://commit-check.com)
 
 Source for [commit-check.com](https://commit-check.com) — the landing page,
 the blog, and the documentation for the commit-check family of projects.
