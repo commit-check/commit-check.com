@@ -11,6 +11,7 @@ developer sees locally and what is enforced on the pull request.
 | [GitHub App](github-app.md) | On every push and pull request, hosted | No | Install once for the organization |
 | [Command line](../example.md) | Wherever you call it: a range of commits, a CI you write yourself | — | `pip install commit-check` |
 | [MCP server](mcp.md) | Before the commit exists, inside an AI coding agent | — | One entry in the agent's MCP config |
+| [Python API](python-api.md) | Wherever your own code runs: a bot, a server-side hook, an agent you build | — | `pip install commit-check`, then `import commit_check.api` |
 | [Organization config](organization.md) | Everywhere at once | — | One shared `cchk.toml`, whichever of the above runs it |
 
 ## Which one
@@ -67,6 +68,11 @@ push and pull request, with no workflow file and no CI minutes.
 
 The same rules as tools for an AI coding agent, so the message is right before
 the commit exists. One entry in the agent's MCP settings. [Set it up →](mcp.md)
+
+## Python API
+
+The same checks from your own code, with no subprocess: each call returns the
+JSON result as a `dict`. [Read the API →](python-api.md)
 
 ## Across an organization { #across-an-organization }
 

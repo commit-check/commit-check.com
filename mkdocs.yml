@@ -175,6 +175,7 @@ nav:
       - GitHub App: guides/github-app.md
       - Across an organization: guides/organization.md
       - MCP server: guides/mcp.md
+      - Python API: guides/python-api.md
       - Policy guides: guides/policies.md
       - Command-line recipes: example.md
       - Troubleshooting: troubleshoot.md
