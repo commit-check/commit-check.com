@@ -180,6 +180,27 @@ a release artifact came from this repository's build pipeline:
 $ gh attestation verify commit_check-*.whl --repo commit-check/commit-check
 ```
 
+## Show that you use it
+
+Put the badge in your README, so contributors know their commits will be
+checked before they open a pull request:
+
+[![commit-check](badge.svg)](https://commit-check.com)
+
+=== "Markdown"
+
+    ```markdown
+    [![commit-check](https://commit-check.com/badge.svg)](https://commit-check.com)
+    ```
+
+=== "reStructuredText"
+
+    ```rst
+    .. image:: https://commit-check.com/badge.svg
+       :target: https://commit-check.com
+       :alt: commit-check
+    ```
+
 ## Where to go next
 
 - **[Where to run it](guides/integrations.md)** — pre-commit hook, GitHub

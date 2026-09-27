@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="157" height="20" role="img" aria-label="commit-check: enabled">
+  <title>commit-check: enabled</title>
+  <!--
+    The Commit Check badge, served at https://commit-check.com/badge.svg
+
+    A hand copy of what shields.io renders for the brand badge documented in
+    commit-check/.github branding/README.md: the Ink label, the Signal Blue
+    value and the mark from branding/badge-logo.svg, in shields' "flat" style
+    and at the same size, so this badge and the shields.io one are
+    indistinguishable in a README row. Hosting it here turns the snippet a
+    user copies into one short line instead of a shields.io URL carrying a
+    base64 logo, and takes a third-party service out of the request.
+
+    The mark is drawn as vectors rather than an embedded image:
+    badge-logo.svg's 64x64 viewBox scaled into shields' 14px logo box at
+    (5,3). Text keeps shields' explicit textLength, which is what keeps the
+    rendering identical on machines that have no Verdana.
+
+    White on Signal Blue is about 3:1, under the 4.5:1 WCAG AA asks of text
+    this size; it is the colour the badge has always had, and the one the
+    brand keeps. If the brand badge changes, re-render it on shields.io and
+    copy the widths, text x and textLength from there.
+  -->
+  <filter id="blur"><feGaussianBlur stdDeviation="16"/></filter>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="157" height="20" rx="3"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="104" height="20" fill="#0b1620"/>
+    <rect x="104" width="53" height="20" fill="#2c9ccd"/>
+    <rect width="157" height="20" fill="url(#s)"/>
+  </g>
+  <g transform="translate(5,3) scale(.21875)">
+    <path d="M21 34L30 43L47 22" fill="none" stroke="#2c9ccd" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="21" cy="34" r="7" fill="#0b1620" stroke="#2c9ccd" stroke-width="5"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110" transform="scale(.1)">
+    <g aria-hidden="true" fill="#010101">
+      <text x="615" y="150" fill-opacity=".8" filter="url(#blur)" textLength="770">commit-check</text>
+      <text x="615" y="150" fill-opacity=".3" textLength="770">commit-check</text>
+      <text x="1295" y="150" fill-opacity=".8" filter="url(#blur)" textLength="430">enabled</text>
+      <text x="1295" y="150" fill-opacity=".3" textLength="430">enabled</text>
+    </g>
+    <text x="615" y="140" textLength="770">commit-check</text>
+    <text x="1295" y="140" textLength="430">enabled</text>
+  </g>
+</svg>
