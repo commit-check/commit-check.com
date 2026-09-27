@@ -317,3 +317,6 @@ $ commit-check -m -b --format json | jq '{status, warnings}'
   "warnings": 1
 }
 ```
+
+From Python, [`commit_check.api`](guides/python-api.md) returns the same
+result as a `dict`, without a subprocess.
