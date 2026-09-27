@@ -14,7 +14,16 @@ The server runs over stdio and is started by the client. With
 
 === "Claude Code"
 
-    ```json title=".claude/settings.local.json or ~/.claude/settings.json"
+    ```console
+    $ claude mcp add commit-check -- uvx commit-check-mcp
+    ```
+
+    That registers it for you, in this project. Add `--scope project` to write
+    it to a `.mcp.json` at the repository root instead, so the whole team gets
+    it once the file is committed, or `--scope user` for every project on your
+    machine. A hand-written `.mcp.json` holds the usual block:
+
+    ```json title=".mcp.json"
     {
       "mcpServers": {
         "commit-check": {
@@ -24,6 +33,8 @@ The server runs over stdio and is started by the client. With
       }
     }
     ```
+
+    Claude Code does not read MCP servers from `settings.json`.
 
 === "Cursor"
 
@@ -38,17 +49,27 @@ The server runs over stdio and is started by the client. With
     }
     ```
 
-=== "Claude Desktop, Windsurf, Cline, Roo Code"
+=== "VS Code"
 
-    The same block, in each client's MCP settings file. The
-    [README](https://github.com/commit-check/commit-check-mcp#use-with-an-mcp-client)
-    lists the file for each.
+    ```json title=".vscode/mcp.json"
+    {
+      "servers": {
+        "commit-check": {
+          "type": "stdio",
+          "command": "uvx",
+          "args": ["commit-check-mcp"]
+        }
+      }
+    }
+    ```
+
+    The key is `servers`, not `mcpServers`. Copilot uses it in agent mode.
 
 === "Zed"
 
     ```json title="~/.config/zed/settings.json"
     {
-      "mcp_servers": {
+      "context_servers": {
         "commit-check": {
           "command": "uvx",
           "args": ["commit-check-mcp"]
@@ -57,6 +78,13 @@ The server runs over stdio and is started by the client. With
     }
     ```
 
+=== "Claude Desktop, Windsurf, Cline, Roo Code, Continue"
+
+    The `mcpServers` block from the Cursor tab, in each client's MCP settings
+    file; Continue takes it as a YAML list. The
+    [README](https://github.com/commit-check/commit-check-mcp#where-each-client-keeps-it)
+    lists the file and the format for each.
+
 === "Without uv"
 
     ```console
@@ -64,7 +92,8 @@ The server runs over stdio and is started by the client. With
     $ which commit-check-mcp
     ```
 
-    Then use that absolute path as the `command`, with no `args`.
+    Then use that absolute path as the `command`, with no `args`. On Windows,
+    `where commit-check-mcp` finds it.
 
 ## Make the agent use it
 
@@ -107,7 +136,10 @@ Every validation tool takes the same optional arguments:
 - `config` — inline overrides, merged on top of the defaults and the file, for
   a one-off stricter or looser check.
 
-All tools are read-only. Nothing is committed, pushed or written.
+No tool commits, pushes or changes the working tree. `validate_push_safety` and
+`validate_repository_state` may run `git fetch` to resolve a SHA, which updates
+`FETCH_HEAD` and the remote-tracking refs. The other six only read, and their
+MCP annotations say so for clients that auto-approve read-only tools.
 
 ## The same rules, one step earlier
 
