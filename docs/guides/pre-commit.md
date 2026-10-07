@@ -36,17 +36,23 @@ That is it. The next malformed commit message is rejected before it exists.
 
 | Hook ID | Stage | Rules |
 |---|---|---|
-| `check-message` | `commit-msg` | [CC001–CC013](../rules.md#commit-message-rules) |
+| `check-message` | `commit-msg` | [CC001–CC016](../rules.md#commit-message-rules) |
 | `check-branch` | `pre-commit` | [CC201–CC202](../rules.md#branch-rules) |
 | `check-author-name` | `pre-commit` | [CC101](../rules.md#cc101) |
 | `check-author-email` | `pre-commit` | [CC102](../rules.md#cc102) |
 | `check-no-force-push` | `pre-push` | [CC301](../rules.md#cc301) |
+| `check-files` | `pre-push` | [CC302–CC304](../rules.md#push-rules) |
+| `check-tag` | `pre-push` | [CC401](../rules.md#cc401) |
 
-`check-no-force-push` also needs its own install:
+The three `pre-push` hooks need their own install too:
 
 ```console
 $ pre-commit install --hook-type pre-push
 ```
+
+pre-commit runs no hook for a push that creates a ref without carrying new
+commits. So a new tag pushed on its own, when the commit it points at is
+already on the remote, is never seen by `check-tag`.
 
 ## Configuring without a TOML file
 
