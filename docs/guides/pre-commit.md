@@ -8,7 +8,7 @@ Add Commit Check to `.pre-commit-config.yaml`:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.2
+    rev: v2.18.3
     hooks:
       - id: check-message
       - id: check-branch
@@ -55,7 +55,7 @@ Options can be passed as hook arguments, which keeps everything in one file:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.2
+    rev: v2.18.3
     hooks:
       - id: check-message
         args:
@@ -67,6 +67,26 @@ repos:
 A `cchk.toml` is usually the better choice once you have more than a couple of
 options, because CI and the CLI read it too. See
 [Configuration](../configuration.md) for the precedence rules.
+
+## Fixing the message instead of rejecting it
+
+Give `check-message` the `--fix` argument and it corrects a message whose
+every failure has a mechanical fix, such as a type written `Fix` or a missing
+colon, and lets the commit through:
+
+```yaml title=".pre-commit-config.yaml"
+repos:
+  - repo: https://github.com/commit-check/commit-check
+    rev: v2.18.3
+    hooks:
+      - id: check-message
+        args: [--fix]
+```
+
+With that, `git commit -m "Fix: add streaming support"` records
+`fix: add streaming support`. A message that needs a judgment, such as one
+with no type at all, is rejected as before. More in
+[Fixing a message in place](../example.md#fixing-a-message-in-place).
 
 ## Skipping a hook
 

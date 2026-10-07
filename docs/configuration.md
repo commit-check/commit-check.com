@@ -65,6 +65,28 @@ $ commit-check --config path/to/cchk.toml --message
     PyCharm and IntelliJ offer completion, validation and inline documentation
     for `cchk.toml` with nothing to configure.
 
+### Settings nothing reads
+
+A key that no check reads, usually a misspelling, leaves its rule at the
+default. Commit Check names each one on stderr, with the closest real name:
+
+```toml title="cchk.toml"
+[commit]
+subject_max_lenght = 50
+```
+
+```console
+$ echo "feat: add streaming support" | commit-check -m
+⚠ unknown setting [commit] subject_max_lenght is ignored; did you mean subject_max_length?
+```
+
+It is a warning, not an error: the exit code and the JSON on stdout do not
+change. The top-level `warn` list and the GitHub App's
+[`[jira]`](guides/github-app.md#jira-ticket-references) and
+[`[pull_request]`](#pull-requests-every-commit-or-the-squash-message) sections
+are read elsewhere and are not reported. The Python API and the MCP server
+load the file themselves and do not report it either.
+
 ## Inheriting a shared config
 
 An organization can keep one base policy and have every repository build on it.
@@ -239,7 +261,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.2
+    rev: v2.18.3
     hooks:
       - id: check-message
         args:
