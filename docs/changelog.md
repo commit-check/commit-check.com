@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.18.3](#v2183) | `--fix` corrects a message in place; `--branch` reads GitLab, Bitbucket, Azure and Jenkins variables | [Fixing a message in place](example.md#fixing-a-message-in-place) · [Other CI](guides/other-ci.md) |
 | [2.18.0](#v2180) | AI disclosure policy: three rules, and the correction written for you | [Policy guides](guides/policies.md#asking-for-disclosure-instead) · [CC014](rules.md#cc014) |
 | [2.17.0](#v2170) | Concrete corrections for mechanical slips; a `warn` level per rule | [Reading the JSON](example.md#reading-the-json) · [Report without enforcing](configuration.md#report-a-rule-without-enforcing-it) |
 | [2.16.0](#v2160) | Tag name validation, and file size, path and pattern policies | [CC401](rules.md#cc401) · [CC302–CC304](rules.md#push-rules) |
@@ -28,6 +29,40 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.18.3 (2026-10-07) { #v2183 }
+
+### Added
+
+* **`--fix` corrects a commit message in place** — when every message check
+  the commit failed has a mechanical fix, the ones `--format json` reports in
+  `fix`, the message file is rewritten and the check passes, so
+  `Fix: add streaming support` is recorded as `fix: add streaming support`.
+  Anything that takes a judgment, such as a subject with no type at all,
+  leaves the file as it was and is rejected as before. It needs a message
+  file, so stdin and `--rev` are a usage error, and `--dry-run` rewrites
+  nothing. With pre-commit it is `args: [--fix]` on `check-message`.
+  See PR [#594](https://github.com/commit-check/commit-check/pull/594) and
+  [Fixing a message in place](example.md#fixing-a-message-in-place).
+
+* **`--branch` reads the branch from GitLab, Bitbucket, Azure and Jenkins** —
+  on a detached checkout git names no branch, and only GitHub's variables
+  were read, so elsewhere the name became `HEAD`, which is always allowed, and
+  every branch passed. Each CI's own variables are now read, a merge or pull
+  request's source branch first, and Jenkins' only inside a Jenkins build that
+  is not a tag build. A pipeline that runs `--branch` on a long-lived branch
+  such as `develop` now has that name judged; `allow_branch_names` can allow
+  it.
+  See PR [#600](https://github.com/commit-check/commit-check/pull/600) and
+  [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md).
+
+* **A setting nothing reads is named** — a misspelt key in `cchk.toml` was
+  ignored in silence, and its rule stayed at the default. Each one is now
+  reported on stderr with the closest real name, as in `⚠ unknown setting
+  [commit] subject_max_lenght is ignored; did you mean subject_max_length?`.
+  The exit code and the JSON do not change.
+  See PR [#593](https://github.com/commit-check/commit-check/pull/593) and
+  [Settings nothing reads](configuration.md#settings-nothing-reads).
 
 ## v2.18.2 (2026-09-28) { #v2182 }
 

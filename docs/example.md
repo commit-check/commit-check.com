@@ -81,6 +81,27 @@ EOF
 $ commit-check -m /tmp/msg.txt
 ```
 
+### Fixing a message in place
+
+`--fix` corrects the message instead of only rejecting it. When every check
+the message failed has a mechanical fix, the corrections that
+[`--format json` reports in `fix`](#reading-the-json), it rewrites the message
+file and the check passes:
+
+```console
+$ printf 'Fix: add streaming support\n' > msg.txt
+$ commit-check -m --fix msg.txt
+✎ fixed the commit message: CC001 message
+$ cat msg.txt
+fix: add streaming support
+```
+
+A failure that takes a judgment, such as `updated the parser`, which has no
+type at all, leaves the file as it was and fails as before. `--fix` needs a
+message file to rewrite, so with stdin or `--rev` it is a usage error, and
+`--dry-run` rewrites nothing. In the `commit-msg` hook it is one argument:
+see [Fixing the message instead of rejecting it](guides/pre-commit.md#fixing-the-message-instead-of-rejecting-it).
+
 ## Checking the branch
 
 ```console
@@ -96,6 +117,13 @@ fix/empty-config-crash
 feature/role-caching
 release/v1.2.0
 ```
+
+On a detached HEAD, which is how most CI systems check out a commit, git has
+no branch to report, so the name comes from the CI's own variables: GitHub
+Actions, GitLab CI, Bitbucket Pipelines, Azure Pipelines, and Jenkins
+multibranch inside a Jenkins build. A merge or pull request's source branch is
+read first. With none of these set, the name is `HEAD`. The variables other
+than GitHub's are read from 2.18.3 on.
 
 ## Checking the committer
 
@@ -131,7 +159,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.2
+    rev: v2.18.3
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -302,7 +330,8 @@ $ echo "Fix: add streaming support" | commit-check -m --format json | jq '.check
 `fix` is empty whenever the correction takes a judgment — a subject with no
 type at all, one over the length limit, a verb that is not imperative — and
 `suggest` then keeps the rule's general advice. A tool can apply a non-empty
-`fix` as it stands; a person only ever needs `suggest`.
+`fix` as it stands, and [`--fix`](#fixing-a-message-in-place) does that to a
+message file; a person only ever needs `suggest`.
 
 A rule listed under [`warn`](configuration.md#report-a-rule-without-enforcing-it)
 reports with `"status": "warn"` instead of `"fail"`. The top-level `status` is

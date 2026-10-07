@@ -47,7 +47,7 @@ way everywhere:
 
 ### Which rules
 
-The App runs the commit message, author and branch rules — [CC001–CC013](../rules.md#commit-message-rules),
+The App runs the commit message, author and branch rules — [CC001–CC016](../rules.md#commit-message-rules),
 [CC101–CC102](../rules.md#author-rules) and [CC201–CC202](../rules.md#branch-rules) —
 with the commit's own branch as the branch under test. One thing it does not
 do: the push, file and tag rules ([CC301–CC304](../rules.md#push-rules),

@@ -8,7 +8,7 @@ Add Commit Check to `.pre-commit-config.yaml`:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.2
+    rev: v2.18.3
     hooks:
       - id: check-message
       - id: check-branch
@@ -36,17 +36,23 @@ That is it. The next malformed commit message is rejected before it exists.
 
 | Hook ID | Stage | Rules |
 |---|---|---|
-| `check-message` | `commit-msg` | [CC001–CC013](../rules.md#commit-message-rules) |
+| `check-message` | `commit-msg` | [CC001–CC016](../rules.md#commit-message-rules) |
 | `check-branch` | `pre-commit` | [CC201–CC202](../rules.md#branch-rules) |
 | `check-author-name` | `pre-commit` | [CC101](../rules.md#cc101) |
 | `check-author-email` | `pre-commit` | [CC102](../rules.md#cc102) |
 | `check-no-force-push` | `pre-push` | [CC301](../rules.md#cc301) |
+| `check-files` | `pre-push` | [CC302–CC304](../rules.md#push-rules) |
+| `check-tag` | `pre-push` | [CC401](../rules.md#cc401) |
 
-`check-no-force-push` also needs its own install:
+The three `pre-push` hooks need their own install too:
 
 ```console
 $ pre-commit install --hook-type pre-push
 ```
+
+pre-commit runs no hook for a push that creates a ref without carrying new
+commits. So a new tag pushed on its own, when the commit it points at is
+already on the remote, is never seen by `check-tag`.
 
 ## Configuring without a TOML file
 
@@ -55,7 +61,7 @@ Options can be passed as hook arguments, which keeps everything in one file:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.2
+    rev: v2.18.3
     hooks:
       - id: check-message
         args:
@@ -67,6 +73,26 @@ repos:
 A `cchk.toml` is usually the better choice once you have more than a couple of
 options, because CI and the CLI read it too. See
 [Configuration](../configuration.md) for the precedence rules.
+
+## Fixing the message instead of rejecting it
+
+Give `check-message` the `--fix` argument and it corrects a message whose
+every failure has a mechanical fix, such as a type written `Fix` or a missing
+colon, and lets the commit through:
+
+```yaml title=".pre-commit-config.yaml"
+repos:
+  - repo: https://github.com/commit-check/commit-check
+    rev: v2.18.3
+    hooks:
+      - id: check-message
+        args: [--fix]
+```
+
+With that, `git commit -m "Fix: add streaming support"` records
+`fix: add streaming support`. A message that needs a judgment, such as one
+with no type at all, is rejected as before. More in
+[Fixing a message in place](../example.md#fixing-a-message-in-place).
 
 ## Skipping a hook
 

@@ -9,11 +9,10 @@ hook and the Action.
 Two things are different from running it on your own machine, and each
 example below handles both:
 
-- **The checkout is a detached HEAD.** git has no branch to report, so
-  `commit-check --branch` would judge `HEAD`, which is always allowed, and
-  pass whatever the branch is called. Pipe the branch name in from the CI's
-  own variable instead: a value piped into `--branch` on its own is the name
-  it checks.
+- **The checkout can be a detached HEAD**, as it is on GitLab and Azure, and
+  then git has no branch to report. `commit-check --branch` reads the name
+  from the CI's own variables instead, the merge or pull request's source
+  branch first, so the jobs call it as is.
 - **A merge request has more than one commit.** `--rev` checks one commit, so
   the job loops over the commits the merge request adds, as in
   [Checking a range of commits](../example.md#checking-a-range-of-commits).
@@ -24,6 +23,19 @@ example below handles both:
 Each job runs on merge or pull requests only, because the variables it reads
 exist only there. Add `--author-name --author-email` to the `commit-check`
 call in the loop to check each commit's author as well.
+
+!!! note "On 2.18.2 or older"
+
+    Releases before 2.18.3 read only GitHub's variables, so on a detached
+    checkout `--branch` judges `HEAD`, which is always allowed, and passes
+    whatever the branch is called. Pipe the name in instead: a value piped
+    into `--branch` on its own is the name it checks.
+
+    ```console
+    $ echo "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" | commit-check --branch          # GitLab
+    $ echo "$BITBUCKET_BRANCH" | commit-check --branch                             # Bitbucket
+    $ echo "${SYSTEM_PULLREQUEST_SOURCEBRANCH#refs/heads/}" | commit-check --branch  # Azure
+    ```
 
 ## GitLab CI
 
@@ -36,7 +48,7 @@ commit-check:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
     - pip install commit-check
-    - echo "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" | commit-check --branch
+    - commit-check --branch
     - |
       head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"
       shas=$(git rev-list "$CI_MERGE_REQUEST_DIFF_BASE_SHA..$head") || exit 1
@@ -69,7 +81,7 @@ pipelines:
             depth: full
           script:
             - pip install commit-check
-            - echo "$BITBUCKET_BRANCH" | commit-check --branch
+            - commit-check --branch
             - |
               shas=$(git rev-list "$BITBUCKET_PR_DESTINATION_COMMIT..$BITBUCKET_COMMIT") || exit 1
               status=0
@@ -104,7 +116,7 @@ steps:
       versionSpec: "3.13"
   - script: pip install commit-check
     displayName: Install Commit Check
-  - script: echo "${SYSTEM_PULLREQUEST_SOURCEBRANCH#refs/heads/}" | commit-check --branch
+  - script: commit-check --branch
     displayName: Check the branch name
   - script: |
       shas=$(git rev-list HEAD^1..HEAD^2) || exit 1
@@ -123,9 +135,9 @@ steps:
 - A pull request build checks out a merge commit whose first parent is the
   target branch and second the pull request, so `HEAD^1..HEAD^2` is exactly
   the commits the pull request adds.
-- `System.PullRequest.SourceBranch` is `refs/heads/feature/x` in Azure Repos
-  and `feature/x` for a GitHub repository; `#refs/heads/` strips the prefix
-  where there is one.
+- The branch name comes from `System.PullRequest.SourceBranch`, which is
+  `refs/heads/feature/x` in Azure Repos and `feature/x` for a GitHub
+  repository. Commit Check drops the `refs/heads/` prefix itself.
 - In Azure Repos the `pr:` section is ignored. Pull request builds come from a
   [build validation branch policy](https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies#set-build-validation)
   on the target branch, and `System.PullRequest.SourceBranch` is only set for
