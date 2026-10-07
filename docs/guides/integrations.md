@@ -9,6 +9,7 @@ developer sees locally and what is enforced on the pull request.
 | [Pre-commit hook](pre-commit.md) | As the message is written | Yes — `--no-verify` | `.pre-commit-config.yaml` in each repository |
 | [GitHub Action](github-actions.md) | On every push and pull request, in CI | No | A workflow file in each repository |
 | [GitHub App](github-app.md) | On every push and pull request, hosted | No | Install once for the organization |
+| [GitLab CI, Bitbucket, Azure Pipelines](other-ci.md) | On every merge or pull request, in CI | No | A job in each repository's pipeline file |
 | [Command line](../example.md) | Wherever you call it: a range of commits, a CI you write yourself | — | `pip install commit-check` |
 | [MCP server](mcp.md) | Before the commit exists, inside an AI coding agent | — | One entry in the agent's MCP config |
 | [Python API](python-api.md) | Wherever your own code runs: a bot, a server-side hook, an agent you build | — | `pip install commit-check`, then `import commit_check.api` |
