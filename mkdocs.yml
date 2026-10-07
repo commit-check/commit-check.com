@@ -3,8 +3,9 @@ site_name: Commit Check
 # netlify.toml.
 site_url: !ENV [SITE_URL, 'https://commit-check.com/']
 site_description: >-
-  Enforce commit message, branch naming, author and signoff standards —
-  one config file, across your CLI, pre-commit hooks, CI, and AI agents.
+  Commit policy as code for teams and AI agents: commit message, branch
+  naming, author and sign-off standards in one config file, enforced in
+  hooks, CI and pull requests.
 site_author: shenxianpeng
 copyright: Copyright &copy; 2022 - 2026 Commit Check
 
