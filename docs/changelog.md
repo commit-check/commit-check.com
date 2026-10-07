@@ -29,6 +29,26 @@ below and to the page that documents the feature properly.
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
+## v2.18.2 (2026-09-28) { #v2182 }
+
+### Fixed
+
+* **A piped message is only the message** — next to `--message`, piped stdin
+  was read by every requested check, so on a valid `feature/streaming-support`
+  branch `printf 'feat: add streaming support\n' | commit-check --message
+  --branch` failed [CC201](rules.md#cc201) on the message text, and the author
+  and tag checks did the same. The other checks now read git. A value piped
+  into one check on its own, such as `echo feature/x | commit-check --branch`,
+  is still what that check judges.
+  See PR [#579](https://github.com/commit-check/commit-check/pull/579).
+
+* **[CC301](rules.md#cc301) reports a skip when it has nothing to compare** —
+  with no push refs, no upstream, or only malformed ref lines, the force-push
+  check reported a pass. It now prints `⊘ skipped (not validated):
+  no-force-push` on stderr and reports `"skip"` in `--format json` and from
+  `validate_push`. Exit codes do not change.
+  See PR [#591](https://github.com/commit-check/commit-check/pull/591).
+
 ## v2.18.1 (2026-09-24) { #v2181 }
 
 ### Changed

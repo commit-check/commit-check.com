@@ -173,6 +173,7 @@ nav:
       - Pre-commit hook: guides/pre-commit.md
       - GitHub Action: guides/github-actions.md
       - GitHub App: guides/github-app.md
+      - GitLab, Bitbucket, Azure: guides/other-ci.md
       - Across an organization: guides/organization.md
       - MCP server: guides/mcp.md
       - Python API: guides/python-api.md
