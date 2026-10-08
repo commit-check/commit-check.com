@@ -5,7 +5,7 @@ hide:
 template: landing.html
 title: Commit Check
 seo_title: Commit Check — Commit message & branch name linter for Git
-description: Catch bad commits before they merge. Messages, branches, authors and AI attribution, checked from your commit hook to every pull request.
+description: Commit policy as code for teams and AI agents. Messages, branches, authors and AI attribution, checked from your commit hook to every pull request.
 ---
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
@@ -32,7 +32,7 @@ description: Catch bad commits before they merge. Messages, branches, authors an
 <div class="cc-hero__copy">
 <p class="cc-pill"><span class="cc-pill__dot"></span>Open source · MIT licensed</p>
 <h1 id="cc-title" class="cc-display">Catch bad commits <span class="cc-accent">before they merge.</span></h1>
-<p class="cc-lede">Commit Check validates commit messages, branch names, authors and sign-offs against one <code>cchk.toml</code> — in your commit hook, in CI, on every pull request and inside your AI agent. When the fix is obvious, it hands you the line.</p>
+<p class="cc-lede"><strong>Commit policy as code for teams and AI agents.</strong> Commit Check validates commit messages, branch names, authors and sign-offs against one <code>cchk.toml</code> — in your commit hook, in CI, on every pull request and inside your AI agent. When the fix is obvious, it hands you the line.</p>
 <div class="cc-actions">
 <a class="cc-btn cc-btn--primary" href="guides/github-actions/">Add to GitHub Actions <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div class="cc-install"><span class="cc-install__sigil" aria-hidden="true">$</span><code>pip install commit-check</code><button class="cc-copy" type="button" data-copy="pip install commit-check" aria-label="Copy the install command"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.2A1.5 1.5 0 0 0 9 2H4a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.2 1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
