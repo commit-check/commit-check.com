@@ -36,14 +36,14 @@ source has already given three different answers.
 | Position | Who takes it |
 |---|---|
 | No AI trailers in the history; disclose in the pull request instead | [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/) |
-| AI is welcome, but say so with a trailer, and never credit the tool as a person | [Linux kernel](https://docs.kernel.org/process/coding-assistants.html) and [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) (`Assisted-by:`), the [ASF](https://www.apache.org/legal/generative-tooling.html) (`Generated-by:`) |
-| The tool is a co-author like anyone else | [pytest](https://docs.pytest.org/en/stable/contributing.html) |
+| AI is welcome, but say so with a trailer, and never credit the tool as a person | [Linux kernel](https://docs.kernel.org/process/coding-assistants.html) and [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) (`Assisted-by:`) |
+| The tool can be credited as a co-author | [pytest](https://docs.pytest.org/en/stable/contributing.html) (`Co-authored-by:`) and the [ASF](https://www.apache.org/legal/generative-tooling.html) (`Generated-by:` or `Co-authored-by:`) |
 
 The kernel adds one hard rule on top: an AI agent must never add a
 `Signed-off-by:` line, because only a person can certify the
 [DCO](https://developercertificate.org/).
 
-The trouble is that all of these are policies written in a CONTRIBUTING file
+The trouble is that all of these are policies written in contributor guidelines
 and enforced by a reviewer's eyes. Nobody reads trailers carefully on the
 twentieth pull request of the day.
 
@@ -52,8 +52,8 @@ twentieth pull request of the day.
 [Commit Check](https://github.com/commit-check/commit-check) is open-source
 commit policy as code for teams and AI agents: the rules for commit messages,
 branch names, authors and sign-offs live in one config file and are enforced in
-hooks, CI and pull requests. Since [v2.18](../../changelog.md#v2180) it turns
-each of those positions into one setting in `cchk.toml`:
+hooks, CI and pull requests. Since [v2.18](../../changelog.md#v2180) it can
+enforce each of those positions from `cchk.toml`:
 
 ```toml
 [commit]
@@ -89,6 +89,11 @@ Only a person can certify the DCO, so no list of accepted trailers makes that
 sign-off acceptable. Each of the three rules can be
 [demoted to a warning](../../configuration.md#report-a-rule-without-enforcing-it)
 on its own, so you can roll the policy out gently.
+
+The third position takes one more line: list `Co-authored-by` in
+[`ai_disclosure_trailers`](../../guides/policies.md#choosing-the-format), and the
+co-author line counts as the disclosure. CC016 still refuses the tool's
+sign-off.
 
 The detection covers co-author and sign-off lines that name Claude Code, GitHub
 Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby or a model, and
@@ -128,8 +133,12 @@ in the first place.
 
 The same `cchk.toml` drives a pre-commit hook, a GitHub Action, a GitHub App
 and a plain CLI for any other CI, so the policy a developer sees locally is the
-one enforced on the pull request
-([where to run it](../../guides/integrations.md)):
+one the pull request is checked against. Make that check required in the
+branch's ruleset or branch protection, and a commit that fails it cannot be
+merged. [Where to run it](../../guides/integrations.md) walks through each
+setup.
+
+To try the disclosure policy without writing a config file:
 
 ```bash
 pip install commit-check
