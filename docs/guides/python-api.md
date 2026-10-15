@@ -70,6 +70,7 @@ Every function returns the same shape:
             "suggest": "...",    # advice for a person
             "fix": "...",        # the corrected value, or "" when it takes judgment
             "docs_url": "https://commit-check.com/rules/#cc001",
+            "reason": "...",     # why a skipped check did not run, when known; else ""
         },
     ],
 }
@@ -80,7 +81,8 @@ Every function returns the same shape:
 - **`skip` is not `pass`.** A check skips when it never ran — the author is in
   `ignore_authors`, or there was nothing to check — and the top-level `status`
   is `skip` only when every check skipped. A skipped run validated nothing, so
-  do not read it as approval.
+  do not read it as approval. When the author or a co-author is in
+  `ignore_authors`, the check's `reason` names them.
 - **`warn`** is a rule listed under the config's `warn`: reported in full,
   never a failure. The top-level `status` stays `pass`, and `warnings` counts
   them.
