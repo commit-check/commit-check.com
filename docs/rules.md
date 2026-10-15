@@ -537,9 +537,10 @@ git commit --amend --signoff
 
 Rejects a commit whose message carries any AI attribution: a co-author or
 sign-off line naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
-Aider, Windsurf or Tabby, a disclosure trailer such as `Assisted-by:` or
-`Generated-by:`, a vendor's own mark such as `🤖 Generated with Claude Code`,
-and generic AI model names.
+Aider, Windsurf, Tabby, Amp, OpenHands, Factory Droid or Jules, a disclosure
+trailer such as `Assisted-by:` or `Generated-by:`, a vendor's own mark such
+as `🤖 Generated with Claude Code` or Amp's `Amp-Thread-ID:` trailer, and
+generic AI model names.
 
 **Why is this bad?**
 
@@ -762,6 +763,11 @@ Checks that the current branch name follows the
 
 `master`, `main`, `HEAD`, and `PR-*` are always accepted.
 
+By default only the type is checked, and any description after the `/` is
+accepted. With `require_description_grammar` the description has to follow
+the specification's grammar too: lowercase letters and digits, words joined
+by single hyphens, dots only inside a word, as in `release/v1.2.0`.
+
 **Why is this bad?**
 
 A predictable prefix is something automation can act on: CI can skip expensive
@@ -787,13 +793,34 @@ feature/role-caching
 
 * `branch.conventional_branch` — set to `false` to disable this rule.
 * `branch.allow_branch_types` — the accepted `<type>` values. The default is
-  a superset of the specification: the spec types plus the Conventional Commit
-  types, AI agent prefixes (`ai`, `claude`, `codex`, `copilot`,
-  `cursor`), and bot prefixes (`dependabot`, `renovate`). Set it
-  explicitly for strict spec-only validation.
+  a superset of the specification: the spec's types (`feature`, `bugfix`,
+  `hotfix`, `release`, `chore`, their aliases `feat` and `fix`, and the AI
+  agent prefixes `ai`, `claude`, `codex`, `copilot` and `cursor`), plus the
+  other Conventional Commit types and the bot prefixes `dependabot` and
+  `renovate`. Set it explicitly for strict spec-only validation.
+* `branch.require_description_grammar` — set to `true` to hold the
+  description to the specification's grammar, so `feature/Add_Login`,
+  `feature/new--login` and `feature/a/b` are rejected. Off by default,
+  because bot branches such as `dependabot/npm_and_yarn/lodash-4.17.21` do
+  not follow it.
 * `branch.allow_branch_names` — additional standalone names to accept, such as
   `["develop", "staging"]`.
 * `branch.ignore_authors` — bypass the check for specific authors.
+
+To check branches exactly as the specification does, set the spec's types,
+the description grammar, and its third trunk branch, `develop`:
+
+```toml title="cchk.toml"
+[branch]
+conventional_branch = true
+allow_branch_types = ["feature", "feat", "bugfix", "fix", "hotfix", "release", "chore", "ai", "claude", "codex", "copilot", "cursor"]
+require_description_grammar = true
+allow_branch_names = ["develop"]
+```
+
+With that, `commit-check --branch` agrees with every case of the
+specification's [conformance suite](https://github.com/conventional-branch/conventional-branch/blob/main/tests/fixtures.json)
+that git can create as a branch.
 
 ### merge-base (CC202) { #cc202 }
 

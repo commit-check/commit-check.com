@@ -97,7 +97,9 @@ sign-off.
 
 The detection covers co-author and sign-off lines that name Claude Code, GitHub
 Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby or a model, and
-vendor marks such as "Generated with Claude Code". It matches the tools'
+vendor marks such as "Generated with Claude Code";
+[v2.19.0](../../changelog.md#v2190) added Amp, OpenHands, Factory Droid and
+Jules. It matches the tools'
 noreply addresses, so a human co-author who happens to be called Claude is left
 alone. [CC013](../../rules.md#cc013) keeps the current list.
 

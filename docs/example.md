@@ -159,7 +159,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.18.3
+    rev: v2.19.0
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -286,6 +286,18 @@ $ echo "Merge branch 'main' into topic" | commit-check -m --no-banner
 ```
 
 In JSON each skipped check carries `"status": "skip"`, distinct from `"pass"`.
+When a check is skipped because the author or a co-author is on an
+`ignore_authors` list, `reason` says so. Here `HEAD` is a Dependabot commit
+and `cchk.toml` lists `dependabot[bot]` under `[commit] ignore_authors`:
+
+```console
+$ commit-check -m --rev HEAD --format json | jq -c '.checks[] | {rule_id, status, reason}'
+{"rule_id":"CC001","status":"skip","reason":"author dependabot[bot] is in [commit].ignore_authors"}
+{"rule_id":"CC004","status":"skip","reason":"author dependabot[bot] is in [commit].ignore_authors"}
+{"rule_id":"CC005","status":"skip","reason":"author dependabot[bot] is in [commit].ignore_authors"}
+```
+
+For any other skip, such as a merge subject, `reason` is empty.
 
 !!! warning "A green run can still have validated nothing"
 
@@ -323,7 +335,8 @@ $ echo "Fix: add streaming support" | commit-check -m --format json | jq '.check
   "error": "The commit message should follow Conventional Commits. See https://www.conventionalcommits.org",
   "suggest": "Use \"fix: add streaming support\"",
   "fix": "fix: add streaming support",
-  "docs_url": "https://commit-check.com/rules/#cc001"
+  "docs_url": "https://commit-check.com/rules/#cc001",
+  "reason": ""
 }
 ```
 

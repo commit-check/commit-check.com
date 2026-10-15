@@ -132,12 +132,17 @@ Docs: https://commit-check.com/rules/#cc013
 ```
 
 Recognised signatures are co-author and sign-off lines naming Claude Code,
-GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf and Tabby, the
-disclosure trailers `Assisted-by:` and `Generated-by:`, vendor marks such as
-`🤖 Generated with Claude Code`, and generic AI model names. This is the
+GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, Amp,
+OpenHands, Factory Droid and Jules, the disclosure trailers `Assisted-by:` and
+`Generated-by:`, vendor marks such as `🤖 Generated with Claude Code` and
+Amp's `Amp-Thread-ID:`, and generic AI model names. This is the
 position [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/)
 takes — no AI trailers in the history, disclosure in the pull request
 instead.
+
+These rules read only the message. Jules and OpenHands can commit under their
+own bot identity instead of adding a co-author line, and such a commit passes
+when its message carries no trailer.
 
 !!! warning "This checks disclosure, not authorship"
 

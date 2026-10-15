@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.19.0](#v2190) | Branch descriptions held to the Conventional Branch grammar; Amp, OpenHands, Factory Droid and Jules recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
 | [2.18.3](#v2183) | `--fix` corrects a message in place; `--branch` reads GitLab, Bitbucket, Azure and Jenkins variables | [Fixing a message in place](example.md#fixing-a-message-in-place) · [Other CI](guides/other-ci.md) |
 | [2.18.0](#v2180) | AI disclosure policy: three rules, and the correction written for you | [Policy guides](guides/policies.md#asking-for-disclosure-instead) · [CC014](rules.md#cc014) |
 | [2.17.0](#v2170) | Concrete corrections for mechanical slips; a `warn` level per rule | [Reading the JSON](example.md#reading-the-json) · [Report without enforcing](configuration.md#report-a-rule-without-enforcing-it) |
@@ -29,6 +30,53 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.19.0 (2026-10-14) { #v2190 }
+
+### Added
+
+* **`require_description_grammar` checks what follows the branch type** —
+  `conventional_branch` checks the `<type>/` prefix and accepted anything
+  after it, so `feature/Add_Login`, `fix/header_bug` and `release/v1.-2.0`
+  all passed. With `[branch] require_description_grammar = true` the
+  description must follow the specification's grammar: lowercase letters and
+  digits, words joined by single hyphens, dots only inside a word. It is off
+  by default, because bot branches such as
+  `dependabot/npm_and_yarn/lodash-4.17.21` do not follow that grammar.
+  See PR [#581](https://github.com/commit-check/commit-check/pull/581) and
+  [CC201](rules.md#cc201).
+
+* **Amp, OpenHands, Factory Droid and Jules are recognised** — co-author and
+  sign-off lines naming them (`Amp <amp@ampcode.com>`, `openhands`,
+  `factory-droid[bot]`, `google-labs-jules[bot]`) and Amp's
+  `Amp-Thread-ID:` trailer now count as AI attribution, for
+  [CC013](rules.md#cc013) and for the `disclose` rules alike. People named
+  Jules or Amp are not flagged.
+  See PR [#606](https://github.com/commit-check/commit-check/pull/606) and
+  [Forbidding AI-attributed commits](guides/policies.md#forbidding-ai-attributed-commits).
+
+* **`--format json` says why a check was skipped** — a check skipped because
+  the author or a co-author is on an `ignore_authors` list carries a `reason`,
+  such as `author dependabot[bot] is in [commit].ignore_authors`. Every check
+  has the key; it is empty when there is no reason to give.
+  See PR [#605](https://github.com/commit-check/commit-check/pull/605) and
+  [When a check is skipped](example.md#when-a-check-is-skipped).
+
+### Fixed
+
+* **`check-tag` checks the tags a push sends** — under pre-commit the hook
+  judged the tags on `HEAD`, so a bad tag sent by `git push --follow-tags`
+  from another branch got through, and a tag push could be rejected over a
+  local tag on `HEAD` that it did not carry. It now checks the tag a tag push
+  names, and on a branch push the tags on every commit the push carries.
+  See PR [#603](https://github.com/commit-check/commit-check/pull/603).
+
+* **A GitHub Actions tag build has no branch to judge** — on a tag push,
+  `GITHUB_REF_NAME` holds the tag, so `--branch` failed
+  [CC201](rules.md#cc201) on `v1.2.0`. A tag build now falls back to `HEAD`,
+  which is always accepted, as tag builds on GitLab, Bitbucket, Azure and
+  Jenkins already did.
+  See PR [#603](https://github.com/commit-check/commit-check/pull/603).
 
 ## v2.18.3 (2026-10-07) { #v2183 }
 
