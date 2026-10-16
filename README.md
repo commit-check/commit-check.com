@@ -1,9 +1,26 @@
-# commit-check.com
+<div align="center">
 
-[![Website](https://img.shields.io/badge/Website-commit--check.com-2c9ccd?labelColor=0b1620&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI%2bPHBhdGggZD0iTTIxIDM0TDMwIDQzTDQ3IDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQzlDQ0QiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8%2bPGNpcmNsZSBjeD0iMjEiIGN5PSIzNCIgcj0iNyIgZmlsbD0iIzBCMTYyMCIgc3Ryb2tlPSIjMkM5Q0NEIiBzdHJva2Utd2lkdGg9IjUiLz48L3N2Zz4K)](https://commit-check.com)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/commit-check/.github/main/branding/banner-dark.png">
+  <img src="https://raw.githubusercontent.com/commit-check/.github/main/branding/banner-light.png" alt="Commit Check">
+</picture>
 
-Source for [commit-check.com](https://commit-check.com) — the landing page,
-the blog, and the documentation for the commit-check family of projects.
+**The website, docs and blog for Commit Check.**
+
+[![Website](https://img.shields.io/badge/Website-commit--check.com-2c9ccd?labelColor=0b1620)](https://commit-check.com)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/commit-check/commit-check.com/deploy.yml?branch=main&labelColor=0b1620&label=deploy)](https://github.com/commit-check/commit-check.com/actions/workflows/deploy.yml)
+
+[Docs](https://commit-check.com/getting-started/) ·
+[Rules](https://commit-check.com/rules/) ·
+[CLI](https://github.com/commit-check/commit-check) ·
+[GitHub Action](https://github.com/commit-check/commit-check-action) ·
+[GitHub App](https://github.com/apps/commit-check) ·
+[MCP server](https://github.com/commit-check/commit-check-mcp)
+
+</div>
+
+Source for [commit-check.com](https://commit-check.com): the landing page, the
+blog, and the documentation for every Commit Check project.
 
 ## Building locally
 
@@ -49,3 +66,9 @@ alone, so a rule or option cannot change there without this site failing here.
 Pushes to `main` build and publish to GitHub Pages. Pull requests get a Netlify
 deploy preview, configured in `netlify.toml`. The custom domain is pinned by
 `docs/CNAME`, which MkDocs copies to the site root on every build.
+
+## Community
+
+Questions and ideas go to [Discussions](https://github.com/commit-check/commit-check/discussions),
+bugs and typos on the site to [Issues](https://github.com/commit-check/commit-check.com/issues).
+Released under the [MIT License](https://github.com/commit-check/commit-check.com/blob/main/LICENSE).
