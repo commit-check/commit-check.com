@@ -409,12 +409,12 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <li><span><b>A fix you can paste</b>, whenever the correction is unambiguous.</span></li>
 </ol>
 </div>
-<!-- Real output of commit-check 2.18.0; the ASCII-art banner it prints first is left out. -->
+<!-- Real output of commit-check 2.19.2; the ASCII-art banner it prints first is left out. -->
 <div class="cc-diag">
 <p class="cc-t-dim">$ echo "Fix: add streaming support" | commit-check -m</p>
 <p><span class="cc-mark">1</span><span><span class="cc-t-fail cc-b">CC001</span> message check failed ==&gt;</span></p>
 <p><span class="cc-mark">2</span><span class="cc-t-white">Fix: add streaming support</span></p>
-<p><span class="cc-mark">3</span><span class="cc-t-dim">The commit message should follow Conventional Commits.</span></p>
+<p><span class="cc-mark">3</span><span class="cc-t-dim">The commit message should follow Conventional Commits. See https://www.conventionalcommits.org</span></p>
 <p><span class="cc-mark">4</span><span><span class="cc-t-blue">Suggest:</span> Use "<span class="cc-t-pass cc-b">fix: add streaming support</span>"</span></p>
 <p class="cc-diag__docs cc-t-dim">Docs: https://commit-check.com/rules/#cc001</p>
 </div>

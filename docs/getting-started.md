@@ -77,7 +77,7 @@ Four things are happening in that output, and each is deliberate:
 ## 3. Fix it
 
 ```console
-$ git commit --amend -m "fix(parser): handle empty input"
+$ git commit --amend --allow-empty -m "fix(parser): handle empty input"
 $ commit-check --message
 ```
 
@@ -93,7 +93,7 @@ $ commit-check --branch
 ```text
 CC201 branch check failed ==> my-changes
 The branch should follow Conventional Branch. See https://conventionalbranch.org
-Suggest: Use <type>/<description> with allowed types
+Suggest: Use <type>/<description> with an allowed type, or add the branch to allow_branch_names in config
 Docs: https://commit-check.com/rules/#cc201
 ```
 

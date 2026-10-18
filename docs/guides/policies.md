@@ -62,7 +62,7 @@ $ git rebase --signoff main
 
 The DCO is a statement about who wrote the code, so it only means something if
 the identity is real. [CC101](../rules.md#cc101) and
-[CC102](../rules.md#cc102) check the committer name and email, and are enabled
+[CC102](../rules.md#cc102) check the author name and email, and are enabled
 by default when their check runs:
 
 ```console

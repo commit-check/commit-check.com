@@ -8,8 +8,8 @@ Rule IDs appear in commit-check's output and in `--format json` results:
 
 ```text
 CC003 subject-imperative check failed ==> docs: revamped the profile
-Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug')
-Suggest: Change the first verb to imperative form, e.g., 'fix' instead of 'fixed'
+Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug', 'add feature' not 'adding feature')
+Suggest: Change the first verb to imperative form, e.g., 'fix' instead of 'fixed'/'fixes'/'fixing'
 Docs: https://commit-check.com/rules/#cc003
 ```
 
@@ -17,7 +17,7 @@ Docs: https://commit-check.com/rules/#cc003
 explanation, suggestion, and documentation link:
 
 ```text
-[FAIL] CC003 subject_imperative: docs: revamped the profile
+[FAIL] CC003 subject-imperative: docs: revamped the profile
 ```
 
 When the correction is mechanical, the suggestion names it instead of
@@ -89,7 +89,7 @@ Run with `-m` / `--message`.
 | [CC009](#cc009) | `allow-fixup-commits` | Fixup commits are not allowed | `-m` | ⚪ Off |
 | [CC010](#cc010) | `allow-wip-commits` | WIP commits are not allowed | `-m` | ⚪ Off |
 | [CC011](#cc011) | `require-body` | Commit body is required | `-m` | ⚪ Off |
-| [CC012](#cc012) | `require-signed-off-by` | Signed-off-by not found in latest commit | `-m` | ⚪ Off |
+| [CC012](#cc012) | `require-signed-off-by` | Signed-off-by trailer not found in the latest commit | `-m` | ⚪ Off |
 | [CC013](#cc013) | `ai-attribution` | AI attribution policy violation | `-m` | ⚪ Off |
 | [CC014](#cc014) | `ai-disclosure` | AI assistance is not disclosed with an accepted trailer | `-m` | ⚪ Off |
 | [CC015](#cc015) | `ai-co-author` | An AI tool is credited as a co-author | `-m` | ⚪ Off |
@@ -329,7 +329,7 @@ result of a hurried commit rather than a deliberate one.
 **Example**
 
 ```text
-fix: bug
+fix
 ```
 
 Use instead:
@@ -686,7 +686,7 @@ off by accepting it as a disclosure.
 ```text
 CC016 ai-signoff check failed ==> Signed-off-by: Claude <noreply@anthropic.com>
 An AI tool signed off the commit: Claude Code
-Suggest: Remove the AI sign-off, then sign off yourself (git commit --signoff)
+Suggest: Use "Assisted-by: Claude" in place of the AI sign-off, then sign off yourself (git commit --signoff)
 ```
 
 **Options**
@@ -713,7 +713,7 @@ matters for both code archaeology and compliance.
 **Example**
 
 ```bash
-git config user.name ec2-user
+git config user.name 12
 ```
 
 Use instead:
@@ -729,9 +729,10 @@ git config --global user.name "Your Name"
 
 !!! note
 
-    The built-in pattern accepts any name made of letters, spaces, and
-    `, . ' -`, so plain account names such as `root` or `ubuntu` still
-    pass it — only names containing digits or other symbols are rejected. Set
+    The built-in pattern accepts a name that starts with a letter and goes on
+    with letters, digits, `_`, spaces and `, . ' -`, so account names such as
+    `root`, `ubuntu` or `ec2-user` still pass it; a name that starts with a
+    digit or holds other symbols (`@`, `/`, ...) is rejected. Set
     `author_name_pattern` if you need something stricter.
 
 ### author-email (CC102) { #cc102 }

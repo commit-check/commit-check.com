@@ -14,13 +14,16 @@ revision.
 
 === "From the repository"
 
-    Validates `HEAD`'s message. This is what the `commit-msg` hook runs.
+    Validates `HEAD`'s message.
 
     ```console
     $ commit-check -m
     ```
 
 === "From a file"
+
+    This is what the `check-message` pre-commit hook runs, with the message
+    file git hands it.
 
     ```console
     $ commit-check -m commit_message.txt
@@ -54,7 +57,7 @@ revision.
 ```console
 $ echo "updated the parser" | commit-check -m
 CC001 message check failed ==> updated the parser
-The commit message should follow Conventional Commits.
+The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
 Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, ...
 Docs: https://commit-check.com/rules/#cc001
 ```
@@ -109,8 +112,8 @@ $ commit-check --branch
 ```
 
 Runs [CC201](rules.md#cc201), and [CC202](rules.md#cc202) if
-`require_rebase_target` is set. `master`, `main`, `HEAD` and `PR-*` are always
-accepted; everything else needs a `<type>/<description>` shape:
+`require_rebase_target` is set. `main`, `master`, `develop`, `HEAD` and `PR-*` are
+always accepted; everything else needs a `<type>/<description>` shape:
 
 ```text
 fix/empty-config-crash
@@ -159,7 +162,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.1
+    rev: v2.19.2
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -198,7 +201,7 @@ and how CLI, environment and file settings override each other.
 
     ```console
     $ commit-check -m --compact
-    [FAIL] CC003 subject_imperative: docs: revamped the profile
+    [FAIL] CC003 subject-imperative: docs: revamped the profile
     ```
 
 === "No banner"

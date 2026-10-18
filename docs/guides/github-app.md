@@ -30,13 +30,14 @@ with the defaults, advisory only (see [Without a config file](#without-a-config-
 ## What you get
 
 On every push to a branch and on every pull request, each commit gets a check
-run named **Commit Check** on the Checks tab, in the commit's status and in the
+run named **Commit Check** (a push of more than 50 commits has its newest 50
+checked, and the older ones get one neutral "not checked" result) on the Checks tab, in the commit's status and in the
 merge box. (Tag pushes and branch deletions carry nothing to check; commits by
 bots are skipped, and squash mode checks a pull request as one message — both
 [below](#bots-re-runs-and-commits-checked-twice).) The result reads the same
 way everywhere:
 
-- a one-line verdict — `All 4 checks passed`, or `2 of 4 checks failed`;
+- a one-line verdict — `All 4 checks passed`, or `Commit message and branch failed (2 of 4 checks)`;
 - for a failure, a table of what failed, the value that failed and the rule
   ID, linked to the [rule reference](../rules.md);
 - **How to fix**: the rule's own explanation and suggestion;
@@ -94,8 +95,9 @@ push or pull request, in the same four places: `cchk.toml`, `commit-check.toml`,
 `.github/commit-check.toml`. Every option on the
 [configuration page](../configuration.md) that belongs to a rule the App runs
 applies, precedence included; the `[push]`, `[files]` and `[tag]` sections are
-read but have nothing to act on here. Nothing is App-specific to set, apart
-from the two sections below.
+read but have nothing to act on here. Nothing is App-specific to set apart
+from `[pull_request]` (above) and `[jira]` (below); the CLI and the Action ignore
+them.
 
 [`inherit_from`](organization.md) works, and a `github:` target is fetched with
 the App's own credentials, so a shared config in a private `.github` repository
@@ -113,7 +115,7 @@ rules.
 
 A repository with no config file **and** no shared one has not chosen its
 rules, so its result is **advisory**: failures are reported in full, but the check is neutral — titled,
-say, `2 of 4 checks would fail (not enforced)` — and never blocks a merge. Below the
+say, `Commit message and branch would fail (2 of 4 checks, not enforced)` — and never blocks a merge. Below the
 fixes the report says why, and gives the smallest file that turns enforcement
 on:
 
@@ -205,8 +207,10 @@ reports the same rule IDs — it just costs you CI minutes instead.
 
 ## Privacy
 
-The App fetches the commits under test and the configuration file, nothing
-else, and stores nothing: no database, no copy of any message, author or
+The App fetches the commits under test, the configuration file (the
+repository's own or its account's shared one) and the repository metadata the
+checks need, such as the squash-merge settings and the comparison with a rebase
+target, and stores nothing: no database, no copy of any message, author or
 config. The [privacy page](../privacy.md) lists the permissions it asks for and
 what each one is used for.
 
