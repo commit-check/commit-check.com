@@ -159,7 +159,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.0
+    rev: v2.19.1
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -273,9 +273,11 @@ A check that had nothing to judge reports a **skip**, not a pass. The common
 case is a merge subject: `Merge branch 'x'` is git's writing, so
 [CC002](rules.md#cc002), [CC003](rules.md#cc003), [CC004](rules.md#cc004) and
 [CC005](rules.md#cc005) decline it rather than grade prose the author never
-wrote. Only git's literal `Merge ` prefix qualifies (plus `fixup! ` for
-CC003); a subject that merely starts with the lowercase word is judged like
-any other.
+wrote. Only subjects that merge tools write qualify: git's `Merge branch
+'…'`, `Merge tag '…'` and their relatives, GitLab's `Merge branch 'x' into
+'y'`, and GitHub's and Bitbucket's `Merge pull request #…` (plus `fixup! ` for
+CC003). A subject someone typed that starts with `Merge ` is judged like any
+other.
 
 Text mode names every skipped check in one line on stderr, leaving stdout and
 the exit code untouched — a skip is still not a failure:
