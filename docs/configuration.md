@@ -313,7 +313,7 @@ The full mapping between the three forms:
 | `author_name_pattern=^.+ .+$` | `CCHK_AUTHOR_NAME_PATTERN=^.+ .+$` | `--author-name-pattern=^.+ .+$` |
 | `conventional_branch = true` | `CCHK_CONVENTIONAL_BRANCH=true` | `--conventional-branch=true` |
 | `allow_branch_types = ["feature"]` | `CCHK_ALLOW_BRANCH_TYPES=feature,bugfix` | `--allow-branch-types=feature,bugfix` |
-| `allow_branch_names = ["staging"]` | `CCHK_ALLOW_BRANCH_NAMES=staging,production` | `--allow-branch-names=staging,production` |
+| `allow_branch_names = ["staging", "production"]` | `CCHK_ALLOW_BRANCH_NAMES=staging,production` | `--allow-branch-names=staging,production` |
 | `require_description_grammar = true` | `CCHK_REQUIRE_DESCRIPTION_GRAMMAR=true` | `--require-description-grammar=true` |
 | `require_rebase_target = "main"` | `CCHK_REQUIRE_REBASE_TARGET=main` | `--require-rebase-target=main` |
 | `allow_force_push = true` | `CCHK_ALLOW_FORCE_PUSH=true` | `--no-force-push` (sets `allow_force_push` to `false`) |

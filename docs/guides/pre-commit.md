@@ -54,11 +54,12 @@ $ pre-commit install --hook-type pre-push
 a branch push, such as `git push --follow-tags`, the tags on every commit the
 push carries.
 
-pre-commit runs no hook for a push that creates a ref without carrying new
-commits. So a new tag pushed on its own, when the commit it points at is
-already on the remote, is never seen by `check-tag`. The same holds for a tag
-that `git push --follow-tags` sends along with a branch push when the commit it
-points at is already on the remote.
+pre-commit works out which commits a push carries from your remote-tracking
+refs, such as `origin/main`, and runs no hook for a push that creates a ref
+without carrying new commits by that measure. So a new tag pushed on its own,
+when the commit it points at is already in a remote-tracking ref, is never seen
+by `check-tag`. The same holds for a tag that `git push --follow-tags` sends
+along with a branch push in that case.
 
 ## Configuring without a TOML file
 

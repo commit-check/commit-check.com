@@ -82,8 +82,9 @@ inherit_from = "github:my-org/.github@v1:cchk.toml"
 
     Useful in a monorepo, where the shared config is already checked out.
     A relative path is looked up next to the config file that names it first,
-    then in the current directory, then at the top of the repository, so it
-    resolves the same from any directory.
+    so a path written relative to that file works from any directory. Only
+    when nothing is there is it tried from the current directory, then from
+    the top of the repository.
 
 === "HTTPS URL"
 
