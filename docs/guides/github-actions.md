@@ -31,11 +31,35 @@ jobs:
           author-email: true
 ```
 
-1. Commit Check needs the full history to inspect every commit in the pull
-   request. Without this it only sees the most recent one.
+1. Recommended, not required: the Action then reads the pull request's
+   commits from the clone. With a shallow clone it lists them through the
+   GitHub API instead (up to 250), and if it cannot, it warns and checks the
+   head commit alone.
 
 The Action reads the same `cchk.toml` as the CLI, so a repository that already
 has one needs no Action-specific configuration.
+
+## Inputs
+
+| Input | Default | What it does |
+|---|---|---|
+| `message` | `true` | Check every commit message of the pull request |
+| `branch` | `true` | Check the branch name |
+| `author-name` | `false` | Check each commit's author name |
+| `author-email` | `false` | Check each commit's author email |
+| `pr-title` | `false` | Check the pull request title against Conventional Commits, the one that matters for squash merges. Pull request events only |
+| `pr-comments` | `false` | Post the report as a pull request comment, edited in place on later runs |
+| `job-summary` | `true` | Write the report to the job summary |
+| `dry-run` | `false` | Report failures as warnings and always exit `0` |
+
+`pull_request` does not fire when a title is edited. With `pr-title: true`,
+add `types: [opened, synchronize, reopened, edited]` to re-check a renamed pull
+request.
+
+The Action also sets a `result` output: the check results as JSON, read with
+`fromJSON(steps.<id>.outputs.result)`. Its `status` is `pass`, `warn`, `skip`
+or `fail`, and each scope carries the same per-check fields as
+`commit-check --format json`.
 
 ## Making it a required check { #making-it-a-required-check }
 
@@ -55,11 +79,10 @@ needs fixing directly on the PR:
           message: true
           branch: true
           pr-comments: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-This needs extra permissions on the job:
+The Action posts with the workflow's own token, so no `GITHUB_TOKEN` needs to
+be passed in. It does need extra permissions on the job:
 
 ```yaml
     permissions:
@@ -85,9 +108,10 @@ Turn it off once the history is clean.
 
 A `pull_request` workflow triggered by a fork receives a **read-only**
 `GITHUB_TOKEN`, and `permissions: pull-requests: write` does not override that.
-`pr-comments` will therefore fail to post on fork pull requests unless the
-repository has *Send write tokens to workflows from pull requests* enabled under
-**Settings → Actions → General**.
+On such a run the Action skips the comment with a warning and says so in the
+job summary; the check, the annotations and the summary still work. For
+feedback on fork pull requests themselves, use the [GitHub App](github-app.md),
+which is not bound by the workflow's token.
 
 !!! warning "Do not reach for `pull_request_target` casually"
 

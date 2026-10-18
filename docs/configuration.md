@@ -23,6 +23,7 @@ flag overrides both for a single run.
     | `--message` | Conventional Commits ([CC001](rules.md#cc001)), subject lengths of 5–80 characters ([CC004](rules.md#cc004), [CC005](rules.md#cc005)), and an allow-list of ten commit types |
     | `--branch` | Conventional Branch ([CC201](rules.md#cc201)) and an allow-list of twenty-one branch types |
     | `--author-name` / `--author-email` | The built-in name and email patterns ([CC101](rules.md#cc101), [CC102](rules.md#cc102)) |
+    | `--tag` | SemVer tag names, with an optional leading `v` ([CC401](rules.md#cc401)) |
 
     Off until you turn them on: subject capitalization, imperative mood,
     required body and signoff, and rebase requirements.
@@ -89,8 +90,9 @@ It is a warning, not an error: the exit code and the JSON on stdout do not
 change. The top-level `warn` list and the GitHub App's
 [`[jira]`](guides/github-app.md#jira-ticket-references) and
 [`[pull_request]`](#pull-requests-every-commit-or-the-squash-message) sections
-are read elsewhere and are not reported. The Python API and the MCP server
-load the file themselves and do not report it either.
+are read elsewhere and are not reported. The Python API reads no file at all
+(it takes a `config` dict), and the MCP server loads the file itself without
+reporting unknown settings.
 
 ## Inheriting a shared config
 
@@ -115,12 +117,15 @@ The value can be a GitHub shorthand, a local path or an HTTPS URL:
 | Local file | `../../shared/org-cchk.toml` |
 | HTTPS URL | `https://example.com/shared/cchk.toml` |
 
-!!! note "Inheritance fails quietly"
+!!! note "Inheritance fails open"
 
     If the target is unreachable or the format is not recognized, Commit Check
-    ignores the inheritance and uses the local configuration alone. Plain HTTP
-    URLs are rejected outright. A repository that silently stops inheriting
-    still passes its own checks, so pin the branch when the policy matters.
+    ignores the inheritance and uses the local configuration alone, printing a
+    one-line `⊘ inherit_from ... could not be loaded` notice on stderr; the exit
+    code does not change. Plain HTTP URLs are rejected the same way. Only one
+    level is followed: an `inherit_from` inside the parent is ignored, with a
+    notice. A repository that stops inheriting still passes its own checks, so
+    pin the branch when the policy matters.
 
 ## Pull requests: every commit, or the squash message
 
@@ -269,7 +274,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.1
+    rev: v2.19.2
     hooks:
       - id: check-message
         args:
@@ -309,8 +314,8 @@ The full mapping between the three forms:
 | `require_body = false` | `CCHK_REQUIRE_BODY=false` | `--require-body=false` |
 | `require_signed_off_by = false` | `CCHK_REQUIRE_SIGNED_OFF_BY=false` | `--require-signed-off-by=false` |
 | `ignore_authors = ["bot"]` | `CCHK_IGNORE_AUTHORS=bot,user` | `--ignore-authors=bot,user` |
-| `author_email_pattern=^.+@example\.com$` | `CCHK_AUTHOR_EMAIL_PATTERN=^.+@example\.com$` | `--author-email-pattern=^.+@example\.com$` |
-| `author_name_pattern=^.+ .+$` | `CCHK_AUTHOR_NAME_PATTERN=^.+ .+$` | `--author-name-pattern=^.+ .+$` |
+| `author_email_pattern = '^.+@example\.com$'` | `CCHK_AUTHOR_EMAIL_PATTERN=^.+@example\.com$` | `--author-email-pattern=^.+@example\.com$` |
+| `author_name_pattern = '^.+ .+$'` | `CCHK_AUTHOR_NAME_PATTERN=^.+ .+$` | `--author-name-pattern=^.+ .+$` |
 | `conventional_branch = true` | `CCHK_CONVENTIONAL_BRANCH=true` | `--conventional-branch=true` |
 | `allow_branch_types = ["feature"]` | `CCHK_ALLOW_BRANCH_TYPES=feature,bugfix` | `--allow-branch-types=feature,bugfix` |
 | `allow_branch_names = ["staging", "production"]` | `CCHK_ALLOW_BRANCH_NAMES=staging,production` | `--allow-branch-names=staging,production` |

@@ -178,9 +178,8 @@ $ commit-check --message --branch
 `commit-check.toml`, in the repository root or `.github/`. Any other name needs
 `--config`.
 
-**TOML fails to parse.** Usually unquoted strings, `True` instead of `true`, or
-a trailing comma in an array. Editors validate the file against the published
-schema — see
+**TOML fails to parse.** Usually unquoted strings, or `True` instead of `true`.
+Editors validate the file against the published schema — see
 [where the config file lives](configuration.md#where-the-config-file-lives).
 
 **A rule does not behave as expected.** Check the option name and its default in

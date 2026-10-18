@@ -8,7 +8,7 @@ bypass is the second thing to reach for. The first is reading what failed:
 every diagnostic names the rule, quotes the value that failed it, and links to
 the page explaining it.
 
-Take an author name check that rejects a one-character name:
+Take an author name check that rejects a name starting with a digit:
 
 ```shell
 check committer name.....................................................Failed
@@ -23,7 +23,7 @@ Suggest: git config user.name 'Your Name'
 Docs: https://commit-check.com/rules/#cc101
 ```
 
-`12` is the value Git actually recorded as the author — usually a sign that
+`12` is the configured `user.name` — usually a sign that
 `user.name` was never set on this machine, or was set by a script. The fix is
 the one the `Suggest:` line gives:
 
@@ -44,7 +44,7 @@ SKIP=check-author-name git commit --amend --no-edit
 ```
 
 The IDs are `check-message`, `check-branch`, `check-author-name`,
-`check-author-email` and `check-no-force-push`.
+`check-author-email`, `check-no-force-push`, `check-tag` and `check-files`.
 
 ### Skipping every hook
 
@@ -73,7 +73,7 @@ their defaults already applied, even with no config file present: `--message`
 enforces Conventional Commits, the 5–80 character subject limits and an
 allow-list of ten commit types; `--branch` enforces Conventional Branch and an
 allow-list of twenty-one branch types; `--author-name` and `--author-email`
-apply the built-in patterns. The *Default* column in the
+apply the built-in patterns; `--tag` holds tag names to SemVer. The *Default* column in the
 [rules reference](rules.md#rule-index) shows every rule's starting state, and
 the [configuration page](configuration.md) spells the split out.
 

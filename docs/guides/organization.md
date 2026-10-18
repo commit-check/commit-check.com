@@ -29,7 +29,7 @@ allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore"]
 Where the [GitHub App](github-app.md) is installed on the organization, that
 file is already in force: a repository with no `cchk.toml` of its own is
 checked against the organization's, including repositories created tomorrow,
-and the check run's last line says so. The App reads the file with its own
+and the check run's report says so in its last lines. The App reads the file with its own
 credentials, so the `.github` repository can be private. A personal account's
 `.github` repository does the same for that account's repositories. A repository that
 commits its own config uses that instead — to build on the shared one rather
@@ -102,8 +102,8 @@ stderr and ignored.
 !!! warning "Inheritance fails open"
 
     If the parent config is unreachable — a network blip, a renamed file, a
-    private repository — Commit Check silently falls back to the local config
-    rather than failing the build. This keeps CI green during an outage, but it
+    private repository — Commit Check falls back to the local config, with a
+    one-line notice on stderr, rather than failing the build. This keeps CI green during an outage, but it
     also means a typo in `inherit_from` is easy to miss. Verify the merged
     result when you first set it up:
 
