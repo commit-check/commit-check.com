@@ -81,6 +81,10 @@ inherit_from = "github:my-org/.github@v1:cchk.toml"
     ```
 
     Useful in a monorepo, where the shared config is already checked out.
+    A relative path is looked up next to the config file that names it first,
+    so a path written relative to that file works from any directory. Only
+    when nothing is there is it tried from the current directory, then from
+    the top of the repository.
 
 === "HTTPS URL"
 
@@ -89,6 +93,11 @@ inherit_from = "github:my-org/.github@v1:cchk.toml"
     ```
 
     Plain HTTP is rejected.
+
+Whatever the source, a parent config is read up to 1 MiB. A larger one, or a
+local path that is not a regular file, is treated as unreachable. Only one
+level is followed: an `inherit_from` inside the parent config is reported on
+stderr and ignored.
 
 !!! warning "Inheritance fails open"
 

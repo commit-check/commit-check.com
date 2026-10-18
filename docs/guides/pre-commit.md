@@ -8,7 +8,7 @@ Add Commit Check to `.pre-commit-config.yaml`:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.0
+    rev: v2.19.1
     hooks:
       - id: check-message
       - id: check-branch
@@ -54,9 +54,12 @@ $ pre-commit install --hook-type pre-push
 a branch push, such as `git push --follow-tags`, the tags on every commit the
 push carries.
 
-pre-commit runs no hook for a push that creates a ref without carrying new
-commits. So a new tag pushed on its own, when the commit it points at is
-already on the remote, is never seen by `check-tag`.
+pre-commit works out which commits a push carries from your remote-tracking
+refs, such as `origin/main`, and runs no hook for a push that creates a ref
+without carrying new commits by that measure. So a new tag pushed on its own,
+when the commit it points at is already in a remote-tracking ref, is never seen
+by `check-tag`. The same holds for a tag that `git push --follow-tags` sends
+along with a branch push in that case.
 
 ## Configuring without a TOML file
 
@@ -65,7 +68,7 @@ Options can be passed as hook arguments, which keeps everything in one file:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.0
+    rev: v2.19.1
     hooks:
       - id: check-message
         args:
@@ -87,7 +90,7 @@ colon, and lets the commit through:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.0
+    rev: v2.19.1
     hooks:
       - id: check-message
         args: [--fix]

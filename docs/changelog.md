@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.19.1](#v2191) | `develop` accepted by default; stricter merge-subject, fixup, WIP and sign-off checks | [CC201](rules.md#cc201) · [CC001](rules.md#cc001) · [CC009](rules.md#cc009) |
 | [2.19.0](#v2190) | Branch descriptions held to the Conventional Branch grammar; Amp, OpenHands, Factory Droid and Jules recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
 | [2.18.3](#v2183) | `--fix` corrects a message in place; `--branch` reads GitLab, Bitbucket, Azure and Jenkins variables | [Fixing a message in place](example.md#fixing-a-message-in-place) · [Other CI](guides/other-ci.md) |
 | [2.18.0](#v2180) | AI disclosure policy: three rules, and the correction written for you | [Policy guides](guides/policies.md#asking-for-disclosure-instead) · [CC014](rules.md#cc014) |
@@ -30,6 +31,79 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.19.1 (2026-10-16) { #v2191 }
+
+### Changed
+
+* **`develop` is accepted by default** — the Conventional Branch
+  specification counts `develop` as a trunk branch beside `main` and
+  `master`, but [CC201](rules.md#cc201) failed it unless
+  `allow_branch_names` listed it. It now passes like `main` and `master`, and
+  the spec-strict config needs only the types and the description grammar.
+  This only widens what passes.
+  See PR [#612](https://github.com/commit-check/commit-check/pull/612).
+
+* **Only merge subjects a tool wrote are exempt** — any subject starting with
+  `Merge ` skipped [CC001](rules.md#cc001) and the subject rules. Now only
+  the forms git, GitHub, GitLab and Bitbucket write are exempt, such as
+  `Merge branch 'x' into 'y'` and `Merge pull request #12 from …`. A typed
+  subject such as `Merge the parser rewrite` is judged like any other, so it
+  now fails CC001.
+  See PR [#619](https://github.com/commit-check/commit-check/pull/619).
+
+* **A commit message file is checked as git will store it** — the
+  `commit-msg` hook runs before git strips comments, so git's comment block,
+  and with `git commit -v` the whole diff, were read as part of the message.
+  Comment lines and everything from the scissors line on are now dropped
+  first. A subject-only commit written in the editor now fails
+  [CC011](rules.md#cc011) when `require_body` is on, and a `Signed-off-by:`
+  line in the diff no longer counts. `--fix` keeps the comment and diff
+  blocks in the file.
+  See PR [#618](https://github.com/commit-check/commit-check/pull/618).
+
+### Fixed
+
+* **[CC009](rules.md#cc009) rejects `squash!` and `amend!` too** — with
+  `allow_fixup_commits = false` only `fixup!` commits failed.
+  See PR [#613](https://github.com/commit-check/commit-check/pull/613).
+
+* **[CC010](rules.md#cc010) catches every WIP marker** — `WIP` followed by a
+  newline, a tab or a dash passed. Any subject that begins with the word `WIP`
+  or `[WIP]`, in any case, now fails; `wipe the cache` still passes.
+  See PR [#616](https://github.com/commit-check/commit-check/pull/616).
+
+* **[CC012](rules.md#cc012) reads only a real trailer** — `Signed-off-by:`
+  text anywhere in the message passed, including the subject and a line with
+  no name. The check now needs a trailer line with a name and an address, and
+  it runs in linear time on any input.
+  See PR [#621](https://github.com/commit-check/commit-check/pull/621).
+
+* **[CC002](rules.md#cc002) and [CC003](rules.md#cc003) skip only a real type
+  prefix** — any leading `word:` was skipped, even with
+  `conventional_commits = false`, so `Added: support for X` passed the
+  imperative check. The prefix is now skipped only when Conventional Commits
+  is on and the type is allowed.
+  See PR [#622](https://github.com/commit-check/commit-check/pull/622).
+
+* **[CC013](rules.md#cc013) sees two more AI co-author forms** — a trailer
+  with a blank before the colon, `Co-authored-by : Claude <…>`, which git
+  still reads as a trailer, and the line Cursor's agent writes,
+  `Co-authored-by: Cursor Agent <cursoragent@cursor.com>`.
+  See PR [#623](https://github.com/commit-check/commit-check/pull/623).
+
+* **The config is found from a subdirectory** — run below the top of a
+  repository, commit-check found no config and used the built-in defaults
+  without saying so. It now falls back to the top of the work tree, and a
+  relative `inherit_from` is read next to the config that names it.
+  See PR [#625](https://github.com/commit-check/commit-check/pull/625) and
+  [Where the config file lives](configuration.md#where-the-config-file-lives).
+
+* **A parent config is read up to 1 MiB** — `inherit_from` now refuses a
+  larger parent, or a local path that is not a regular file, and continues
+  with the local config as it does when a parent is unreachable.
+  See PR [#614](https://github.com/commit-check/commit-check/pull/614) and
+  [Across an organization](guides/organization.md).
 
 ## v2.19.0 (2026-10-14) { #v2190 }
 

@@ -45,6 +45,11 @@ Check searches four locations and uses the first that exists:
 3. `.github/cchk.toml`
 4. `.github/commit-check.toml`
 
+Run from a subdirectory of a repository, where none of the four is in the
+current directory, it looks in the same four places at the top of the
+repository's work tree. The current directory still comes first, so a package
+in a monorepo can keep a config of its own.
+
 Pass `--config` to point at one directly and skip the search:
 
 ```console
@@ -229,7 +234,7 @@ conventional_branch = true
 allow_branch_types = ["feature", "bugfix", "hotfix", "release", "chore"]
 # true also holds the part after "/" to the spec's grammar
 require_description_grammar = false
-# allow_branch_names = []          # optional: extra standalone names, e.g. ["develop"]
+# allow_branch_names = []          # optional: extra standalone names, e.g. ["staging"]
 # require_rebase_target = "main"   # optional: no rebase requirement by default
 # ignore_authors = []              # optional: as above, for branch checks
 ```
@@ -264,7 +269,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.0
+    rev: v2.19.1
     hooks:
       - id: check-message
         args:
@@ -308,7 +313,7 @@ The full mapping between the three forms:
 | `author_name_pattern=^.+ .+$` | `CCHK_AUTHOR_NAME_PATTERN=^.+ .+$` | `--author-name-pattern=^.+ .+$` |
 | `conventional_branch = true` | `CCHK_CONVENTIONAL_BRANCH=true` | `--conventional-branch=true` |
 | `allow_branch_types = ["feature"]` | `CCHK_ALLOW_BRANCH_TYPES=feature,bugfix` | `--allow-branch-types=feature,bugfix` |
-| `allow_branch_names = ["develop"]` | `CCHK_ALLOW_BRANCH_NAMES=develop,staging` | `--allow-branch-names=develop,staging` |
+| `allow_branch_names = ["staging", "production"]` | `CCHK_ALLOW_BRANCH_NAMES=staging,production` | `--allow-branch-names=staging,production` |
 | `require_description_grammar = true` | `CCHK_REQUIRE_DESCRIPTION_GRAMMAR=true` | `--require-description-grammar=true` |
 | `require_rebase_target = "main"` | `CCHK_REQUIRE_REBASE_TARGET=main` | `--require-rebase-target=main` |
 | `allow_force_push = true` | `CCHK_ALLOW_FORCE_PUSH=true` | `--no-force-push` (sets `allow_force_push` to `false`) |
@@ -364,7 +369,7 @@ the same thing twice, so read the description rather than the cell:
 | commit | allow_merge_commits | bool | true | Allow merge commits. |
 | commit | allow_revert_commits | bool | true | Allow revert commits. |
 | commit | allow_empty_commits | bool | true | Allow empty commits. |
-| commit | allow_fixup_commits | bool | true | Allow fixup commits (e.g., "fixup! <commit message>"). |
+| commit | allow_fixup_commits | bool | true | Allow fixup commits: `fixup!`, `squash!` and `amend!` subjects. |
 | commit | allow_wip_commits | bool | true | Allow work-in-progress commits (e.g., "WIP: <commit message>"). |
 | commit | require_body | bool | false | Require a body in the commit message. |
 | commit | ignore_authors | list[str] | [] (none ignored) | List of commit authors **or co-authors** (`Co-authored-by:` lines) to bypass all commit checks. Useful for bots (e.g., `"dependabot[bot]"`, `"coderabbitai[bot]"`). |
@@ -377,7 +382,7 @@ the same thing twice, so read the description rather than the cell:
 | branch | conventional_branch | bool | true | Enforce Conventional Branch specification. |
 | branch | allow_branch_types | list[str] | ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix", "build", "ci", "docs", "perf", "refactor", "style", "test", "ai", "claude", "codex", "copilot", "cursor", "dependabot", "renovate"] | Allowed branch types when `conventional_branch` is true. The default is a superset of the [Conventional Branch spec](https://conventionalbranch.org/): the spec's types (`feature`, `bugfix`, `hotfix`, `release`, `chore`, their aliases `feat` and `fix`, and the AI agent prefixes `ai`, `claude`, `codex`, `copilot`, `cursor`) plus the other Conventional Commit types (`build`, `ci`, `docs`, `perf`, `refactor`, `style`, `test`) and bot prefixes (`dependabot`, `renovate`). For strict spec-only validation, set this option explicitly to the spec's types; [CC201](rules.md#cc201) has the full config. |
 | branch | require_description_grammar | bool | false | Also hold the description after `<type>/` to the Conventional Branch grammar: lowercase letters and digits, words joined by single hyphens, dots only inside a word. Off by default, because bot branches such as `dependabot/npm_and_yarn/lodash-4.17.21` do not follow it. See [CC201](rules.md#cc201). |
-| branch | allow_branch_names | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["develop", "staging"]). By default, master, main, HEAD, and PR-* are always allowed. |
+| branch | allow_branch_names | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["staging", "production"]). By default, main, master, develop, HEAD, and PR-* are always allowed. |
 | branch | require_rebase_target | str | "" (no requirement) | Target branch for rebase requirement. If not set, no rebase validation is performed. |
 | push | allow_force_push | bool | true | Allow force pushes. Set to `false` to block force pushes when used as a pre-push hook or with `--no-force-push`. |
 | branch | ignore_authors | list[str] | [] (none ignored) | List of authors to ignore (i.e., always allow). |

@@ -160,6 +160,12 @@ Checks that the commit message subject follows the
 [Conventional Commits](https://www.conventionalcommits.org) specification:
 `<type>(<scope>)!: <description>`.
 
+A subject that a merge tool writes, such as git's `Merge branch 'main' into
+topic` or GitHub's `Merge pull request #12 from …`, is accepted as it is;
+whether merge commits are allowed at all is [CC006](#cc006)'s call. A subject
+someone typed that merely starts with `Merge `, such as `Merge the parser
+rewrite`, is judged like any other.
+
 **Why is this bad?**
 
 A free-form subject can only be read by a human. A structured one can be read by
@@ -194,6 +200,11 @@ fix(parser): handle empty input
 
 Checks that the description in the subject line starts with a capital letter.
 
+The description is what follows a `<type>(<scope>)!:` prefix, and the prefix
+is skipped only when Conventional Commits is on and the type is one of
+`allow_commit_types`. Otherwise the subject is read from its first word, so
+`Added: support for X` is judged on `Added`.
+
 **Why is this bad?**
 
 Nothing is inherently wrong with either casing — but mixing them is. A history
@@ -227,6 +238,11 @@ fix: Handle empty input
 
 Checks that the first word of the description is in the imperative mood —
 `fix`, not `fixed`, `fixes`, or `fixing`.
+
+The description is what follows a `<type>(<scope>)!:` prefix, and the prefix
+is skipped only when Conventional Commits is on and the type is one of
+`allow_commit_types`. Otherwise the subject is read from its first word, so
+`Added: support for X` is judged on `Added`.
 
 **Why is this bad?**
 
@@ -411,7 +427,8 @@ once it is pushed, adding a message means rewriting history.
 
 **What it does**
 
-Rejects `fixup!` and `squash!` commits.
+Rejects `fixup!`, `squash!` and `amend!` commits, the ones `git commit
+--fixup`, `--squash` and `--fixup=amend:` write.
 
 **Why is this bad?**
 
@@ -440,7 +457,9 @@ git rebase -i --autosquash main
 
 **What it does**
 
-Rejects work-in-progress commits — subjects beginning with `WIP`.
+Rejects work-in-progress commits — subjects beginning with the word `WIP` or
+with `[WIP]`, in any case and whatever follows. Words that merely start with
+the letters, such as `wipe`, pass, and so does a body that mentions WIP.
 
 **Why is this bad?**
 
@@ -470,6 +489,11 @@ git commit --amend -m "feat: add a caching layer for role lookups"
 **What it does**
 
 Requires a non-empty body after the subject line.
+
+A message file is judged as the message git will store: comment lines, and
+everything from the `git commit -v` scissors line on, do not count. So a
+subject-only commit written in the editor fails, although git's comment block
+follows the subject when the hook runs.
 
 **Why is this bad?**
 
@@ -501,7 +525,9 @@ incident on 2026-05-11, long after the upstream had recovered.
 
 **What it does**
 
-Requires a `Signed-off-by:` trailer in the commit message.
+Requires a `Signed-off-by:` trailer in the commit message: a line of its own
+that names a person and an `<address>`, as `git commit --signoff` writes it.
+The same text inside the subject or a sentence of the body does not count.
 
 **Why is this bad?**
 
@@ -761,7 +787,7 @@ Checks that the current branch name follows the
 [Conventional Branch](https://conventionalbranch.org/) specification:
 `<type>/<description>`.
 
-`master`, `main`, `HEAD`, and `PR-*` are always accepted.
+`main`, `master`, `develop`, `HEAD`, and `PR-*` are always accepted.
 
 By default only the type is checked, and any description after the `/` is
 accepted. With `require_description_grammar` the description has to follow
@@ -804,18 +830,18 @@ feature/role-caching
   because bot branches such as `dependabot/npm_and_yarn/lodash-4.17.21` do
   not follow it.
 * `branch.allow_branch_names` — additional standalone names to accept, such as
-  `["develop", "staging"]`.
+  `["staging", "production"]`.
 * `branch.ignore_authors` — bypass the check for specific authors.
 
-To check branches exactly as the specification does, set the spec's types,
-the description grammar, and its third trunk branch, `develop`:
+To check branches exactly as the specification does, set the spec's types and
+the description grammar. Its trunk branches, `main`, `master` and `develop`,
+are accepted already:
 
 ```toml title="cchk.toml"
 [branch]
 conventional_branch = true
 allow_branch_types = ["feature", "feat", "bugfix", "fix", "hotfix", "release", "chore", "ai", "claude", "codex", "copilot", "cursor"]
 require_description_grammar = true
-allow_branch_names = ["develop"]
 ```
 
 With that, `commit-check --branch` agrees with every case of the

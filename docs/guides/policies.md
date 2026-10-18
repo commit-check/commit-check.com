@@ -142,7 +142,7 @@ instead.
 
 These rules read only the message. Jules and OpenHands can commit under their
 own bot identity instead of adding a co-author line, and such a commit passes
-when its message carries no trailer.
+when its message contains no recognized AI signature.
 
 !!! warning "This checks disclosure, not authorship"
 
