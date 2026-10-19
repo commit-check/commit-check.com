@@ -134,15 +134,18 @@ Docs: https://commit-check.com/rules/#cc013
 Recognised signatures are co-author and sign-off lines naming Claude Code,
 GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, Amp,
 OpenHands, Factory Droid and Jules, the disclosure trailers `Assisted-by:` and
-`Generated-by:`, vendor marks such as `🤖 Generated with Claude Code` and
-Amp's `Amp-Thread-ID:`, and generic AI model names. This is the
+`Generated-by:`, vendor marks such as `🤖 Generated with Claude Code`, Amp's
+`Amp-Thread-ID:` and the Copilot coding agent's `Agent-Logs-Url:`, and generic
+AI model names. This is the
 position [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/)
 takes — no AI trailers in the history, disclosure in the pull request
 instead.
 
 These rules read only the message. Jules and OpenHands can commit under their
 own bot identity instead of adding a co-author line, and such a commit passes
-when its message contains no recognized AI signature.
+when its message contains no recognized AI signature. The Copilot coding agent
+also commits as its own account, but every commit it makes carries an
+`Agent-Logs-Url:` trailer, so its commits are caught.
 
 !!! warning "This checks disclosure, not authorship"
 
@@ -157,12 +160,13 @@ when its message contains no recognized AI signature.
 
 ### Asking for disclosure instead
 
-Most projects that allow AI assistance ask to be told about it. The
-[Linux kernel](https://docs.kernel.org/process/coding-assistants.html),
+Most projects that allow AI assistance ask to be told about it.
 [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) and
-FluxCD want an `Assisted-by:` trailer; the
+FluxCD want an `Assisted-by:` trailer, as the
+[Linux kernel](https://docs.kernel.org/process/coding-assistants.html) did
+until its maintainers decided in October 2026 to drop the tag; the
 [Apache Software Foundation](https://www.apache.org/legal/generative-tooling.html)
-recommends `Generated-by:`. The kernel also says an AI agent must
+recommends `Generated-by:`. The kernel still says an AI agent must
 never add a `Signed-off-by:` line, because only a person can certify the
 [DCO](https://developercertificate.org/).
 
@@ -202,7 +206,7 @@ as the project's disclosure trailer, keeping the name the tool gave itself.
 ```
 
 Once the tool is disclosed, CC015 asks only for the co-author line to go, and
-a commit written the way the kernel asks passes all three:
+a commit in the kernel's `Assisted-by:` format passes all three:
 
 ```bash
 printf 'feat: add caching layer\n\nAssisted-by: LLM coccinelle sparse\nSigned-off-by: Jane Dev <jane@example.com>' | commit-check -m
@@ -216,7 +220,7 @@ and the first one is what a correction is written with:
 ```toml title="cchk.toml"
 [commit]
 ai_attribution = "disclose"
-ai_disclosure_trailers = ["Assisted-by"]   # the kernel's, and nothing else
+ai_disclosure_trailers = ["Assisted-by"]   # Assisted-by, and nothing else
 ```
 
 Listing `Co-authored-by` says the project accepts the tool as a co-author —

@@ -36,7 +36,7 @@ source has already given three different answers.
 | Position | Who takes it |
 |---|---|
 | No AI trailers in the history; disclose in the pull request instead | [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/) |
-| AI is welcome, but say so with a trailer, and never credit the tool as a person | [Linux kernel](https://docs.kernel.org/process/coding-assistants.html) and [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) (`Assisted-by:`) |
+| AI is welcome, but say so with a trailer, and never credit the tool as a person | [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) (`Assisted-by:`), and the [Linux kernel](https://docs.kernel.org/process/coding-assistants.html) until its maintainers decided in October 2026 to drop the tag |
 | The tool can be credited as a co-author | [pytest](https://docs.pytest.org/en/stable/contributing.html) (`Co-authored-by:`) and the [ASF](https://www.apache.org/legal/generative-tooling.html) (`Generated-by:` or `Co-authored-by:`) |
 
 The kernel adds one hard rule on top: an AI agent must never add a
@@ -99,7 +99,8 @@ The detection covers co-author and sign-off lines that name Claude Code, GitHub
 Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby or a model, and
 vendor marks such as "Generated with Claude Code";
 [v2.19.0](../../changelog.md#v2190) added Amp, OpenHands, Factory Droid and
-Jules. It matches the tools'
+Jules, and [v2.19.2](../../changelog.md#v2192) the Copilot coding agent's
+`Agent-Logs-Url:` trailer. It matches the tools'
 noreply addresses, so a human co-author who happens to be called Claude is left
 alone. [CC013](../../rules.md#cc013) keeps the current list.
 

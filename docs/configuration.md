@@ -351,7 +351,26 @@ setting in the file appears to have no effect.
 
 ## Every option
 
-Types are as TOML understands them. A default shown as `""` means the option is
+Types are as TOML understands them. A pattern, a subject length, or a type or
+name list given a value of another type stops the run with exit 2 and names
+the setting:
+
+```toml title="cchk.toml"
+[commit]
+subject_max_length = "50"
+```
+
+```console
+$ echo "feat: add streaming support" | commit-check -m
+Error: [commit] subject_max_length must be a whole number, got '50'
+```
+
+`allow_commit_types`, `allow_branch_types` and `allow_branch_names` also take
+one comma-separated string, as `--allow-commit-types` does. A boolean has to be
+a TOML boolean: `"false"` in quotes is a non-empty string, and it counts as
+true.
+
+A default shown as `""` means the option is
 unset, which is never the same as the check being off — but it does not mean
 the same thing twice, so read the description rather than the cell:
 
