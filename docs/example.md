@@ -237,6 +237,12 @@ To override the detection:
 | `FORCE_COLOR=1` / `FORCE_COLOR=0` | color on or off, outranking everything else |
 | `FORCE_HYPERLINK=1` / `FORCE_HYPERLINK=0` | linked rule IDs on or off |
 
+Whatever the destination, the commit text in a failure is printed inert.
+Control characters other than newline and tab appear as `\xNN`, and a line
+that starts with `::` is printed as `\::`, so a commit message cannot move the
+terminal's cursor or send a GitHub Actions runner a workflow command.
+`--format json` is not affected; JSON escapes those characters already.
+
 ### Checking a range of commits
 
 `--rev` makes each commit addressable without checking it out or piping its

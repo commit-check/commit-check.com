@@ -107,7 +107,7 @@ broken policy from a bad commit. Commit Check keeps them apart:
 |---|---|
 | `0` | Every enforced check passed, or every check was skipped. |
 | `1` | A check failed. This is a verdict on the commit. |
-| `2` | The run could not start, so nothing was validated: bad usage, a `--rev` that does not resolve, a setting whose regex does not compile, or a config file that is missing, is not valid TOML, or names an unknown rule. |
+| `2` | The run could not start, so nothing was validated: bad usage, a `--rev` that does not resolve, a setting whose regex does not compile or whose value has the wrong type, or a config file that is missing, is not valid TOML, or names an unknown rule. |
 
 A configuration error names the file it came from:
 
@@ -120,6 +120,7 @@ instead, and echoes the value it could not use:
 
 ```text
 Error: [commit] message_pattern is not a valid regex: '^(unclosed' (missing ), unterminated subpattern at position 1)
+Error: [commit] subject_max_length must be a whole number, got '50'
 ```
 
 ## Something else

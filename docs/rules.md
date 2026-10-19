@@ -565,8 +565,11 @@ Rejects a commit whose message carries any AI attribution: a co-author or
 sign-off line naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
 Aider, Windsurf, Tabby, Amp, OpenHands, Factory Droid or Jules, a disclosure
 trailer such as `Assisted-by:` or `Generated-by:`, a vendor's own mark such
-as `🤖 Generated with Claude Code` or Amp's `Amp-Thread-ID:` trailer, and
-generic AI model names.
+as `🤖 Generated with Claude Code`, Amp's `Amp-Thread-ID:` trailer or the
+`Agent-Logs-Url:` trailer the Copilot coding agent adds, and generic AI model
+names. Copilot is also recognised by its account's
+`N+Copilot@users.noreply.github.com` address, so the coding agent's
+`copilot-swe-agent[bot]` co-author line counts under any display name.
 
 **Why is this bad?**
 
@@ -606,10 +609,11 @@ match `ai_disclosure_pattern` — fails too.
 **Why is this bad?**
 
 A project that allows AI assistance and asks for it to be disclosed has an
-honour-system rule until something checks it. The
-[Linux kernel](https://docs.kernel.org/process/coding-assistants.html),
+honour-system rule until something checks it.
 [Fedora](https://docs.fedoraproject.org/en-US/council/policy/ai-policy/) and
-FluxCD ask for `Assisted-by:`; the
+FluxCD ask for `Assisted-by:`, as the
+[Linux kernel](https://docs.kernel.org/process/coding-assistants.html) did
+until its maintainers decided in October 2026 to drop the tag; the
 [Apache Software Foundation](https://www.apache.org/legal/generative-tooling.html)
 recommends `Generated-by:`. The tools, meanwhile, stamp their own format on
 the way out, so a contributor following the policy and one ignoring it produce
@@ -855,6 +859,11 @@ that git can create as a branch.
 
 Checks that the current branch is rebased onto a target branch.
 
+When the target matches no branch, neither locally nor under `origin/`, the
+check is a **skip**, not a pass, and the JSON `reason` says
+`rebase target 'main' not found`. A shallow CI clone without the target branch
+is the usual cause; fetch the branch before the check.
+
 **Why is this bad?**
 
 A branch that has fallen behind is tested against code that no longer exists on
@@ -1022,6 +1031,10 @@ and `release-1.2.3` do not.
 
 A commit with no tag is a **skip**, not a failure: the rule governs how tags
 are named, and the absence of one is not a naming violation.
+
+As a `pre-push` hook it checks the tags the push creates, under the name the
+remote will give them: `git push origin v1.0.0:refs/tags/release-1` is checked
+as `release-1`. Deleting a tag is not checked.
 
 **Why is this bad?**
 
