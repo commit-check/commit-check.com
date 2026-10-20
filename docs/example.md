@@ -239,8 +239,9 @@ To override the detection:
 
 Whatever the destination, the commit text in a failure is printed inert.
 Control characters other than newline and tab appear as `\xNN`, and a line
-that starts with `::` is printed as `\::`, so a commit message cannot move the
-terminal's cursor or send a GitHub Actions runner a workflow command.
+that starts with `::` is printed as `\::`, so a commit message cannot send
+control sequences to the terminal, or workflow commands to a GitHub Actions
+runner.
 `--format json` is not affected; JSON escapes those characters already.
 
 ### Checking a range of commits
