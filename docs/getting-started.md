@@ -5,6 +5,13 @@ commit message on your machine, and wired into the two places it belongs.
 
 It takes about five minutes and needs nothing but a Git repository.
 
+!!! tip "On GitHub and want nothing to install?"
+
+    [Install the GitHub App](https://github.com/apps/commit-check): every push
+    and pull request gets a **Commit Check** result, with no workflow file. The
+    [App guide](guides/github-app.md) covers what it checks. This page sets up
+    the CLI and the hook, which work with any Git host.
+
 ## 1. Install
 
 === "pip"

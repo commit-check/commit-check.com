@@ -34,7 +34,7 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <h1 id="cc-title" class="cc-display">Catch bad commits <span class="cc-accent">before they merge.</span></h1>
 <p class="cc-lede"><strong>Commit policy as code for teams and AI agents.</strong> Commit Check validates commit messages, branch names, authors and sign-offs against one <code>cchk.toml</code> — in your commit hook, in CI, on every pull request and inside your AI agent. When the fix is obvious, it hands you the line.</p>
 <div class="cc-actions">
-<a class="cc-btn cc-btn--primary" href="guides/github-actions/">Add to GitHub Actions <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="cc-btn cc-btn--primary" href="https://github.com/apps/commit-check">Install the GitHub App <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div class="cc-install"><span class="cc-install__sigil" aria-hidden="true">$</span><code>pip install commit-check</code><button class="cc-copy" type="button" data-copy="pip install commit-check" aria-label="Copy the install command"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.2A1.5 1.5 0 0 0 9 2H4a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.2 1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
 </div>
 </div>
@@ -102,22 +102,22 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <code class="cc-surface__code">- id: check-message</code>
 <span class="cc-surface__go">Hook guide →</span>
 </a></li>
-<li><a class="cc-surface cc-surface--main" href="guides/github-actions/">
-<span class="cc-surface__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/></svg></span>
-<span class="cc-surface__flag">Most teams start here</span>
-<span class="cc-surface__kicker">Enforced in CI</span>
-<span class="cc-surface__name">GitHub Action</span>
-<span class="cc-surface__desc">A required check no one can skip, with a PR comment and a job summary.</span>
-<code class="cc-surface__code">commit-check-action@v2</code>
-<span class="cc-surface__go">Action guide →</span>
-</a></li>
-<li><a class="cc-surface" href="guides/github-app/">
+<li><a class="cc-surface cc-surface--main" href="guides/github-app/">
 <span class="cc-surface__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+<span class="cc-surface__flag">Fastest to set up</span>
 <span class="cc-surface__kicker">Zero YAML</span>
 <span class="cc-surface__name">GitHub App</span>
 <span class="cc-surface__desc">Install once. Every push and pull request gets a check run, no CI minutes.</span>
 <code class="cc-surface__code">apps/commit-check</code>
 <span class="cc-surface__go">App guide →</span>
+</a></li>
+<li><a class="cc-surface" href="guides/github-actions/">
+<span class="cc-surface__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/></svg></span>
+<span class="cc-surface__kicker">Enforced in CI</span>
+<span class="cc-surface__name">GitHub Action</span>
+<span class="cc-surface__desc">A required check no one can skip, with a PR comment and a job summary.</span>
+<code class="cc-surface__code">commit-check-action@v2</code>
+<span class="cc-surface__go">Action guide →</span>
 </a></li>
 <li><a class="cc-surface" href="guides/mcp/">
 <span class="cc-surface__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="8" width="15" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="13.5" r="1.3" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1.3" fill="currentColor"/></svg></span>
@@ -442,7 +442,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <ul class="cc-plans">
 <li class="cc-plan"><p class="cc-plan__name">Open Source</p><p class="cc-plan__price">Free</p><p class="cc-plan__desc">Public repositories, on any account.</p><a href="https://github.com/apps/commit-check">Install the App →</a></li>
 <li class="cc-plan"><p class="cc-plan__name">Personal</p><p class="cc-plan__price">Free</p><p class="cc-plan__desc">Private repositories on a personal account.</p><a href="https://github.com/apps/commit-check">Install the App →</a></li>
-<li class="cc-plan cc-plan--soon"><p class="cc-plan__name">Team</p><p class="cc-plan__price">Coming soon</p><p class="cc-plan__desc">Private repositories in an organization. Until then, the Action covers private repositories for free.</p><a href="https://github.com/commit-check/commit-check-app">Watch for the launch →</a></li>
+<li class="cc-plan cc-plan--soon"><p class="cc-plan__name">Team</p><p class="cc-plan__price">Coming soon</p><p class="cc-plan__desc">Private repositories in an organization. Until it launches, the App checks them at no charge.</p><a href="guides/github-app/#plans">How the plan will work →</a></li>
 </ul>
 <p class="cc-plans__note">Nothing is blocked while you try it: without a config file the App reports its findings but leaves the check run neutral. GitHub's own commit-metadata rules sit behind its Enterprise plan — <a href="compare/github-rules/">the arithmetic, and the caveats →</a></p>
 </div>

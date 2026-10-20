@@ -141,7 +141,15 @@ branch's ruleset or branch protection, and a commit that fails it cannot be
 merged. [Where to run it](../../guides/integrations.md) walks through each
 setup.
 
-To try the disclosure policy without writing a config file:
+On GitHub, the quickest way to get there is the
+[Commit Check App](https://github.com/apps/commit-check): install it on a
+repository or an organization, commit a `cchk.toml` that sets
+`ai_attribution`, and every push and pull request gets a **Commit Check**
+result, with no workflow file to maintain. The App is free for public
+repositories and personal accounts.
+
+To try the disclosure policy on your machine first, without writing a config
+file:
 
 ```bash
 pip install commit-check
