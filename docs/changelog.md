@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.19.3](#v2193) | A quoted `"false"` for a true/false setting refused instead of read as true | [Every option](configuration.md#every-option) |
 | [2.19.2](#v2192) | Copilot coding agent commits recognised; config values of the wrong type refused; commit text printed inert | [CC013](rules.md#cc013) · [Every option](configuration.md#every-option) · [Color and links](example.md#color-and-links) |
 | [2.19.1](#v2191) | `develop` accepted by default; stricter merge-subject, fixup, WIP and sign-off checks | [CC201](rules.md#cc201) · [CC001](rules.md#cc001) · [CC009](rules.md#cc009) |
 | [2.19.0](#v2190) | Branch descriptions held to the Conventional Branch grammar; Amp, OpenHands, Factory Droid and Jules recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
@@ -32,6 +33,18 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.19.3 (2026-10-21) { #v2193 }
+
+### Fixed
+
+* **A true/false setting written as a string stops the run** — a quoted
+  value such as `conventional_commits = "false"` was read as true, so the
+  rule stayed on and rejected the commit. Any value of a true/false setting
+  that is not `true` or `false` is now a configuration error (exit 2) that
+  names the setting, like the other wrong-type values in 2.19.2. CLI flags
+  and `CCHK_*` variables were already read correctly.
+  See PR [#636](https://github.com/commit-check/commit-check/pull/636).
 
 ## v2.19.2 (2026-10-18) { #v2192 }
 
