@@ -15,10 +15,11 @@ report the same rule IDs, so running both is fine.
 
 ## Install
 
-On the Marketplace page, pick the account to install on. For an organization,
-choose **All repositories** and every repository, including ones created later,
-is covered; with **Only select repositories**, only those are checked and new
-ones have to be added by hand. A personal account works the same way.
+On the [App's page](https://github.com/apps/commit-check), click **Install** and
+pick the account to install on. For an organization, choose **All
+repositories** and every repository, including ones created later, is covered;
+with **Only select repositories**, only those are checked and new ones have to
+be added by hand. A personal account works the same way.
 
 There is nothing to add to a repository. A repository that already has a
 `cchk.toml` or `commit-check.toml` is checked against it from the next push. One
@@ -33,8 +34,8 @@ On every push to a branch and on every pull request, each commit gets a check
 run named **Commit Check** (a push of more than 50 commits has its newest 50
 checked, and the older ones get one neutral "not checked" result) on the Checks tab, in the commit's status and in the
 merge box. (Tag pushes and branch deletions carry nothing to check; commits by
-bots are skipped, and squash mode checks a pull request as one message — both
-[below](#bots-re-runs-and-commits-checked-twice).) The result reads the same
+bots other than AI coding agents are skipped, and squash mode checks a pull
+request as one message — both [below](#bots-re-runs-and-commits-checked-twice).) The result reads the same
 way everywhere:
 
 - a one-line verdict — `All 4 checks passed`, or `Commit message and branch failed (2 of 4 checks)`;
