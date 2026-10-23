@@ -34,8 +34,9 @@ On every push to a branch and on every pull request, each commit gets a check
 run named **Commit Check** (a push of more than 50 commits has its newest 50
 checked, and the older ones get one neutral "not checked" result) on the Checks tab, in the commit's status and in the
 merge box. (Tag pushes and branch deletions carry nothing to check; commits by
-bots other than AI coding agents are skipped, and squash mode checks a pull
-request as one message — both [below](#bots-re-runs-and-commits-checked-twice).) The result reads the same
+bots are skipped, except for AI coding agents that commit as an app, and squash
+mode checks a pull request as one message — both
+[below](#bots-re-runs-and-commits-checked-twice).) The result reads the same
 way everywhere:
 
 - a one-line verdict — `All 4 checks passed`, or `Commit message and branch failed (2 of 4 checks)`;
