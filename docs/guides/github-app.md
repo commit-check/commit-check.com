@@ -80,9 +80,11 @@ has the table of what is checked under each merge setting.
 ### Bots, re-runs, and commits checked twice
 
 - Commits by bots (any author whose name ends in `[bot]`: dependabot,
-  renovate, and the like) are skipped. For finer control use
-  [`ignore_authors`](../configuration.md#every-option), which the rule engine
-  applies itself.
+  renovate, and the like) are skipped. AI coding agents that commit as an app
+  are the exception: commits by Devin, Jules, Copilot's coding agent, Claude,
+  Codex, Amazon Q, Cursor and Factory are checked like anyone's. For finer
+  control use [`ignore_authors`](../configuration.md#every-option), which the
+  rule engine applies itself.
 - **Re-run** on the Checks tab checks a commit again — after a config change,
   say. In squash mode it re-checks the pull request.
 - A commit pushed to a branch that has an open pull request raises both a push
@@ -218,7 +220,7 @@ what each one is used for.
 
 **No check appears.** The App is not installed on that repository (check the
 installation's repository list), the push was a tag or a branch deletion, or
-every commit was by a bot.
+every commit was by a bot other than an AI coding agent.
 
 **A rule you never turned on is failing.** The repository has no config file
 and the defaults apply — which is why the result is advisory. The
