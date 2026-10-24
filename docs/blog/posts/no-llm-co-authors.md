@@ -42,9 +42,9 @@ The co-author line is rarely on the commit a reviewer looks at. An agent adds
 it to the commit it wrote, the contributor pushes a fix on top, and the review
 happens on the final diff.
 
-When the project squashes on merge, GitHub collects the `Co-authored-by:` and
-`Signed-off-by:` lines from all of the pull request's commits and appends them
-to the squash commit. It also credits each commit author other than the person
+When the project squashes on merge, GitHub's default squash message collects
+the `Co-authored-by:` and `Signed-off-by:` lines from all of the pull
+request's commits and appends them, whichever body the repository uses. It also credits each commit author other than the person
 who opened the pull request, so commits written by the Copilot coding agent
 reach main with a `Co-authored-by: Copilot` line. One line missed in any commit
 becomes a permanent co-author credit on main.
@@ -52,8 +52,10 @@ becomes a permanent co-author credit on main.
 ## One file
 
 [Commit Check](https://github.com/commit-check/commit-check) reads its rules
-from a `cchk.toml`. This one checks the co-author rule and turns everything
-else off:
+from a `cchk.toml`. This one checks the co-author rule, turns off the message
+format and branch name rules, and allows any subject up to 1000 characters.
+The default author name and email checks ([CC101](../../rules.md#cc101),
+[CC102](../../rules.md#cc102)) stay on:
 
 ```toml
 warn = ["CC014"]  # the policy does not ask for disclosure: report it, never fail
@@ -61,8 +63,8 @@ warn = ["CC014"]  # the policy does not ask for disclosure: report it, never fai
 [commit]
 ai_attribution = "disclose"   # fail if an AI tool is credited as co-author or sign-off
 conventional_commits = false  # no message format
-subject_max_length = 1000     # no subject length limit
-subject_min_length = 0
+subject_max_length = 1000     # allow long subjects
+subject_min_length = 0        # and short ones
 
 [branch]
 conventional_branch = false   # no branch name rules
@@ -96,8 +98,9 @@ Squash message  `Add retries to the HTTP client (#214)`  CC015 ai-co-author
 
 Make **Commit Check** a required check in the branch's ruleset, and the pull
 request can't be merged until the contributor removes the line from their
-commits. The App only reads the repository and writes check runs. It never
-comments, and it is free for public repositories. The
+commits. The App can read the repository and its pull requests and can write
+only check runs ([what it reads](../../privacy.md)). It never comments, and it is
+free for public repositories. The
 [App guide](../../guides/github-app.md#pull-requests) shows what is checked
 under each merge setting.
 
@@ -109,10 +112,11 @@ reads the same file and checks every commit of the pull request.
 
 It catches the co-author and sign-off lines that Claude Code, GitHub Copilot
 (including the coding agent), Cursor, Codex, Devin, Jules, Amp, Factory Droid
-and OpenHands write, and model names such as `gemini-2.5-pro`. Human co-authors
-pass, including people who happen to be called Claude or Jules. So do
-Dependabot, pre-commit.ci and `Assisted-by:` trailers, which this policy
-doesn't forbid.
+and OpenHands write, and model names such as `gemini-2.5-pro`. It matches those
+known signatures, so a tool it doesn't recognize yet passes. Human co-authors
+pass, including people who happen to be called Claude or Jules, and so do
+Dependabot and pre-commit.ci. `Assisted-by:` and `Generated-by:` trailers pass
+too, since this policy doesn't forbid them.
 
 ## What it can't do
 
