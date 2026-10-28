@@ -269,7 +269,9 @@ Docs: https://commit-check.com/rules/#cc014
 This rule is set to warn in the config; it does not fail the run.
 ```
 
-The run still passes. See
+The run still passes. The warning still suggests a disclosure that pip and
+attrs don't ask for: commit-check has no switch that turns off a single rule,
+so reporting CC014 is as quiet as it gets. See
 [Report a rule without enforcing it](../configuration.md#report-a-rule-without-enforcing-it).
 
 [CPython](https://devguide.python.org/getting-started/ai-tools/) sets no rule
