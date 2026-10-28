@@ -246,12 +246,13 @@ Suggest: Write the Assisted-by value so that it matches ^\S+/\S+$ (set by ai_dis
 That failure carries no correction, because the tool should not guess which
 model or format you meant.
 
-### Disclosure that is appreciated, not required
+### Refusing the tool as a co-author, without asking for disclosure
 
-Some projects — [CPython](https://devguide.python.org/getting-started/generative-ai/)
-among them — welcome disclosure without demanding it, while still refusing the
-tool as a co-author. Put CC014 in the top-level `warn` list and the other two
-keep enforcing:
+[pip](https://github.com/pypa/pip/blob/main/AI_POLICY.md) and
+[attrs](https://github.com/python-attrs/attrs/blob/main/.github/AI_POLICY.md)
+close any pull request that lists an LLM as a co-author, but they don't ask
+contributors to disclose AI use. Put CC014 in the top-level `warn` list and
+the other two keep enforcing:
 
 ```toml title="cchk.toml"
 warn = ["ai_disclosure"]
@@ -270,6 +271,12 @@ This rule is set to warn in the config; it does not fail the run.
 
 The run still passes. See
 [Report a rule without enforcing it](../configuration.md#report-a-rule-without-enforcing-it).
+
+[CPython](https://devguide.python.org/getting-started/ai-tools/) sets no rule
+for commits at all: disclosing AI use is appreciated but not required, and
+triagers judge each contribution by whether its author can explain it in their
+own words. A policy like that leaves nothing for commit-check to enforce, so
+keep `ai_attribution` at its default, `"ignore"`.
 
 ### Exempting automation
 
