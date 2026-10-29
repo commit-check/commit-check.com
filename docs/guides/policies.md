@@ -135,8 +135,8 @@ Recognised signatures are co-author and sign-off lines naming Claude Code,
 GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, Amp,
 OpenHands, Factory Droid and Jules, the disclosure trailers `Assisted-by:` and
 `Generated-by:`, vendor marks such as `🤖 Generated with Claude Code`, Amp's
-`Amp-Thread-ID:` and the Copilot coding agent's `Agent-Logs-Url:`, and generic
-AI model names. This is the
+`Amp-Thread-ID:`, the Copilot coding agent's `Agent-Logs-Url:` and Cursor's
+`Made-with: Cursor`, and generic AI model names. This is the
 position [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/)
 takes — no AI trailers in the history, disclosure in the pull request
 instead.

@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.19.4](#v2194) | `agents/` branches accepted by default; Cursor's `Made-with: Cursor` trailer recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
 | [2.19.3](#v2193) | A quoted `"false"` for a true/false setting refused instead of read as true | [Every option](configuration.md#every-option) |
 | [2.19.2](#v2192) | Copilot coding agent commits recognised; config values of the wrong type refused; commit text printed inert | [CC013](rules.md#cc013) · [Every option](configuration.md#every-option) · [Color and links](example.md#color-and-links) |
 | [2.19.1](#v2191) | `develop` accepted by default; stricter merge-subject, fixup, WIP and sign-off checks | [CC201](rules.md#cc201) · [CC001](rules.md#cc001) · [CC009](rules.md#cc009) |
@@ -33,6 +34,29 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.19.4 (2026-10-29) { #v2194 }
+
+### Changed
+
+* **`agents/` branches are accepted by default** — VS Code's Agents window
+  names its branches `agents/<description>`, and its users cannot change the
+  prefix, so [CC201](rules.md#cc201) failed them unless `allow_branch_types`
+  listed `agents`. It is now in the default list. The Conventional Branch
+  specification plans to accept it as an alias of `ai`
+  ([conventional-branch#196](https://github.com/conventional-branch/conventional-branch/issues/196)).
+  This only widens what passes.
+  See PR [#645](https://github.com/commit-check/commit-check/pull/645).
+
+### Fixed
+
+* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise Cursor's
+  `Made-with: Cursor` trailer** — Cursor marks the commits it writes with it,
+  and every policy let it through. It now counts as Cursor's own mark, like
+  the Copilot coding agent's `Agent-Logs-Url:`: `forbid` rejects it, and under
+  `disclose` the correction appends `Assisted-by: Cursor`. Other `Made-with:`
+  values are left alone.
+  See PR [#643](https://github.com/commit-check/commit-check/pull/643).
 
 ## v2.19.3 (2026-10-21) { #v2193 }
 

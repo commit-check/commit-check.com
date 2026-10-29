@@ -565,9 +565,9 @@ Rejects a commit whose message carries any AI attribution: a co-author or
 sign-off line naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
 Aider, Windsurf, Tabby, Amp, OpenHands, Factory Droid or Jules, a disclosure
 trailer such as `Assisted-by:` or `Generated-by:`, a vendor's own mark such
-as `🤖 Generated with Claude Code`, Amp's `Amp-Thread-ID:` trailer or the
-`Agent-Logs-Url:` trailer the Copilot coding agent adds, and generic AI model
-names. Copilot is also recognised by its account's
+as `🤖 Generated with Claude Code`, Amp's `Amp-Thread-ID:` trailer, the
+`Agent-Logs-Url:` trailer the Copilot coding agent adds or Cursor's
+`Made-with: Cursor`, and generic AI model names. Copilot is also recognised by its account's
 `N+Copilot@users.noreply.github.com` address, so the coding agent's
 `copilot-swe-agent[bot]` co-author line counts under any display name.
 
@@ -827,8 +827,9 @@ feature/role-caching
   a superset of the specification: the spec's types (`feature`, `bugfix`,
   `hotfix`, `release`, `chore`, their aliases `feat` and `fix`, and the AI
   agent prefixes `ai`, `claude`, `codex`, `copilot` and `cursor`), plus the
-  other Conventional Commit types and the bot prefixes `dependabot` and
-  `renovate`. Set it explicitly for strict spec-only validation.
+  other Conventional Commit types, `agents` (the prefix VS Code's Agents
+  window uses) and the bot prefixes `dependabot` and `renovate`. Set it
+  explicitly for strict spec-only validation.
 * `branch.require_description_grammar` — set to `true` to hold the
   description to the specification's grammar, so `feature/Add_Login`,
   `feature/new--login` and `feature/a/b` are rejected. Off by default,
