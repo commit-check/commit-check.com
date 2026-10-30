@@ -92,7 +92,7 @@ Rule by rule:
 | gitlint | Commit Check |
 |---|---|
 | T1 `title-max-length` | `subject_max_length` ([CC004](../rules.md#cc004)) |
-| T5 `title-must-not-contain-word` (default `WIP`) | `allow_wip_commits = false` ([CC010](../rules.md#cc010)), which rejects a subject that starts with `WIP` |
+| T5 `title-must-not-contain-word` (default `WIP`) | `allow_wip_commits = false` ([CC010](../rules.md#cc010)), which rejects a subject that starts with `WIP`; gitlint rejects the word anywhere in the title |
 | T7 `title-match-regex`, B8 `body-match-regex` | `message_pattern`, one regex over the whole message ([CC001](../rules.md#cc001)) |
 | T8 `title-min-length` | `subject_min_length` ([CC005](../rules.md#cc005)) |
 | B5 `body-min-length`, B6 `body-is-missing` | `require_body` ([CC011](../rules.md#cc011)); there is no minimum length |

@@ -44,9 +44,13 @@ jobs:
 ```
 
 The default [commit types](../configuration.md) are the Conventional Commits
-ones the tools release on (`feat`, `fix`, `perf`) plus the ones they record
-without releasing. A breaking change written as `feat!:` or `feat(api)!:`
-passes, and so does a `BREAKING CHANGE:` footer.
+ones the tools release on (`feat`, `fix`, `perf`) plus the ones they parse but
+do not release on, such as `docs` and `chore`; whether those show in the
+changelog is the tool's setting. A breaking change written as `feat!:` or
+`feat(api)!:` passes Commit Check, and so does a `BREAKING CHANGE:` footer.
+semantic-release's default Angular preset does not read the `!`, though: give
+the commit a `BREAKING CHANGE:` footer, or switch it to the
+`conventionalcommits` preset.
 
 ## Let the tool's own pull request through
 
@@ -76,8 +80,8 @@ Conventional Commits title and commit message:
 ```yaml
 - uses: changesets/action@v1
   with:
-    commit-message: "chore: version packages"
-    pr-title: "chore: version packages"
+    commit: "chore: version packages"
+    title: "chore: version packages"
 ```
 
 ## Per tool
