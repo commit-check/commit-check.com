@@ -19,7 +19,11 @@ Which message that is depends on how pull requests are merged.
   request title becomes the commit on `main`. release-please, for one,
   "highly recommend[s]" squash merges. Check the title: `pr-title: true` on
   the Action, or `check = "squash"` on the [App](github-app.md#pull-requests),
-  which checks the full message a squash merge would land.
+  which checks the full message a squash merge would land. With GitHub's
+  default squash message, a pull request of a single commit lands that
+  commit's message rather than the title. The App follows that setting; with
+  the Action, set the squash commit message to "Pull request title" in the
+  repository settings so the title you check is the one that lands.
 
 ```yaml title=".github/workflows/commit-check.yml"
 name: Commit Check
