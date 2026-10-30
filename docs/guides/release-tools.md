@@ -58,8 +58,8 @@ whose name you cannot choose:
 | release-please | `release-please--branches--main`, plus `--components--<name>` in a monorepo | `chore(main): release 1.2.3` |
 | [changesets/action](https://github.com/changesets/action) | `changeset-release/main` | `Version Packages` |
 
-Commit Check 2.19.4 rejects both branch names under
-[CC201](../rules.md#cc201). Allow them:
+The default branch rule, [CC201](../rules.md#cc201), rejects both names.
+Allow the ones you use:
 
 ```toml title="cchk.toml"
 [branch]
@@ -68,9 +68,6 @@ allow_branch_names = ["release-please--branches--.+", "changeset-release/.+"]
 
 Each entry is a regular expression that has to match the whole branch name,
 so these allow the tools' branches and nothing that merely contains them.
-[commit-check#648](https://github.com/commit-check/commit-check/pull/648)
-accepts both names by default; once it is released, this section is no longer
-needed.
 
 release-please's title passes [CC001](../rules.md#cc001) as it is.
 changesets' `Version Packages` does not, so with `pr-title: true` give it a
