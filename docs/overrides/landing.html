@@ -20,7 +20,12 @@
   <link rel="stylesheet" href="{{ 'stylesheets/landing.css' | url }}">
 {% endblock %}
 
-{% block site_nav %}{% endblock %}
+{#
+  `site_nav` is left to the theme. It holds the navigation that the header's
+  menu button opens on phones; `hide: navigation` already keeps it out of the
+  wide-screen layout. Emptying the block left that button with nothing to
+  open.
+#}
 
 {% block container %}
   <div class="md-content cc-landing" data-md-component="content">
