@@ -776,6 +776,16 @@ git config --global user.email you@example.com
   `^.+@.+$`; set something like `"^.+@example\\.com$"` to require a company
   domain.
 
+To reject an address instead of requiring one, use a negative lookahead. This
+refuses GitHub's no-reply addresses (`jane@users.noreply.github.com` and
+`12345+jane@users.noreply.github.com`), which cannot receive mail and can
+lose their link to the author's account after a GitHub username change:
+
+```toml title="cchk.toml"
+[commit]
+author_email_pattern = '(?i)^(?!.*@users\.noreply\.github\.com$).+@.+$'
+```
+
 !!! note
 
     Because the built-in pattern only looks for an `@`, local and placeholder

@@ -76,6 +76,14 @@ To require a company address:
 author_email_pattern = "^.+@example\\.com$"
 ```
 
+To refuse GitHub's no-reply addresses, which cannot receive mail and can lose
+their link to the author's account after a username change:
+
+```toml title="cchk.toml"
+[commit]
+author_email_pattern = '(?i)^(?!.*@users\.noreply\.github\.com$).+@.+$'
+```
+
 ### Bots
 
 Automation cannot meaningfully sign the DCO, and forcing it to produces
