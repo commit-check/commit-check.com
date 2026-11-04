@@ -4,4 +4,5 @@
 #
 # The `imaging` extra pulls in cairosvg and pillow, which the social plugin
 # needs to render the share cards.
-mkdocs-ng-material[imaging]==9.7.7
+mkdocs-ng==1.11.0
+mkdocs-ng-material[imaging]==9.8.0
