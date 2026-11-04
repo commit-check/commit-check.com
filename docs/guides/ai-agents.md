@@ -34,12 +34,14 @@ and tells Claude why. This one stops `--no-verify`, and `-n` on `git commit`:
 
 ```bash title=".claude/hooks/no-verify.sh"
 #!/usr/bin/env bash
-# Stop `git commit` and `git push` from skipping the hooks. Quoted text
-# is dropped first, so a commit message that mentions -n still passes.
-command=$(jq -r '.tool_input.command' | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
-skips='--no-verify|git( +-C +[^ ]+)* +commit[^;&|]* +-[a-zA-Z]*n'
+# Stop git from skipping the hooks: --no-verify, or -n on git commit.
+# Quoted text becomes _ first, so a commit message that mentions -n passes.
+command -v jq >/dev/null || { echo "This hook needs jq." >&2; exit 2; }
+cmd=$(jq -r '.tool_input.command' | sed -E "s/\"[^\"]*\"/_/g; s/'[^']*'/_/g")
+any='git [^;&|]*--no-verify'
+commit='git( +-C +[^ ]+)* +commit[^;&|]* +-[a-zA-Z]*n'
 
-if grep -Eq -e "$skips" <<<"$command"; then
+if grep -Eq -e "$any" -e "$commit" <<<"$cmd"; then
   echo "Do not skip the hooks (--no-verify, -n)." \
        "Fix what Commit Check reported and commit again." >&2
   exit 2
@@ -65,10 +67,11 @@ fi
 }
 ```
 
-Make the script executable, install [jq](https://jqlang.org/), and commit both
-files, so everyone who works in the repository with Claude Code gets the hook.
-It reads the command as written and does not catch every way around a hook,
-pre-commit's `SKIP` variable for one.
+Make the script executable, install [jq](https://jqlang.org/) (without it the
+hook stops every command), and commit both files, so everyone who works in the
+repository with Claude Code gets the hook. It reads the command as written and
+does not catch every way around a hook, such as a command wrapped in `bash -c`
+or pre-commit's `SKIP` variable.
 
 ## Check the pull request
 
