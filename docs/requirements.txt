@@ -3,5 +3,5 @@
 # depends on, and Sumi, its documentation theme. Sumi brings its own blog,
 # search palette and fonts, so nothing else is needed.
 mkdocs-ng==1.11.0
-mkdocs-sumi==0.3.0
+mkdocs-sumi==0.3.1
 pymdown-extensions==12.3
