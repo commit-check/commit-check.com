@@ -428,7 +428,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <li><b>160+</b><span>repositories run the Action</span></li>
 <li><b>Apache</b><span>allowlists the Action for its projects' CI</span></li>
 </ul>
-<p class="cc-users"><span>In the CI of</span><a href="https://github.com/apache">Apache</a><a href="https://github.com/TexasInstruments">Texas Instruments</a><a href="https://github.com/mila-iqia">Mila</a><a href="https://github.com/istio-ecosystem">Istio Ecosystem</a><a href="https://github.com/OpenDriveLab">OpenDriveLab</a><a href="https://github.com/commit-check/commit-check-action/network/dependents">and more →</a></p>
+<p class="cc-users"><span>In the CI of</span><a href="https://github.com/apache">Apache</a><a href="https://github.com/freebsd">FreeBSD</a><a href="https://github.com/TexasInstruments">Texas Instruments</a><a href="https://github.com/mila-iqia">Mila</a><a href="https://github.com/istio-ecosystem">Istio Ecosystem</a><a href="https://github.com/OpenDriveLab">OpenDriveLab</a><a href="https://github.com/commit-check/commit-check-action/network/dependents">and more →</a></p>
 </div>
 </section>
 
