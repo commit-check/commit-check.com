@@ -81,6 +81,8 @@ installs one. The check that holds for every agent is the one on the pull
 request. The [GitHub App](github-app.md) needs no workflow file and also
 checks the agents that commit as an app
 ([which ones](github-app.md#bots-re-runs-and-commits-checked-twice)); the
-[Action](github-actions.md) does the same job in CI. Make **Commit Check** a
-[required check](github-app.md#enforcing-it), and a commit that skipped the
-hook still cannot merge.
+[Action](github-actions.md) does the same job in CI. Make the check required
+and a commit that skipped the hook still cannot merge, since both look at every
+commit of the pull request. The App's check is named **Commit Check**
+([enforcing it](github-app.md#enforcing-it)); the Action's takes its job's
+name, `commit-check` in [the example](github-actions.md#making-it-a-required-check).
