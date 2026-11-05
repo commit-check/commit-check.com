@@ -1,10 +1,10 @@
 /* Brand palette -----------------------------------------------------------
-   Material's "custom" primary/accent read these variables.
+   Sumi reads every colour, font and size from its --sumi-* variables, so the
+   brand is applied by pointing those at the Commit Check palette.
 
-   Ink is the brand's dark and Signal Blue its accent. The header and footer
-   are Ink on every page, so the docs and the landing page share one frame;
-   Signal Blue is the same #2c9ccd the README badge has always used, so badges
-   already in the wild still match. */
+   Ink is the brand's dark and Signal Blue its accent. Signal Blue is the same
+   #2c9ccd the README badge has always used, so badges already in the wild
+   still match. Paper is the cool grey of the tinted bands. */
 :root {
   --cc-ink: #0b1620;
   --cc-ink-raised: #13212c;
@@ -14,113 +14,162 @@
   /* The brand blue only reaches 3.1:1 on white; links need 4.5:1. */
   --cc-link: #176b89;
 
-  --md-primary-fg-color: var(--cc-ink);
-  --md-primary-fg-color--light: var(--cc-ink-raised);
-  --md-primary-fg-color--dark: #060d13;
-  --md-accent-fg-color: var(--cc-brand-dark);
-
-  /* A literal stack: the theme defines --md-text-font-family below :root,
-     so a var() of it here would resolve to nothing. */
+  /* Literal stacks rather than var()s of each other, so each one can be read
+     on its own. */
   --cc-display-font: "Bricolage Grotesque", "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
+  --sumi-font: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --sumi-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --sumi-accent: var(--cc-brand);
+  --sumi-accent-ink: var(--cc-link);
+  --sumi-bg: #ffffff;
+  --sumi-bg-elev: #ffffff;
+  --sumi-bg-soft: #f4f6f7;
+  --sumi-bg-sunken: #eef2f4;
+  --sumi-fg: #0e1b24;
+  --sumi-fg-2: #4f6270;
+  --sumi-fg-3: #6a7c89;
+  --sumi-line: #dce3e8;
+  --sumi-line-2: #c9d3da;
+  --sumi-link: var(--cc-link);
+  --sumi-link-hover: #0f5570;
+  --sumi-header-bg: rgba(255, 255, 255, 0.9);
+  --sumi-code-bg: #f6f8f9;
+  --sumi-code-head: #eef2f4;
+  --sumi-code-inline: #eef2f4;
+
+  /* The page width the site has always had: a 1220px column with the header
+     aligned to it, and both sidebars at the same width. */
+  --cc-page-w: 1220px;
+  --sumi-side-w: 242px;
+  --sumi-rail-w: 242px;
+  --sumi-header-h: 48px;
 }
 
-/* The theme sets the footer colours per scheme, so they are overridden per
-   scheme too; on :root alone they would lose to the theme's own. */
-[data-md-color-scheme="default"],
-[data-md-color-scheme="slate"] {
-  --md-footer-bg-color: #081119;
-  --md-footer-bg-color--dark: #060d13;
+[data-theme="dark"] {
+  --sumi-accent: var(--cc-brand);
+  --sumi-accent-ink: var(--cc-brand-light);
+  --sumi-bg: #0e1a23;
+  --sumi-bg-elev: #13212c;
+  --sumi-bg-soft: #13212c;
+  --sumi-bg-sunken: #0b1620;
+  --sumi-fg: #e8eef2;
+  --sumi-fg-2: #b9c7d1;
+  --sumi-fg-3: #8fa3b1;
+  --sumi-line: #22323f;
+  --sumi-line-2: #2e4252;
+  --sumi-link: var(--cc-brand-light);
+  --sumi-link-hover: #7fc6e6;
+  --sumi-header-bg: rgba(11, 22, 32, 0.9);
+  --sumi-code-bg: #0b1620;
+  --sumi-code-head: #13212c;
+  --sumi-code-inline: #13212c;
 }
 
-[data-md-color-scheme="slate"] {
-  /* Material tints every slate grey from one hue; 205 is Ink's. */
-  --md-hue: 205;
-  --md-default-bg-color: #0e1a23;
-  --md-primary-fg-color: var(--cc-ink);
-  --md-accent-fg-color: var(--cc-brand-light);
-  --md-typeset-a-color: var(--cc-brand-light);
+/* Page frame ---------------------------------------------------------------- */
+.sumi-header-inner,
+.sumi-shell,
+.sumi-footer-inner {
+  max-width: var(--cc-page-w);
 }
 
-[data-md-color-scheme="default"] {
-  --md-typeset-a-color: var(--cc-link);
-  /* A light header in the light scheme, Ink in the dark one, so the header
-     answers the theme toggle like the rest of the page. */
-  --md-primary-fg-color: #ffffff;
-  --md-primary-fg-color--light: #f4f6f7;
-  --md-primary-fg-color--dark: #eef2f4;
-  --md-primary-bg-color: var(--cc-ink);
-  --md-primary-bg-color--light: #4f6270;
+.sumi-shell {
+  column-gap: 32px;
 }
 
-[data-md-color-scheme="default"] .md-header {
-  box-shadow: inset 0 -1px 0 #dce3e8;
+/* The footer is Ink on every page and in both schemes, so the docs and the
+   landing page share one frame. */
+.sumi-footer {
+  border-top: 0;
+  background: #060d13;
 }
 
-/* The theme's search field is a translucent black meant for a coloured
-   header; on a white one it needs a solid tint instead. */
-[data-md-color-scheme="default"] .md-search__form {
-  background-color: #eef2f4;
+.sumi-footer-inner {
+  color: #8fa3b1;
 }
 
-[data-md-color-scheme="default"] .md-search__form:hover {
-  background-color: #e4e9ed;
+.sumi-footer a,
+.sumi-footer .sumi-icon-btn {
+  color: #b9c7d1;
 }
 
-/* A primary button is Signal Blue with Ink text: white on this blue is 3.1:1,
-   under the 4.5:1 a button label needs; Ink on it is 5.9:1. */
-.md-typeset .md-button--primary {
-  background-color: var(--cc-brand);
-  border-color: var(--cc-brand);
-  color: var(--cc-ink);
+.sumi-footer a:hover,
+.sumi-footer .sumi-icon-btn:hover {
+  color: #ffffff;
+  background: none;
 }
 
-.md-typeset .md-button--primary:focus,
-.md-typeset .md-button--primary:hover {
-  background-color: var(--cc-brand-light);
-  border-color: var(--cc-brand-light);
-  color: var(--cc-ink);
+/* Text the way the site has always set it: Instrument Sans without the
+   stylistic sets Sumi turns on for its own face, at the same line height, and
+   with no lead paragraph or rule above each section. */
+body {
+  font-feature-settings: normal;
+}
+
+.sumi-prose {
+  line-height: 1.6;
+}
+
+.sumi-prose h1 + p {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.sumi-prose h2 {
+  padding-top: 0;
+  border-top: 0;
 }
 
 /* Display face for page titles, section headings and the site name. Body text
-   stays in the theme's text font. */
-.md-typeset h1,
-.md-typeset h2 {
+   stays in the text font. */
+.sumi-prose h1,
+.sumi-prose h2,
+.sumi-brand-name {
   font-family: var(--cc-display-font);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-/* The theme draws page titles in a light grey at weight 300; in the display
-   face they read as headings only at full strength. */
-.md-typeset h1 {
-  color: var(--md-default-fg-color);
-}
-
-.md-header__title {
-  font-family: var(--cc-display-font);
-  font-weight: 700;
+.sumi-brand-name {
   letter-spacing: -0.01em;
 }
 
-/* Feature grid: uses Material's card grid, tightened up a little. */
-.md-typeset .grid.cards > ul > li {
-  border-radius: 0.4rem;
+/* Buttons -------------------------------------------------------------------
+   A primary button is Signal Blue with Ink text: white on this blue is 3.1:1,
+   under the 4.5:1 a button label needs; Ink on it is 5.9:1. */
+.sumi-prose .md-button--primary,
+.sumi-btn--primary {
+  background-color: var(--cc-brand);
+  border-color: var(--cc-brand);
+  color: var(--cc-ink);
+}
+
+.sumi-prose .md-button--primary:focus,
+.sumi-prose .md-button--primary:hover,
+.sumi-btn--primary:hover {
+  background-color: var(--cc-brand-light);
+  border-color: var(--cc-brand-light);
+  color: var(--cc-ink);
+}
+
+/* Feature grid: the card hover picks up the brand colour. */
+.sumi-prose .grid.cards > ul > li,
+.sumi-prose ul.sumi-cards > li {
   transition: border-color 125ms, box-shadow 125ms;
 }
 
-.md-typeset .grid.cards > ul > li:hover {
+.sumi-prose .grid.cards > ul > li:hover,
+.sumi-prose ul.sumi-cards > li:hover {
   border-color: var(--cc-brand);
   box-shadow: 0 0 0 1px var(--cc-brand);
 }
 
-.md-typeset .grid.cards > ul > li > hr {
-  margin: 0.6rem 0;
-}
-
 /* Tables -------------------------------------------------------------------
    Cells align to the top so short values line up with a wrapped message. */
-.md-typeset table:not([class]) td,
-.md-typeset table:not([class]) th {
+.sumi-prose table:not([class]) td,
+.sumi-prose table:not([class]) th {
   vertical-align: top;
 }
 
@@ -129,12 +178,6 @@
    break across two lines even on a wide screen. Other tables hold long regexes
    and allow-lists that must stay wrappable, hence the wrapper class rather
    than a rule for every table. */
-.md-typeset .rules-index td code {
+.sumi-prose .rules-index td code {
   white-space: nowrap;
-}
-
-/* Sidebar section headings ("Getting started", "Reference", ...) */
-.md-nav__item--section > .md-nav__link {
-  font-weight: 700;
-  color: var(--md-default-fg-color);
 }

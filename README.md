@@ -35,21 +35,17 @@ Or through nox, which manages the environment for you:
 $ nox -s docs-live
 ```
 
-Building the share cards needs cairo on the system (`libcairo2` on Debian and
-Ubuntu, `cairo` from Homebrew on macOS). To skip them while writing:
-
-```console
-$ SOCIAL_CARDS=false mkdocs serve
-```
+The site uses [Sumi](https://sumi.mkdocs-ng.org/), the MkDocs NG theme. It
+needs no system libraries and fetches nothing at build time.
 
 ## Layout
 
 | Path | Contents |
 | --- | --- |
-| `docs/index.md` | Landing page. Renders through `docs/overrides/home.html`. |
+| `docs/index.md` | Landing page. Renders through `docs/overrides/landing.html`. |
 | `docs/getting-started/`, `docs/guides/` | Tutorials and how-to guides. |
 | `docs/rules.md`, `docs/configuration.md` | Reference. |
-| `docs/blog/` | Blog, published with Material's blog plugin. |
+| `docs/blog/` | Blog, published by Sumi. A post's file name, `YYYY-MM-DD-slug.md`, sets its URL. |
 | `docs/overrides/`, `docs/stylesheets/`, `docs/assets/` | Theme, styles, brand assets. |
 | `scripts/mkdocs_hooks.py` | Redirect stubs for the URLs the old Sphinx site served. |
 

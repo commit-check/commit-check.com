@@ -54,11 +54,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      # The social plugin renders the share cards through cairo, which cairosvg
-      # loads at runtime rather than bundling.
-      - name: Install cairo
-        run: sudo apt-get install -y --no-install-recommends libcairo2
-
       - name: Build site
         run: pipx run nox -s docs
 

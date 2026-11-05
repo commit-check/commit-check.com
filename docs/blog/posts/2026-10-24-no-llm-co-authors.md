@@ -128,5 +128,5 @@ day.
 
 If your project's AI policy says something different, such as "disclose it
 with `Assisted-by:`" or "no AI trailers at all",
-[this earlier post](ai-commit-attribution-policy.md) shows the setting for
+[this earlier post](2026-10-11-ai-commit-attribution-policy.md) shows the setting for
 each.

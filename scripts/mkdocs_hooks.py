@@ -54,6 +54,12 @@ MOVED_URLS = {
     # An orphan: nothing linked to it, it was not in the nav, and it matched no
     # key in .authors.yml, so the blog never treated it as an author page.
     "blog/author/team": "blog/",
+    # Material's blog plugin wrote an archive page and one page per category.
+    # Sumi's blog index lists every post and filters by tag in place, so these
+    # all land on it.
+    "blog/archive/2026": "blog/",
+    "blog/category/announcements": "blog/",
+    "blog/category/updates": "blog/",
 }
 
 # Redirect stubs for the URLs the Sphinx site served.

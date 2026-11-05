@@ -29,65 +29,26 @@ validation:
   anchors: warn
 
 theme:
-  name: material
-  language: en
+  name: sumi
+  locale: en
   custom_dir: docs/overrides
   logo: assets/logo.svg
   favicon: assets/favicon.svg
-  icon:
-    repo: fontawesome/brands/github
-  # Instrument Sans for text and JetBrains Mono for code; the display face,
-  # Bricolage Grotesque, is loaded in overrides/main.html because the theme
-  # only takes two families.
-  font:
-    text: Instrument Sans
-    code: JetBrains Mono
-  # Two states, not three. The first visit still follows the system through
-  # the media queries; after that every click visibly changes the page. A
-  # third "follow system" state made one click in three do nothing a reader
-  # could see, which read as a broken toggle.
-  palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
-  features:
-    # Navigation lives in the left sidebar, grouped into sections — deliberately
-    # not navigation.tabs, which moves the top level up into the header.
-    - navigation.sections
-    - navigation.top
-    - navigation.tracking
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.footer
-    - toc.follow
-    - search.suggest
-    - search.highlight
-    - search.share
-    - content.code.copy
-    - content.code.annotate
-    - content.tabs.link
-    - content.action.edit
+  # Follows the system on the first visit; the header toggle then switches
+  # between light and dark and remembers the choice.
+  palette: auto
+  # Signal Blue, the brand accent (see assets/extra.css for the full palette).
+  accent: "#2c9ccd"
+  # Navigation lives in the left sidebar, grouped into sections, not in
+  # header tabs.
+  navigation_tabs: false
+  # The preview image for pages that do not set their own `image:`.
+  social_image: assets/social.png
 
 extra_css:
-  # Brand colours and typography, then the landing-page-specific layout.
+  # Brand colours and typography. The landing page adds its own layout in
+  # overrides/landing.html.
   - assets/extra.css
-  - stylesheets/extra.css
-
-# The landing page's two demos. Loaded everywhere, because instant navigation
-# does not run scripts that arrive with a page; it does nothing elsewhere.
-extra_javascript:
-  - javascripts/landing.js
 
 extra:
   social:
@@ -113,9 +74,6 @@ markdown_extensions:
       permalink: true
       permalink_title: Link to this section
   - pymdownx.details
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -135,18 +93,9 @@ markdown_extensions:
 
 plugins:
   - search
-  - blog
-  # Generates the preview image shown when a page is shared on Slack, X or
-  # LinkedIn. Needs cairo and pillow, which the docs requirements pull in.
-  #
-  # Deploy previews turn this off (see netlify.toml): nobody shares a preview
-  # link for its preview image, and skipping the cards keeps those builds fast
-  # and free of the system cairo dependency.
-  - social:
-      enabled: !ENV [SOCIAL_CARDS, true]
-      cards_layout_options:
-        background_color: "#0b1620"
-        color: "#ffffff"
+  # Sumi's plugin: components, the blog (index, tags, Atom feed) under
+  # docs/blog/, and a Markdown copy of each page.
+  - sumi
 
 hooks:
   - scripts/mkdocs_hooks.py

@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 
 {# The landing page sets `title: Commit Check` so its social card and search
-   entry are not labelled "Home". Material appends the site name to any page
-   that carries a meta title, which on this one page repeats it.
-
-   The site name alone says nothing to someone who has not heard of it, and
-   it is what Google shows as the result's headline, so the landing page can
-   give its document title separately as `seo_title`. #}
+   entry are not labelled "Home". The site name alone says nothing to someone
+   who has not heard of it, and it is what Google shows as the result's
+   headline, so the landing page can give its document title separately as
+   `seo_title`. #}
 {% block htmltitle %}
-  {% if page.is_homepage %}
-    <title>{{ page.meta.seo_title or config.site_name }}</title>
+  {% if page and page.is_homepage and page.meta.seo_title %}
+    <title>{{ page.meta.seo_title }}</title>
   {% else %}
     {{ super() }}
   {% endif %}
 {% endblock %}
 
 {% block extrahead %}
-  {# The display face for headings and the site name (--cc-display-font in
-     assets/extra.css). The theme loads the text and code faces itself. #}
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..800&display=swap">
+  {# The brand faces: Instrument Sans for text, JetBrains Mono for code and
+     Bricolage Grotesque for headings and the site name (see assets/extra.css,
+     which points Sumi's font variables at them). #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&family=Bricolage+Grotesque:opsz,wght@12..96,700..800&display=swap">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/static/apple-touch-icon.png">
   <link rel="icon" type="image/x-icon" href="{{ base_url }}/static/favicon.ico">
 {% endblock %}
