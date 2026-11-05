@@ -802,7 +802,8 @@ Checks that the current branch name follows the
 [Conventional Branch](https://conventionalbranch.org/) specification:
 `<type>/<description>`.
 
-`main`, `master`, `develop`, `HEAD`, and `PR-*` are always accepted.
+`main`, `master`, `develop`, `HEAD`, `PR-*`, and the `gh-readonly-queue/*`
+branches GitHub's merge queue creates are always accepted.
 
 By default only the type is checked, and any description after the `/` is
 accepted. With `require_description_grammar` the description has to follow
