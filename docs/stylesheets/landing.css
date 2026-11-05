@@ -2,16 +2,13 @@
  * Landing page only.
  *
  * This file is linked from docs/overrides/landing.html rather than listed in
- * mkdocs.yml's extra_css, so the documentation pages never load it. Instant
- * navigation diffs <head> between documents, so the link is added when a
- * reader arrives here and removed when they leave -- which is also why rules
- * below may safely reach outside the content area, to .md-header and
- * .md-main. A body class could not do that: instant navigation does not
- * touch <body>.
+ * mkdocs.yml's extra_css, so the documentation pages never load it. Every
+ * page is a full page load, so rules below may safely reach outside the
+ * content area, to the header and the page frame.
  *
- * Sizes are in px, not the theme's rem: the theme scales its root font size
- * up on wide screens, and the landing page is laid out to fixed measures
- * (the demo window, the five-column row) that should not grow with it.
+ * Sizes are in px, not rem: the landing page is laid out to fixed measures
+ * (the demo window, the five-column row) that should not grow with the
+ * reader's font size.
  *
  * The brand tokens are Ink, Signal Blue and Paper; see the brand kit. The
  * demo window is drawn light in both colour schemes on purpose -- it stands
@@ -47,7 +44,7 @@
   --cc-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-[data-md-color-scheme="slate"] {
+[data-theme="dark"] {
   --cc-paper: #0e1a23;
   --cc-card: #13212c;
   --cc-line: #263744;
@@ -59,47 +56,33 @@
 
 /* ---------------------------------------------------------------- chrome -- */
 
-/* The brand is small and out of the way in the header: nobody arrives caring
-   about it. The search box is what competes with the headline, and a reader
-   who wants search is one click into the docs. */
-.md-header .md-search {
-  display: none;
-}
-
-@media screen and (min-width: 76.25em) {
-  .md-header .md-search {
-    display: block;
-  }
-}
-
-/* The hero is a dark band that meets the header, so the theme's gap above the
-   content, and the spacer it draws inside it, go. */
-.md-main__inner {
-  margin-top: 0;
-}
-
-.cc-landing .md-content__inner {
-  padding-top: 0;
-  margin-bottom: 0;
-}
-
-.cc-landing .md-content__inner::before {
-  display: none;
-}
-
-/* The "edit this page" pencil points at index.md, which is not what a
-   first-time reader wants to do next. */
-.cc-landing .md-content__button {
-  display: none;
-}
-
-.md-main {
+/* The hero is a band that meets the header, so the theme's gap above the
+   content goes. The page is one centred column, the same width as the header,
+   and the bands below reach past it to the window edges. */
+.sumi-main.cc-landing {
+  padding: 0;
   background: var(--cc-paper);
   /* The bands below span the window with `margin-inline: calc(50% - 50vw)`.
      100vw includes a classic scrollbar, so they can end a few pixels wide;
-     `clip` rather than `hidden`, because `hidden` would make .md-main a
-     scroll container and break the sticky header and in-page anchors. */
+     `clip` rather than `hidden`, because `hidden` would make this a scroll
+     container and break the sticky header and in-page anchors. */
   overflow-x: clip;
+}
+
+.cc-landing > .md-typeset {
+  max-width: var(--cc-page-w, 1220px);
+  margin: 0 auto;
+  padding: 0 16px;
+  font-family: var(--sumi-font);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* The cards were laid out with half an em above and below a paragraph inside
+   a list item, which the page's first theme gave them. Component rules below
+   are more specific and still override it. */
+.md-typeset :is(ul, ol) li :is(p, blockquote) {
+  margin: 0.5em 0;
 }
 
 /* ---------------------------------------------------------------- resets -- */
@@ -112,14 +95,14 @@
   margin: 0;
 }
 
-/* The theme indents lists with [dir=ltr]-prefixed rules, hence [dir] here. */
-[dir] .md-typeset :where(.cc-band:not(.cc-faq)) :is(ul, ol) {
+/* :root keeps these ahead of the theme's own list rules. */
+:root .md-typeset :where(.cc-band:not(.cc-faq)) :is(ul, ol) {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-[dir] .md-typeset :where(.cc-band:not(.cc-faq)) :is(ul, ol) > li {
+:root .md-typeset :where(.cc-band:not(.cc-faq)) :is(ul, ol) > li {
   margin: 0;
 }
 
@@ -150,7 +133,7 @@
 
 /* Each band spans the window while its text stays in the content column:
    the negative margin pulls the edges out, the padding puts the text back.
-   Percentages, not viewport units, for the margin: .md-content is a flex
+   Percentages, not viewport units, for the margin: the column is a grid
    item, and a `-100vw` margin counts towards its min-content width, which
    once stretched the column to 2754px on a 1440px screen. */
 .md-typeset .cc-band {
@@ -2046,7 +2029,7 @@
   color: #5b6d7a;
 }
 
-[data-md-color-scheme="slate"] .md-typeset .cc-users a {
+[data-theme="dark"] .md-typeset .cc-users a {
   color: #a3b4c0;
 }
 
@@ -2086,7 +2069,7 @@
   background: #f5fafd;
 }
 
-[data-md-color-scheme="slate"] .md-typeset .cc-plan--soon {
+[data-theme="dark"] .md-typeset .cc-plan--soon {
   border-color: #2e5467;
   background: #10222d;
 }
@@ -2139,20 +2122,25 @@
 
 .md-typeset .cc-faq .cc-h2 {
   margin: 0 0 28px;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .md-typeset .cc-faq details {
   margin: 0 0 10px;
   border: 1px solid var(--cc-line);
   border-radius: 12px;
+  padding: 0;
   background: var(--cc-card);
   box-shadow: none;
   font-size: 15px;
 }
 
 .md-typeset .cc-faq details > summary {
-  padding: 14px 44px 14px 18px;
+  margin: 0;
+  padding: 14px 18px;
   background: none;
+  color: var(--cc-text);
   font-size: 16px;
   font-weight: 600;
 }
@@ -2161,9 +2149,10 @@
   display: none;
 }
 
+/* The question admonition's green, on the chevron only. */
 .md-typeset .cc-faq details > summary::after {
-  top: 16px;
-  right: 14px;
+  border-color: #64dd17;
+  opacity: 1;
 }
 
 .md-typeset .cc-faq details > p {
@@ -2474,7 +2463,7 @@
 
 /* In the dark scheme the cards are already near Ink; an outline keeps the
    organization card from dissolving into its neighbours. */
-[data-md-color-scheme="slate"] .md-typeset .cc-group--ink {
+[data-theme="dark"] .md-typeset .cc-group--ink {
   border-color: #22404f;
 }
 
@@ -2485,51 +2474,51 @@
    stay dark: they stand for a terminal, which is dark in either theme. The
    Action band and the closing band stay Ink in both schemes as a stage for
    the demo. */
-[data-md-color-scheme="default"] .md-typeset .cc-hero {
+[data-theme="light"] .md-typeset .cc-hero {
   background: #ffffff;
   color: var(--cc-text);
   box-shadow: inset 0 -1px 0 var(--cc-line);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-display {
+[data-theme="light"] .md-typeset .cc-hero .cc-display {
   color: var(--cc-text);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-accent {
+[data-theme="light"] .md-typeset .cc-hero .cc-accent {
   /* Signal Blue is 3.1:1 on white, enough for display type (3:1 from 24px). */
   color: var(--cc-blue);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-lede {
+[data-theme="light"] .md-typeset .cc-hero .cc-lede {
   color: var(--cc-muted);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-lede code {
+[data-theme="light"] .md-typeset .cc-hero .cc-lede code {
   color: var(--cc-text);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-pill {
+[data-theme="light"] .md-typeset .cc-hero .cc-pill {
   border-color: #b9dcec;
   background: var(--cc-tint);
   color: #135a74;
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero ul.cc-facts {
+[data-theme="light"] .md-typeset .cc-hero ul.cc-facts {
   border-top-color: var(--cc-line);
   color: var(--cc-muted);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-install {
+[data-theme="light"] .md-typeset .cc-hero .cc-install {
   border-color: var(--cc-ink);
   background: var(--cc-ink);
 }
 
-[data-md-color-scheme="default"] .md-typeset .cc-hero .cc-term {
+[data-theme="light"] .md-typeset .cc-hero .cc-term {
   box-shadow: 0 24px 60px rgba(11, 22, 32, 0.22);
 }
 
 /* The history-line motif's nodes are filled with the ground colour so the
    lines pass behind them; on the light hero that ground is white. */
-[data-md-color-scheme="default"] .md-typeset .cc-hero__graph circle {
+[data-theme="light"] .md-typeset .cc-hero__graph circle {
   fill: #ffffff;
 }

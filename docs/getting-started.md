@@ -127,9 +127,9 @@ repository root — or in `.github/` — to make the policy explicit:
 ```toml title="cchk.toml"
 [commit]
 conventional_commits = true
-subject_imperative = true          # (1)!
+subject_imperative = true          # (1)
 subject_max_length = 72
-allow_wip_commits = false          # (2)!
+allow_wip_commits = false          # (2)
 
 [branch]
 conventional_branch = true
@@ -158,23 +158,23 @@ belongs:
 
 <div class="grid cards" markdown>
 
--   :material-git:{ .lg .middle } __Before the commit lands__
+-   :lucide-git-commit-horizontal:{ .lg .middle } __Before the commit lands__
 
     ---
 
     A pre-commit hook rejects the message as you write it, so nothing bad
     reaches the branch in the first place.
 
-    [:octicons-arrow-right-24: Pre-commit hook](guides/integrations.md#as-a-pre-commit-hook)
+    [:lucide-arrow-right: Pre-commit hook](guides/integrations.md#as-a-pre-commit-hook)
 
--   :material-github:{ .lg .middle } __On every pull request__
+-   :brand-github:{ .lg .middle } __On every pull request__
 
     ---
 
     A GitHub Action checks every commit in the PR and can comment on the PR
     with what needs fixing.
 
-    [:octicons-arrow-right-24: GitHub Actions](guides/integrations.md#in-github-actions)
+    [:lucide-arrow-right: GitHub Actions](guides/integrations.md#in-github-actions)
 
 </div>
 

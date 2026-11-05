@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0        # (1)!
+          fetch-depth: 0        # (1)
       - uses: commit-check/commit-check-action@v2
         with:
           message: true

@@ -1,18 +1,14 @@
 {% extends "main.html" %}
 
 {#
-  The landing page takes over the content area but deliberately leaves the
-  header alone.
+  The landing page is raw HTML laid out by stylesheets/landing.css, so it
+  takes over the whole area below the header: no sidebar, no table of
+  contents, no page actions. The header and footer stay Sumi's, the same as
+  on every other page.
 
-  Instant navigation swaps a fixed list of elements between documents
-  (see `bs()` in the theme bundle): announce, container, header-topic,
-  outdated, logo, skip. `{% block header %}` renders *outside*
-  `[data-md-component=container]`, so a header overridden here would not be
-  swapped on navigation: it would follow the reader onto every docs page,
-  and the docs header would follow them back here. The landing look is
-  applied to the stock header from `landing.css` instead, which is added to
-  and removed from `<head>` as the reader arrives and leaves — instant
-  navigation diffs the head, so that part does work.
+  The content sits inside `.md-typeset`, the class landing.css scopes its
+  rules to, as well as Sumi's own `.sumi-prose`, so Sumi's styles for the
+  plain Markdown parts (the FAQ) still apply.
 #}
 
 {% block extrahead %}
@@ -20,19 +16,17 @@
   <link rel="stylesheet" href="{{ 'stylesheets/landing.css' | url }}">
 {% endblock %}
 
-{#
-  `site_nav` is left to the theme. It holds the navigation that the header's
-  menu button opens on phones; `hide: navigation` already keeps it out of the
-  wide-screen layout. Emptying the block left that button with nothing to
-  open.
-#}
+{% block layout %}
+  <main class="sumi-main cc-landing" id="content">
+    <div class="md-typeset" data-pagefind-body>
+      {{ page.content }}
+    </div>
+  </main>
+{% endblock %}
 
-{% block container %}
-  <div class="md-content cc-landing" data-md-component="content">
-    <article class="md-content__inner md-typeset">
-      {% block content %}
-        {% include "partials/content.html" %}
-      {% endblock %}
-    </article>
-  </div>
+{# The two animated demos. Only this page has them, and Sumi loads every page
+   in full, so the script is linked here rather than site-wide. #}
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ 'javascripts/landing.js' | url }}" defer></script>
 {% endblock %}

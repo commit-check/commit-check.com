@@ -448,7 +448,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 </div>
 </section>
 
-<div class="cc-band cc-faq" markdown>
+<div class="cc-band cc-faq sumi-prose" markdown>
 <div class="cc-wrap" markdown>
 
 <h2 class="cc-h2" id="questions">Questions</h2>
