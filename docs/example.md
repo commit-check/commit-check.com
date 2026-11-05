@@ -112,8 +112,8 @@ $ commit-check --branch
 ```
 
 Runs [CC201](rules.md#cc201), and [CC202](rules.md#cc202) if
-`require_rebase_target` is set. `main`, `master`, `develop`, `HEAD` and `PR-*` are
-always accepted; everything else needs a `<type>/<description>` shape:
+`require_rebase_target` is set. `main`, `master`, `develop`, `HEAD`, `PR-*` and
+`gh-readonly-queue/*` (GitHub merge queue branches) are always accepted; everything else needs a `<type>/<description>` shape:
 
 ```text
 fix/empty-config-crash
@@ -162,7 +162,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.4
+    rev: v2.19.5
     hooks:
       - id: check-no-force-push
         stages: [pre-push]

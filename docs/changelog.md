@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.19.5](#v2195) | GitHub merge queue branches accepted by default; aider's default co-author trailer recognised; exit 2 when git cannot read the repository | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) · [Exit codes](troubleshoot.md#exit-codes) |
 | [2.19.4](#v2194) | `agents/` branches accepted by default; Cursor's `Made-with: Cursor` trailer recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
 | [2.19.3](#v2193) | A quoted `"false"` for a true/false setting refused instead of read as true | [Every option](configuration.md#every-option) |
 | [2.19.2](#v2192) | Copilot coding agent commits recognised; config values of the wrong type refused; commit text printed inert | [CC013](rules.md#cc013) · [Every option](configuration.md#every-option) · [Color and links](example.md#color-and-links) |
@@ -34,6 +35,36 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.19.5 (2026-11-04) { #v2195 }
+
+### Fixed
+
+* **GitHub merge queue branches are accepted by default** — the merge queue
+  runs its `merge_group` checks on a branch it creates,
+  `gh-readonly-queue/<base>/pr-<N>-<sha>`, and [CC201](rules.md#cc201)
+  rejected it. A repository with a merge queue and Commit Check as a required
+  check failed every queue entry. The name is now accepted next to `main`,
+  `master`, `develop`, `HEAD` and `PR-*`, whatever `allow_branch_types` or
+  `allow_branch_names` say.
+  See PR [#653](https://github.com/commit-check/commit-check/pull/653).
+
+* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise aider's default
+  co-author trailer** — since v0.85 aider adds
+  `Co-authored-by: aider (<model>) <aider@aider.chat>` to every commit, and the
+  model in parentheses kept it from matching, so `forbid` and `disclose` let
+  it through. It is now matched by its address, whatever model it names, and
+  under `disclose` the correction is `Assisted-by: aider (<model>)`.
+  See PR [#652](https://github.com/commit-check/commit-check/pull/652).
+
+* **A directory git cannot read stops the run with exit 2** — outside a
+  repository, or in one git refuses for "dubious ownership" (common in
+  containers and on self-hosted agents), every check was skipped and the run
+  exited 0, so CI went green without checking anything. Now git's own reason
+  is printed, including its `safe.directory` hint, and the run exits 2. A
+  piped or file message, and a repository with no commits yet, work as before.
+  See PR [#654](https://github.com/commit-check/commit-check/pull/654) and
+  [Exit codes](troubleshoot.md#exit-codes).
 
 ## v2.19.4 (2026-10-29) { #v2194 }
 

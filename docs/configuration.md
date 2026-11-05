@@ -274,7 +274,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.4
+    rev: v2.19.5
     hooks:
       - id: check-message
         args:
@@ -406,7 +406,7 @@ the same thing twice, so read the description rather than the cell:
 | branch | conventional_branch | bool | true | Enforce Conventional Branch specification. |
 | branch | allow_branch_types | list[str] | ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix", "build", "ci", "docs", "perf", "refactor", "style", "test", "ai", "claude", "codex", "copilot", "cursor", "agents", "dependabot", "renovate"] | Allowed branch types when `conventional_branch` is true. The default is a superset of the [Conventional Branch spec](https://conventionalbranch.org/): the spec's types (`feature`, `bugfix`, `hotfix`, `release`, `chore`, their aliases `feat` and `fix`, and the AI agent prefixes `ai`, `claude`, `codex`, `copilot`, `cursor`) plus the other Conventional Commit types (`build`, `ci`, `docs`, `perf`, `refactor`, `style`, `test`), `agents` (the prefix VS Code's Agents window uses) and bot prefixes (`dependabot`, `renovate`). For strict spec-only validation, set this option explicitly to the spec's types; [CC201](rules.md#cc201) has the full config. |
 | branch | require_description_grammar | bool | false | Also hold the description after `<type>/` to the Conventional Branch grammar: lowercase letters and digits, words joined by single hyphens, dots only inside a word. Off by default, because bot branches such as `dependabot/npm_and_yarn/lodash-4.17.21` do not follow it. See [CC201](rules.md#cc201). |
-| branch | allow_branch_names | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["staging", "production"]). By default, main, master, develop, HEAD, and PR-* are always allowed. |
+| branch | allow_branch_names | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["staging", "production"]). By default, main, master, develop, HEAD, PR-* and gh-readonly-queue/* (GitHub merge queue branches) are always allowed. |
 | branch | require_rebase_target | str | "" (no requirement) | Target branch for rebase requirement. If not set, no rebase validation is performed. |
 | push | allow_force_push | bool | true | Allow force pushes. Set to `false` to block force pushes when used as a pre-push hook or with `--no-force-push`. |
 | branch | ignore_authors | list[str] | [] (none ignored) | List of authors to ignore (i.e., always allow). |
