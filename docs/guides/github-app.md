@@ -65,8 +65,11 @@ behind the target the branch is.
 ### Pull requests
 
 Every commit of a pull request is checked on its own, fork pull requests
-included, and pushing more commits checks the new ones. A team that
-squash-merges keeps none of those commits, so it can check the result instead:
+included, and pushing more commits checks the new ones. GitHub reads a
+required check on the newest commit only, so that commit's check also fails
+when an earlier commit of the pull request failed, and lists the commits to
+fix. A team that squash-merges keeps none of those commits, so it can check the
+result instead:
 
 ```toml title="cchk.toml"
 [pull_request]

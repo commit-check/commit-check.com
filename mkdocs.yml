@@ -125,6 +125,7 @@ nav:
       - GitHub App: guides/github-app.md
       - GitLab, Bitbucket, Azure: guides/other-ci.md
       - With release tools: guides/release-tools.md
+      - With AI coding agents: guides/ai-agents.md
       - Across an organization: guides/organization.md
       - MCP server: guides/mcp.md
       - Python API: guides/python-api.md
