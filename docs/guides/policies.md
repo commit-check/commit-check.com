@@ -141,7 +141,8 @@ Docs: https://commit-check.com/rules/#cc013
 
 Recognised signatures are co-author and sign-off lines naming Claude Code,
 GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, Amp,
-OpenHands, Factory Droid and Jules, the disclosure trailers `Assisted-by:` and
+OpenHands, Factory Droid, Jules, Continue, Mistral Vibe and Qwen Code, the
+disclosure trailers `Assisted-by:` and
 `Generated-by:`, vendor marks such as `🤖 Generated with Claude Code`, Amp's
 `Amp-Thread-ID:`, the Copilot coding agent's `Agent-Logs-Url:` and Cursor's
 `Made-with: Cursor`, and generic AI model names. This is the
@@ -165,6 +166,40 @@ also commits as its own account, but every commit it makes carries an
     contributors who are already following the rules — not an enforcement
     mechanism against those who aren't. Be clear with yourself about which of
     those you are buying.
+
+### Checking AI attribution and nothing else
+
+`ai_attribution` sits alongside the message rules that are on by default, so
+`--message` still applies Conventional Commits and the subject length limits
+(80 characters at most, 5 at least). A project that has its own commit style
+and only wants the AI check turns those off:
+
+```toml title="cchk.toml"
+[commit]
+ai_attribution = "forbid"
+conventional_commits = false
+subject_max_length = 0   # 0 turns the length rule off
+subject_min_length = 0
+```
+
+Or, in the GitHub Action, without a config file:
+
+```yaml
+- uses: commit-check/commit-check-action@v2
+  env:
+    CCHK_AI_ATTRIBUTION: forbid
+    CCHK_CONVENTIONAL_COMMITS: false
+    CCHK_SUBJECT_MAX_LENGTH: 0
+    CCHK_SUBJECT_MIN_LENGTH: 0
+  with:
+    message: true
+    branch: false
+```
+
+Leave the length limits on and a long subject fails the job too. Dependency
+bots write long ones: Renovate's `Update dependency
+com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer to
+v20261103` is 95 characters.
 
 ### Asking for disclosure instead
 

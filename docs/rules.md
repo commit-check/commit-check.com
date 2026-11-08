@@ -312,7 +312,7 @@ same root cause.
 **Options**
 
 * `commit.subject_max_length` — the limit, in characters. Defaults to `80`.
-  `50` and `72` are the other conventional choices.
+  `50` and `72` are the other conventional choices. `0` turns the rule off.
 
 ### subject-min-length (CC005) { #cc005 }
 
@@ -341,6 +341,7 @@ fix: reject config files with a null inherit_from
 **Options**
 
 * `commit.subject_min_length` — the minimum, in characters. Defaults to `5`.
+  `0` turns the rule off.
 
 ### allow-merge-commits (CC006) { #cc006 }
 
@@ -563,7 +564,8 @@ git commit --amend --signoff
 
 Rejects a commit whose message carries any AI attribution: a co-author or
 sign-off line naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
-Aider, Windsurf, Tabby, Amp, OpenHands, Factory Droid or Jules, a disclosure
+Aider, Windsurf, Tabby, Amp, OpenHands, Factory Droid, Jules, Continue,
+Mistral Vibe or Qwen Code, a disclosure
 trailer such as `Assisted-by:` or `Generated-by:`, a vendor's own mark such
 as `🤖 Generated with Claude Code`, Amp's `Amp-Thread-ID:` trailer, the
 `Agent-Logs-Url:` trailer the Copilot coding agent adds or Cursor's
