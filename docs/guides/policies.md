@@ -207,12 +207,12 @@ v20261103` is 95 characters.
 
 Agents leave their mark in the pull request description as often as in the
 commits: `🤖 Generated with Claude Code`, `Link to Devin run: https://app.devin.ai/sessions/...`,
-a Codex task or Cursor agent link. `--ai-only` holds any text to the AI rules
+a Codex task or Cursor agent link. `--ai-attribution-only` holds any text to the AI rules
 alone, so the description is not judged as a Conventional Commit:
 
 ```console
 $ set -o pipefail   # a failed `gh` must not pass as an empty description
-$ gh pr view 42 --json body -q .body | commit-check --ai-only
+$ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only
 ```
 
 Under `ai_attribution = "forbid"` a description with an agent's mark fails
@@ -222,7 +222,7 @@ passes; `--format json` still lists what it found in `ai_tools`, which is
 enough to label the pull request:
 
 ```console
-$ gh pr view 42 --json body -q .body | commit-check --ai-only --format json | jq -c '.ai_tools'
+$ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only --format json | jq -c '.ai_tools'
 ["Devin"]
 ```
 
