@@ -63,7 +63,7 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 </div>
 <ul class="cc-wrap cc-facts">
 <li>MIT licensed, no account needed</li>
-<li>Python 3.10 – 3.15 on Linux, macOS and Windows</li>
+<li>Python 3.11 – 3.15 on Linux, macOS and Windows</li>
 <li>Signed build provenance on every release</li>
 <li>CLI and hook work with any Git host</li>
 </ul>
