@@ -323,6 +323,47 @@ triagers judge each contribution by whether its author can explain it in their
 own words. A policy like that leaves nothing for commit-check to enforce, so
 keep `ai_attribution` at its default, `"ignore"`.
 
+### Recipes from real projects
+
+Many projects enforce their AI policy with a hand-written grep step in CI.
+Each policy below fits in a few lines of `cchk.toml`. Add
+`conventional_commits = false` if your project does not use Conventional
+Commits (see [Checking AI attribution and nothing else](#checking-ai-attribution-and-nothing-else)).
+
+| Project | Its rule for commits | `cchk.toml` |
+|---|---|---|
+| [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/) | No AI co-author, no AI sign-off, no `Assisted-by` | `ai_attribution = "forbid"` |
+| [Linux kernel](https://docs.kernel.org/process/coding-assistants.html) | Every commit signed off by a person; an AI never signs off | `ai_attribution = "disclose"`, `require_signed_off_by = true`, top-level `warn = ["ai_disclosure"]` |
+| Nextcloud | `Assisted-by: AGENT_NAME:MODEL_VERSION` on AI-assisted commits; an AI never signs off | `ai_attribution = "disclose"`, `ai_disclosure_pattern = '^[^:\s]+:\S+'` |
+| [pip](https://github.com/pypa/pip/blob/main/AI_POLICY.md), [attrs](https://github.com/python-attrs/attrs/blob/main/.github/AI_POLICY.md) | No AI co-author; disclosure not required | `ai_attribution = "disclose"`, top-level `warn = ["ai_disclosure"]` |
+| Fedora, FluxCD | Disclose with `Assisted-by:` | `ai_attribution = "disclose"`, `ai_disclosure_trailers = ["Assisted-by"]` |
+
+The Nextcloud recipe, in full:
+
+```toml title="cchk.toml"
+[commit]
+ai_attribution = "disclose"
+ai_disclosure_pattern = '^[^:\s]+:\S+'   # AGENT_NAME:MODEL_VERSION
+```
+
+`Assisted-by: ClaudeCode:claude-sonnet-4-6` passes. `Assisted-by: Claude Code`
+fails CC014 because it names no model, and `Signed-off-by: Claude
+<noreply@anthropic.com>` fails CC016.
+
+Some projects ask every commit to say whether AI was used, with
+`Assisted-by: none` when it was not. `disclose` only asks when a commit shows
+signs of AI, so pair it with a `message_pattern` that requires the trailer:
+
+```toml title="cchk.toml"
+[commit]
+ai_attribution = "disclose"
+message_pattern = '(?ms).*^Assisted-by:[ \t]*\S'
+```
+
+`message_pattern` replaces the Conventional Commits check, so this recipe
+cannot be combined with `conventional_commits = true`. A commit with no
+`Assisted-by:` line fails CC001; `Assisted-by: none` passes.
+
 ### Exempting automation
 
 Bots that legitimately carry AI trailers can be excluded:
