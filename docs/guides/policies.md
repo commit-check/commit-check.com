@@ -201,6 +201,28 @@ bots write long ones: Renovate's `Update dependency
 com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer to
 v20261103` is 95 characters.
 
+### Checking a pull request description
+
+Agents leave their mark in the pull request description as often as in the
+commits: `🤖 Generated with Claude Code`, `Link to Devin run: https://app.devin.ai/sessions/...`,
+a Codex task or Cursor agent link. `--ai-only` holds any text to the AI rules
+alone, so the description is not judged as a Conventional Commit:
+
+```console
+$ gh pr view 42 --json body -q .body | commit-check --ai-only
+```
+
+Under `ai_attribution = "forbid"` a description with an agent's mark fails
+[CC013](../rules.md#cc013); under `"disclose"` it has to disclose the tool,
+like a commit. Under the default `"ignore"` no rule runs and the check
+passes; `--format json` still lists what it found in `ai_tools`, which is
+enough to label the pull request:
+
+```console
+$ gh pr view 42 --json body -q .body | commit-check --ai-only --format json | jq -c '.ai_tools'
+["Devin"]
+```
+
 ### Asking for disclosure instead
 
 Most projects that allow AI assistance ask to be told about it.

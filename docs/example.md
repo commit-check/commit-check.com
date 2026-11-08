@@ -162,7 +162,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.20.0
+    rev: v2.20.1
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -371,6 +371,19 @@ $ commit-check -m -b --format json | jq '{status, warnings}'
   "warnings": 1
 }
 ```
+
+When a message is checked, the JSON also carries `ai_tools`: the AI tools
+recognised by their known marks in the message and, for a commit, by its
+author. It is filled under every `ai_attribution` policy, the default
+`ignore` included, so a script can tell an AI-written commit apart without
+failing it:
+
+```console
+$ commit-check -m --rev HEAD --format json | jq -c '.ai_tools'
+["Claude Code"]
+```
+
+A sentence that merely mentions a tool is not a mark, so it adds nothing.
 
 From Python, [`commit_check.api`](guides/python-api.md) returns the same
 result as a `dict`, without a subprocess.

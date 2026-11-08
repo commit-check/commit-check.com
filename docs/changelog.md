@@ -11,6 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.20.1](#v2201) | `--ai-only` checks a pull request description against the AI rules; JSON reports `ai_tools`; Warp, Crush, credit trailers and agent run links recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
 | [2.20.0](#v2200) | A commit authored by an AI tool rejected (CC017); Continue, Mistral Vibe and Qwen Code recognised; subject length `0` turns the rule off; Python 3.10 dropped | [CC017](rules.md#cc017) · [CC013](rules.md#cc013) · [CC004](rules.md#cc004) |
 | [2.19.5](#v2195) | GitHub merge queue branches accepted by default; aider's default co-author trailer recognised; exit 2 when git cannot read the repository | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) · [Exit codes](troubleshoot.md#exit-codes) |
 | [2.19.4](#v2194) | `agents/` branches accepted by default; Cursor's `Made-with: Cursor` trailer recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
@@ -36,6 +37,36 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.20.1 (2026-11-08) { #v2201 }
+
+### Added
+
+* **`--ai-only` checks text that is not a commit message** — it runs only the
+  AI rules ([CC013](rules.md#cc013)–[CC016](rules.md#cc016)) on what you pipe
+  in, so a pull request description can be held to the same `ai_attribution`
+  policy as the commits without being judged as a Conventional Commit. See
+  [Checking a pull request description](guides/policies.md#checking-a-pull-request-description).
+  See PR [#673](https://github.com/commit-check/commit-check/pull/673).
+
+* **JSON output names the AI tools it found** — whenever a message is checked,
+  `--format json` adds `ai_tools`, the tools recognised in the message and, for
+  a commit, in its author. It is filled under every `ai_attribution` policy,
+  `ignore` included, so a workflow can label a pull request without failing
+  it. See [Reading the JSON](example.md#reading-the-json).
+  See PR [#673](https://github.com/commit-check/commit-check/pull/673).
+
+* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise more AI marks** —
+  `Reviewed-by`, `Suggested-by`, `Helped-by`, `Tested-by` and `Reported-by`
+  naming a known tool; the Claude Code notice without the robot emoji, in
+  italics, or as a lone `https://claude.ai/code/session_...` line; Warp's
+  cloud agent `Warp <agent@warp.dev>`; Crush (`💘 Generated with Crush`,
+  `crush@charm.land`); and the run links agents leave in pull request
+  descriptions: Codex task, Devin session, Jules task and Cursor agent links.
+  A person named in a credit trailer, or a sentence that merely mentions a
+  tool, still passes.
+  See PRs [#672](https://github.com/commit-check/commit-check/pull/672) and
+  [#673](https://github.com/commit-check/commit-check/pull/673).
 
 ## v2.20.0 (2026-11-08) { #v2200 }
 

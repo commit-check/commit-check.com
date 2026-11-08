@@ -565,11 +565,15 @@ git commit --amend --signoff
 Rejects a commit whose message carries any AI attribution: a co-author or
 sign-off line naming Claude Code, Copilot, Codex, Gemini, Cursor, Devin,
 Aider, Windsurf, Tabby, Amp, OpenHands, Factory Droid, Jules, Continue,
-Mistral Vibe or Qwen Code, a disclosure
-trailer such as `Assisted-by:` or `Generated-by:`, a vendor's own mark such
-as `🤖 Generated with Claude Code`, Amp's `Amp-Thread-ID:` trailer, the
+Mistral Vibe, Qwen Code, Warp or Crush, a disclosure
+trailer such as `Assisted-by:` or `Generated-by:`, a credit trailer such as
+`Reviewed-by:` or `Suggested-by:` naming one of those tools, a vendor's own
+mark such as `🤖 Generated with Claude Code` (with or without the emoji),
+Amp's `Amp-Thread-ID:` trailer, the
 `Agent-Logs-Url:` trailer the Copilot coding agent adds or Cursor's
-`Made-with: Cursor`, and generic AI model names. Copilot is also recognised by its account's
+`Made-with: Cursor`, a run link an agent leaves on its own line (a Claude
+Code session, Codex task, Devin session, Jules task or Cursor agent link),
+and generic AI model names. Copilot is also recognised by its account's
 `N+Copilot@users.noreply.github.com` address, so the coding agent's
 `copilot-swe-agent[bot]` co-author line counts under any display name.
 
