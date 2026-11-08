@@ -39,6 +39,18 @@ jobs:
 The Action reads the same `cchk.toml` as the CLI, so a repository that already
 has one needs no Action-specific configuration.
 
+!!! note "Python 3.11 or newer"
+
+    The Action runs on the runner's own Python, and since v2.19.0 it needs
+    3.11 or newer. The `*-latest` GitHub-hosted runners have it.
+    `ubuntu-22.04` ships 3.10, so add a setup step before the Action there:
+
+    ```yaml
+    - uses: actions/setup-python@v7
+      with:
+        python-version: "3.11"
+    ```
+
 ## Inputs
 
 | Input | Default | What it does |

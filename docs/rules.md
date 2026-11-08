@@ -699,6 +699,49 @@ Suggest: Use "Assisted-by: Claude" in place of the AI sign-off, then sign off yo
 
 * `commit.ai_attribution` — set to `"disclose"` to enable this rule.
 
+### ai-author (CC017) { #cc017 }
+
+**What it does**
+
+Under `ai_attribution = "forbid"` or `"disclose"`, rejects a commit whose
+author is an AI tool: `claude[bot]`, `copilot-swe-agent[bot]`,
+`google-labs-jules[bot]`, `devin-ai-integration[bot]`, OpenHands, a name
+ending in `(aider)`, or any name at a tool's own address such as
+`noreply@anthropic.com`. The author is read the same way as a
+`Co-authored-by:` line, so the two never disagree about who is a tool.
+
+An existing commit is judged by the author it records. A message piped in,
+or one the `commit-msg` hook checks before the commit exists, is judged by
+the author git would record: `GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL` when
+set, otherwise `user.name` and `user.email`. The GitHub Action passes each
+pull request commit's own author this way.
+
+**Why is this bad?**
+
+The message rules read only the message. Several agents commit under their
+own identity and add no trailer at all, or credit the person as the
+co-author, so a commit made entirely by a tool can carry a clean message.
+Putting the tool in the author's place is the strongest attribution there
+is, and it is what GitHub shows as the contributor.
+
+**Example**
+
+```text
+CC017 ai-author check failed ==> google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+An AI tool is the commit author: Jules
+Suggest: Author the commit yourself: git commit --amend --reset-author
+```
+
+The commit fails even with a human `Co-authored-by:` line.
+
+**Options**
+
+* `commit.ai_attribution` — set to `"forbid"` or `"disclose"` to enable this
+  rule.
+* `commit.ignore_authors` — authors listed here are skipped, for a bot you
+  trust to commit on its own.
+* Top-level `warn = ["ai_author"]` reports the rule without failing the run.
+
 ## Author rules
 
 ### author-name (CC101) { #cc101 }
