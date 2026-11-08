@@ -162,7 +162,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.20.0
+    rev: v2.20.1
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -371,6 +371,21 @@ $ commit-check -m -b --format json | jq '{status, warnings}'
   "warnings": 1
 }
 ```
+
+When a message is checked, the JSON also carries `ai_tools`: the AI tools
+recognised by their known marks in the message and, for a commit, by its
+author. It is filled under every `ai_attribution` policy, the default
+`ignore` included, so a script can act on the attribution without failing
+the commit:
+
+```console
+$ commit-check -m --rev HEAD --format json | jq -c '.ai_tools'
+["Claude Code"]
+```
+
+It reports attribution, not authorship: a sentence that merely mentions a
+tool adds nothing, an empty list does not mean no AI was used, and a listed
+tool may only have assisted.
 
 From Python, [`commit_check.api`](guides/python-api.md) returns the same
 result as a `dict`, without a subprocess.

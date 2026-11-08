@@ -141,11 +141,13 @@ Docs: https://commit-check.com/rules/#cc013
 
 Recognised signatures are co-author and sign-off lines naming Claude Code,
 GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, Amp,
-OpenHands, Factory Droid, Jules, Continue, Mistral Vibe and Qwen Code, the
-disclosure trailers `Assisted-by:` and
+OpenHands, Factory Droid, Jules, Continue, Mistral Vibe, Qwen Code, Warp and
+Crush, credit trailers such as `Reviewed-by:` or `Suggested-by:` naming one of
+those tools, the disclosure trailers `Assisted-by:` and
 `Generated-by:`, vendor marks such as `🤖 Generated with Claude Code`, Amp's
 `Amp-Thread-ID:`, the Copilot coding agent's `Agent-Logs-Url:` and Cursor's
-`Made-with: Cursor`, and generic AI model names. This is the
+`Made-with: Cursor`, agent run links on their own line, and generic AI model
+names; [CC013](../rules.md#cc013) has the full list. This is the
 position [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/)
 takes — no AI trailers in the history, disclosure in the pull request
 instead.
@@ -200,6 +202,29 @@ Leave the length limits on and a long subject fails the job too. Dependency
 bots write long ones: Renovate's `Update dependency
 com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer to
 v20261103` is 95 characters.
+
+### Checking a pull request description
+
+Agents leave their mark in the pull request description as often as in the
+commits: `🤖 Generated with Claude Code`, `Link to Devin run: https://app.devin.ai/sessions/...`,
+a Codex task or Cursor agent link. `--ai-only` holds any text to the AI rules
+alone, so the description is not judged as a Conventional Commit:
+
+```console
+$ set -o pipefail   # a failed `gh` must not pass as an empty description
+$ gh pr view 42 --json body -q .body | commit-check --ai-only
+```
+
+Under `ai_attribution = "forbid"` a description with an agent's mark fails
+[CC013](../rules.md#cc013); under `"disclose"` it has to disclose the tool,
+like a commit. Under the default `"ignore"` no rule runs and the check
+passes; `--format json` still lists what it found in `ai_tools`, which is
+enough to label the pull request:
+
+```console
+$ gh pr view 42 --json body -q .body | commit-check --ai-only --format json | jq -c '.ai_tools'
+["Devin"]
+```
 
 ### Asking for disclosure instead
 
