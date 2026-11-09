@@ -127,7 +127,7 @@ pass 1
 To apply a repository's own policy, load its file and pass it along:
 
 ```python
-import tomllib  # on Python 3.10: import tomli as tomllib
+import tomllib
 
 from commit_check.api import validate_message
 
@@ -137,8 +137,7 @@ with open("cchk.toml", "rb") as f:
 result = validate_message("feat: add streaming support", config=config)
 ```
 
-On Python 3.10, `tomli` is already installed: commit-check depends on it
-there. `inherit_from` is not followed this way; only the file's own keys
+`inherit_from` is not followed this way; only the file's own keys
 apply. Every key is in the [configuration reference](../configuration.md).
 
 ## Fixing until it passes

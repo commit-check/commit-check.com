@@ -141,10 +141,13 @@ Docs: https://commit-check.com/rules/#cc013
 
 Recognised signatures are co-author and sign-off lines naming Claude Code,
 GitHub Copilot, Codex, Gemini, Cursor, Devin, Aider, Windsurf, Tabby, Amp,
-OpenHands, Factory Droid and Jules, the disclosure trailers `Assisted-by:` and
+OpenHands, Factory Droid, Jules, Continue, Mistral Vibe, Qwen Code, Warp and
+Crush, credit trailers such as `Reviewed-by:` or `Suggested-by:` naming one of
+those tools, the disclosure trailers `Assisted-by:` and
 `Generated-by:`, vendor marks such as `🤖 Generated with Claude Code`, Amp's
 `Amp-Thread-ID:`, the Copilot coding agent's `Agent-Logs-Url:` and Cursor's
-`Made-with: Cursor`, and generic AI model names. This is the
+`Made-with: Cursor`, agent run links on their own line, and generic AI model
+names; [CC013](../rules.md#cc013) has the full list. This is the
 position [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/)
 takes — no AI trailers in the history, disclosure in the pull request
 instead.
@@ -165,6 +168,63 @@ also commits as its own account, but every commit it makes carries an
     contributors who are already following the rules — not an enforcement
     mechanism against those who aren't. Be clear with yourself about which of
     those you are buying.
+
+### Checking AI attribution and nothing else
+
+`ai_attribution` sits alongside the message rules that are on by default, so
+`--message` still applies Conventional Commits and the subject length limits
+(80 characters at most, 5 at least). A project that has its own commit style
+and only wants the AI check turns those off:
+
+```toml title="cchk.toml"
+[commit]
+ai_attribution = "forbid"
+conventional_commits = false
+subject_max_length = 0   # 0 turns the length rule off
+subject_min_length = 0
+```
+
+Or, in the GitHub Action, without a config file:
+
+```yaml
+- uses: commit-check/commit-check-action@v2
+  env:
+    CCHK_AI_ATTRIBUTION: forbid
+    CCHK_CONVENTIONAL_COMMITS: false
+    CCHK_SUBJECT_MAX_LENGTH: 0
+    CCHK_SUBJECT_MIN_LENGTH: 0
+  with:
+    message: true
+    branch: false
+```
+
+Leave the length limits on and a long subject fails the job too. Dependency
+bots write long ones: Renovate's `Update dependency
+com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer to
+v20261103` is 95 characters.
+
+### Checking a pull request description
+
+Agents leave their mark in the pull request description as often as in the
+commits: `🤖 Generated with Claude Code`, `Link to Devin run: https://app.devin.ai/sessions/...`,
+a Codex task or Cursor agent link. `--ai-attribution-only` holds any text to the AI rules
+alone, so the description is not judged as a Conventional Commit:
+
+```console
+$ set -o pipefail   # a failed `gh` must not pass as an empty description
+$ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only
+```
+
+Under `ai_attribution = "forbid"` a description with an agent's mark fails
+[CC013](../rules.md#cc013); under `"disclose"` it has to disclose the tool,
+like a commit. Under the default `"ignore"` no rule runs and the check
+passes; `--format json` still lists what it found in `ai_tools`, which is
+enough to label the pull request:
+
+```console
+$ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only --format json | jq -c '.ai_tools'
+["Devin"]
+```
 
 ### Asking for disclosure instead
 
@@ -287,6 +347,47 @@ for commits at all: disclosing AI use is appreciated but not required, and
 triagers judge each contribution by whether its author can explain it in their
 own words. A policy like that leaves nothing for commit-check to enforce, so
 keep `ai_attribution` at its default, `"ignore"`.
+
+### Recipes from real projects
+
+Many projects enforce their AI policy with a hand-written grep step in CI.
+Each policy below fits in a few lines of `cchk.toml`. Add
+`conventional_commits = false` if your project does not use Conventional
+Commits (see [Checking AI attribution and nothing else](#checking-ai-attribution-and-nothing-else)).
+
+| Project | Its rule for commits | `cchk.toml` |
+|---|---|---|
+| [Kubernetes](https://www.kubernetes.dev/docs/guide/pull-requests/) | No AI co-author, no AI sign-off, no `Assisted-by` | `ai_attribution = "forbid"` |
+| [Linux kernel](https://docs.kernel.org/process/coding-assistants.html) | Every commit signed off by a person; an AI never signs off | `ai_attribution = "disclose"`, `require_signed_off_by = true`, top-level `warn = ["ai_disclosure"]` |
+| Nextcloud | `Assisted-by: AGENT_NAME:MODEL_VERSION` on AI-assisted commits; an AI never signs off | `ai_attribution = "disclose"`, `ai_disclosure_pattern = '^[^:\s]+:\S+'` |
+| [pip](https://github.com/pypa/pip/blob/main/AI_POLICY.md), [attrs](https://github.com/python-attrs/attrs/blob/main/.github/AI_POLICY.md) | No AI co-author; disclosure not required | `ai_attribution = "disclose"`, top-level `warn = ["ai_disclosure"]` |
+| Fedora, FluxCD | Disclose with `Assisted-by:` | `ai_attribution = "disclose"`, `ai_disclosure_trailers = ["Assisted-by"]` |
+
+The Nextcloud recipe, in full:
+
+```toml title="cchk.toml"
+[commit]
+ai_attribution = "disclose"
+ai_disclosure_pattern = '^[^:\s]+:\S+'   # AGENT_NAME:MODEL_VERSION
+```
+
+`Assisted-by: ClaudeCode:claude-sonnet-4-6` passes. `Assisted-by: Claude Code`
+fails CC014 because it names no model, and `Signed-off-by: Claude
+<noreply@anthropic.com>` fails CC016.
+
+Some projects ask every commit to say whether AI was used, with
+`Assisted-by: none` when it was not. `disclose` only asks when a commit shows
+signs of AI, so pair it with a `message_pattern` that requires the trailer:
+
+```toml title="cchk.toml"
+[commit]
+ai_attribution = "disclose"
+message_pattern = '(?ms).*^Assisted-by:[ \t]*\S'
+```
+
+`message_pattern` replaces the Conventional Commits check, so this recipe
+cannot be combined with `conventional_commits = true`. A commit with no
+`Assisted-by:` line fails CC001; `Assisted-by: none` passes.
 
 ### Exempting automation
 
