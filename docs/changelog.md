@@ -11,7 +11,7 @@ below and to the page that documents the feature properly.
 
 | Version | What changed | Documented in |
 |---|---|---|
-| [2.20.1](#v2201) | `--ai-only` checks a pull request description against the AI rules; JSON reports `ai_tools`; Warp, Crush, credit trailers and agent run links recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
+| [2.20.1](#v2201) | `--ai-attribution-only` (named `--ai-only` in 2.20.1) checks a pull request description against the AI rules; JSON reports `ai_tools`; Warp, Crush, credit trailers and agent run links recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
 | [2.20.0](#v2200) | A commit authored by an AI tool rejected (CC017); Continue, Mistral Vibe and Qwen Code recognised; subject length `0` turns the rule off; Python 3.10 dropped | [CC017](rules.md#cc017) · [CC013](rules.md#cc013) · [CC004](rules.md#cc004) |
 | [2.19.5](#v2195) | GitHub merge queue branches accepted by default; aider's default co-author trailer recognised; exit 2 when git cannot read the repository | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) · [Exit codes](troubleshoot.md#exit-codes) |
 | [2.19.4](#v2194) | `agents/` branches accepted by default; Cursor's `Made-with: Cursor` trailer recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
@@ -37,6 +37,17 @@ below and to the page that documents the feature properly.
 | [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.20.2 (2026-11-08) { #v2202 }
+
+### Changed
+
+* **`--ai-only` is now `--ai-attribution-only`** — the new name says what the
+  run is limited to: the AI attribution of the text, and it pairs with the
+  `--ai-attribution` policy option. `--ai-only` still works, so a script
+  written against 2.20.1 needs no change; it is no longer listed in
+  `--help`. See [Checking a pull request description](guides/policies.md#checking-a-pull-request-description).
+  See PR [#677](https://github.com/commit-check/commit-check/pull/677).
 
 ## v2.20.1 (2026-11-08) { #v2201 }
 
