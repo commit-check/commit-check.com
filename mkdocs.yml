@@ -93,6 +93,11 @@ markdown_extensions:
 
 plugins:
   - search
+  # llms.txt at the site root, listing the Markdown copy of every page, and
+  # llms-full.txt with all of them in one file, for agents that read the docs.
+  # Built from the pages, so nothing to keep up to date by hand.
+  - llms_txt:
+      full_output: true
   # Sumi's plugin: components, the blog (index, tags, Atom feed) under
   # docs/blog/, and a Markdown copy of each page.
   - sumi
