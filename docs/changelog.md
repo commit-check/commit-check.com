@@ -1,22 +1,22 @@
 # Changelog
 
-All **notable changes** to this project will be documented in this file.
-
-Full changelog available at [GitHub releases](https://github.com/commit-check/commit-check/releases).
+Notable changes to the commit-check CLI, one line each, newest first. Every
+change, including maintenance, is in the
+[GitHub releases](https://github.com/commit-check/commit-check/releases).
 
 ## Highlights
 
-The releases worth knowing about, newest first. Each links to its full entry
-below and to the page that documents the feature properly.
+The releases worth knowing about. Each links to its entry below and to the
+page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
-| [2.20.1](#v2201) | `--ai-attribution-only` (named `--ai-only` in 2.20.1) checks a pull request description against the AI rules; JSON reports `ai_tools`; Warp, Crush, credit trailers and agent run links recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
-| [2.20.0](#v2200) | A commit authored by an AI tool rejected (CC017); Continue, Mistral Vibe and Qwen Code recognised; subject length `0` turns the rule off; Python 3.10 dropped | [CC017](rules.md#cc017) · [CC013](rules.md#cc013) · [CC004](rules.md#cc004) |
+| [2.20.1](#v2201) | `--ai-attribution-only` checks a pull request description against your AI policy; JSON lists the AI tools found; more AI marks recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
+| [2.20.0](#v2200) | Commits authored by an AI tool rejected; subject length `0` turns the rule off; Python 3.11+ required | [CC017](rules.md#cc017) · [CC013](rules.md#cc013) · [CC004](rules.md#cc004) |
 | [2.19.5](#v2195) | GitHub merge queue branches accepted by default; aider's default co-author trailer recognised; exit 2 when git cannot read the repository | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) · [Exit codes](troubleshoot.md#exit-codes) |
 | [2.19.4](#v2194) | `agents/` branches accepted by default; Cursor's `Made-with: Cursor` trailer recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
 | [2.19.3](#v2193) | A quoted `"false"` for a true/false setting refused instead of read as true | [Every option](configuration.md#every-option) |
-| [2.19.2](#v2192) | Copilot coding agent commits recognised; config values of the wrong type refused; commit text printed inert | [CC013](rules.md#cc013) · [Every option](configuration.md#every-option) · [Color and links](example.md#color-and-links) |
+| [2.19.2](#v2192) | Copilot coding agent recognised; config values of the wrong type refused; commit text printed safely | [CC013](rules.md#cc013) · [Every option](configuration.md#every-option) · [Color and links](example.md#color-and-links) |
 | [2.19.1](#v2191) | `develop` accepted by default; stricter merge-subject, fixup, WIP and sign-off checks | [CC201](rules.md#cc201) · [CC001](rules.md#cc001) · [CC009](rules.md#cc009) |
 | [2.19.0](#v2190) | Branch descriptions held to the Conventional Branch grammar; Amp, OpenHands, Factory Droid and Jules recognised | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) |
 | [2.18.3](#v2183) | `--fix` corrects a message in place; `--branch` reads GitLab, Bitbucket, Azure and Jenkins variables | [Fixing a message in place](example.md#fixing-a-message-in-place) · [Other CI](guides/other-ci.md) |
@@ -34,7 +34,7 @@ below and to the page that documents the feature properly.
 | [2.9.0](#v290) | AI agent branch prefixes accepted by default | [CC201](rules.md#cc201) |
 | [2.8.0](#v280) | Custom `message_pattern`; Python 3.9 dropped | [CC001](rules.md#cc001) |
 | [2.7.0](#v270) | Force push blocking | [CC301](rules.md#cc301) |
-| [2.6.0](#v260) | `--format json`, `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
+| [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
@@ -42,893 +42,323 @@ below and to the page that documents the feature properly.
 
 ### Changed
 
-* **`--ai-only` is now `--ai-attribution-only`** — the new name says what the
-  run is limited to: the AI attribution of the text, and it pairs with the
-  `--ai-attribution` policy option. `--ai-only` still works, so a script
-  written against 2.20.1 needs no change; it is no longer listed in
-  `--help`. See [Checking a pull request description](guides/policies.md#checking-a-pull-request-description).
-  See PR [#677](https://github.com/commit-check/commit-check/pull/677).
+* `--ai-only` is renamed `--ai-attribution-only`; the old name still works. ([Guide](guides/policies.md#checking-a-pull-request-description), [#677](https://github.com/commit-check/commit-check/pull/677))
 
 ## v2.20.1 (2026-11-08) { #v2201 }
 
 ### Added
 
-* **`--ai-only` checks text that is not a commit message** — it runs only the
-  AI rules ([CC013](rules.md#cc013)–[CC016](rules.md#cc016)) on what you pipe
-  in, so a pull request description can be held to the same `ai_attribution`
-  policy as the commits without being judged as a Conventional Commit. See
-  [Checking a pull request description](guides/policies.md#checking-a-pull-request-description).
-  See PR [#673](https://github.com/commit-check/commit-check/pull/673).
-
-* **JSON output names the AI tools it found** — whenever a message is checked,
-  `--format json` adds `ai_tools`, the tools recognised in the message and, for
-  a commit, in its author. It is filled under every `ai_attribution` policy,
-  `ignore` included, so a workflow can label a pull request without failing
-  it. See [Reading the JSON](example.md#reading-the-json).
-  See PR [#673](https://github.com/commit-check/commit-check/pull/673).
-
-* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise more AI marks** —
-  `Reviewed-by`, `Suggested-by`, `Helped-by`, `Tested-by` and `Reported-by`
-  naming a known tool; the Claude Code notice without the robot emoji, in
-  italics, or as a lone `https://claude.ai/code/session_...` line; Warp's
-  cloud agent `Warp <agent@warp.dev>`; Crush (`💘 Generated with Crush`,
-  `crush@charm.land`); and the run links agents leave in pull request
-  descriptions: Codex task, Devin session, Jules task and Cursor agent links.
-  A person named in a credit trailer, or a sentence that merely mentions a
-  tool, still passes.
-  See PRs [#672](https://github.com/commit-check/commit-check/pull/672) and
-  [#673](https://github.com/commit-check/commit-check/pull/673).
+* `--ai-only` checks a pull request description against your AI policy, without the commit message rules. ([Guide](guides/policies.md#checking-a-pull-request-description), [#673](https://github.com/commit-check/commit-check/pull/673))
+* `--format json` lists the AI tools it found in `ai_tools`, even under `ignore`. ([Reading the JSON](example.md#reading-the-json), [#673](https://github.com/commit-check/commit-check/pull/673))
+* More AI marks are recognised: Warp, Crush, the Claude Code notice without the emoji, `Reviewed-by:` and similar trailers naming a tool, and Codex, Devin, Jules and Cursor run links. ([CC013](rules.md#cc013), [#672](https://github.com/commit-check/commit-check/pull/672), [#673](https://github.com/commit-check/commit-check/pull/673))
 
 ## v2.20.0 (2026-11-08) { #v2200 }
 
+### Breaking
+
+* Python 3.11 or newer is required. On `ubuntu-22.04`, add `actions/setup-python` before the Action. ([GitHub Action](guides/github-actions.md), [#662](https://github.com/commit-check/commit-check/pull/662))
+
 ### Added
 
-* **[CC017](rules.md#cc017) rejects a commit whose author is an AI tool** —
-  the message rules read only the message, so an agent that commits under
-  its own identity (`claude[bot]`, `google-labs-jules[bot]`,
-  `devin-ai-integration[bot]`, OpenHands, an `(aider)` name) passed with a
-  clean message, even one that credits a person as co-author. Under
-  `ai_attribution = "forbid"` or `"disclose"` such a commit now fails.
-  `ignore_authors` skips it and `warn` can report it without failing.
-  See PR [#661](https://github.com/commit-check/commit-check/pull/661).
-
-* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise Continue,
-  Mistral Vibe and Qwen Code** — their default commit signatures
-  (`Generated with [Continue](https://continue.dev)`,
-  `Generated by Mistral Vibe.` with `vibe@mistral.ai`, and
-  `Co-authored-by: Qwen-Coder <qwen-coder@alibabacloud.com>`) passed every
-  policy.
-  See PRs [#657](https://github.com/commit-check/commit-check/pull/657) and
-  [#659](https://github.com/commit-check/commit-check/pull/659).
+* A commit authored by an AI tool, such as `claude[bot]`, fails under `forbid` and `disclose`. ([CC017](rules.md#cc017), [#661](https://github.com/commit-check/commit-check/pull/661))
+* Continue, Mistral Vibe and Qwen Code are recognised. ([CC013](rules.md#cc013), [#657](https://github.com/commit-check/commit-check/pull/657), [#659](https://github.com/commit-check/commit-check/pull/659))
 
 ### Changed
 
-* **`subject_max_length = 0` and `subject_min_length = 0` turn the rule
-  off** — `0` used to mean a limit of zero characters, so a project that
-  wanted only the AI check had to pick a large number instead. See
-  [Checking AI attribution and nothing else](guides/policies.md#checking-ai-attribution-and-nothing-else).
-  See PR [#660](https://github.com/commit-check/commit-check/pull/660).
-
-* **Python 3.11 or newer is required** — Python 3.10 reached end of life, and
-  the `tomli` dependency is gone with it. The GitHub Action needs it too from
-  v2.19.0: on `ubuntu-22.04`, add `actions/setup-python` first (see
-  [GitHub Action](guides/github-actions.md)).
-  See PR [#662](https://github.com/commit-check/commit-check/pull/662).
+* `subject_max_length = 0` or `subject_min_length = 0` turns that check off. ([CC004](rules.md#cc004), [#660](https://github.com/commit-check/commit-check/pull/660))
 
 ### Fixed
 
-* **`[commit] require_verified` no longer warns as an unknown setting** — the
-  GitHub App reads it, and the CLI now leaves it alone.
-  See PR [#656](https://github.com/commit-check/commit-check/pull/656).
+* `[commit] require_verified`, read by the GitHub App, no longer warns as an unknown setting. ([#656](https://github.com/commit-check/commit-check/pull/656))
 
 ## v2.19.5 (2026-11-04) { #v2195 }
 
 ### Fixed
 
-* **GitHub merge queue branches are accepted by default** — the merge queue
-  runs its `merge_group` checks on a branch it creates,
-  `gh-readonly-queue/<base>/pr-<N>-<sha>`, and [CC201](rules.md#cc201)
-  rejected it. A repository with a merge queue and Commit Check as a required
-  check failed every queue entry. The name is now accepted next to `main`,
-  `master`, `develop`, `HEAD` and `PR-*`, whatever `allow_branch_types` or
-  `allow_branch_names` say.
-  See PR [#653](https://github.com/commit-check/commit-check/pull/653).
-
-* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise aider's default
-  co-author trailer** — since v0.85 aider adds
-  `Co-authored-by: aider (<model>) <aider@aider.chat>` to every commit, and the
-  model in parentheses kept it from matching, so `forbid` and `disclose` let
-  it through. It is now matched by its address, whatever model it names, and
-  under `disclose` the correction is `Assisted-by: aider (<model>)`.
-  See PR [#652](https://github.com/commit-check/commit-check/pull/652).
-
-* **A directory git cannot read stops the run with exit 2** — outside a
-  repository, or in one git refuses for "dubious ownership" (common in
-  containers and on self-hosted agents), every check was skipped and the run
-  exited 0, so CI went green without checking anything. Now git's own reason
-  is printed, including its `safe.directory` hint, and the run exits 2. A
-  piped or file message, and a repository with no commits yet, work as before.
-  See PR [#654](https://github.com/commit-check/commit-check/pull/654) and
-  [Exit codes](troubleshoot.md#exit-codes).
+* GitHub merge queue branches (`gh-readonly-queue/…`) pass the branch check by default. ([CC201](rules.md#cc201), [#653](https://github.com/commit-check/commit-check/pull/653))
+* aider's default co-author trailer is recognised. ([CC013](rules.md#cc013), [#652](https://github.com/commit-check/commit-check/pull/652))
+* When git cannot read the repository, for example "dubious ownership", the run exits 2 instead of passing without checking. ([Exit codes](troubleshoot.md#exit-codes), [#654](https://github.com/commit-check/commit-check/pull/654))
 
 ## v2.19.4 (2026-10-29) { #v2194 }
 
 ### Changed
 
-* **`agents/` branches are accepted by default** — VS Code's Agents window
-  names its branches `agents/<description>`, and its users cannot change the
-  prefix, so [CC201](rules.md#cc201) failed them unless `allow_branch_types`
-  listed `agents`. It is now in the default list. The Conventional Branch
-  specification plans to accept it as an alias of `ai`
-  ([conventional-branch#196](https://github.com/conventional-branch/conventional-branch/issues/196)).
-  This only widens what passes.
-  See PR [#645](https://github.com/commit-check/commit-check/pull/645).
+* `agents/` branches, made by VS Code's Agents window, pass by default. ([CC201](rules.md#cc201), [#645](https://github.com/commit-check/commit-check/pull/645))
 
 ### Fixed
 
-* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise Cursor's
-  `Made-with: Cursor` trailer** — Cursor marks the commits it writes with it,
-  and every policy let it through. It now counts as Cursor's own mark, like
-  the Copilot coding agent's `Agent-Logs-Url:`: `forbid` rejects it, and under
-  `disclose` the correction appends `Assisted-by: Cursor`. Other `Made-with:`
-  values are left alone.
-  See PR [#643](https://github.com/commit-check/commit-check/pull/643).
+* Cursor's `Made-with: Cursor` trailer is recognised. ([CC013](rules.md#cc013), [#643](https://github.com/commit-check/commit-check/pull/643))
 
 ## v2.19.3 (2026-10-21) { #v2193 }
 
 ### Fixed
 
-* **A true/false setting written as a string stops the run** — a quoted
-  value such as `conventional_commits = "false"` was read as true, so the
-  rule stayed on and rejected the commit. Any value of a true/false setting
-  that is not `true` or `false` is now a configuration error (exit 2) that
-  names the setting, like the other wrong-type values in 2.19.2. CLI flags
-  and `CCHK_*` variables were already read correctly.
-  See PR [#636](https://github.com/commit-check/commit-check/pull/636).
+* A quoted true/false value such as `"false"` is a config error (exit 2) instead of being read as true. ([Every option](configuration.md#every-option), [#636](https://github.com/commit-check/commit-check/pull/636))
 
 ## v2.19.2 (2026-10-18) { #v2192 }
 
 ### Changed
 
-* **A config value of the wrong type stops the run** — `message_pattern = 5`
-  crashed, `subject_max_length = true` became a one-character limit,
-  `subject_max_length = "50"` turned the rule off without a word, and
-  `allow_commit_types = "feat,fix"` was read letter by letter, so `f: x`
-  passed. A pattern, a subject length, or a type or name list of the wrong
-  type is now a configuration error (exit 2) that names the setting. A
-  comma-separated string in `allow_commit_types`, `allow_branch_types` or
-  `allow_branch_names` is split the way `--allow-commit-types` splits it. A
-  config that relied on the old reading now stops with that error, so check
-  yours when you upgrade.
-  See PR [#624](https://github.com/commit-check/commit-check/pull/624) and
-  [Every option](configuration.md#every-option).
-
-* **[CC202](rules.md#cc202) skips when the rebase target does not resolve** —
-  a `require_rebase_target` that matched no branch, because of a typo or a
-  shallow clone without `origin/main`, reported a pass without comparing
-  anything. It is now a skip, and the JSON `reason` names the missing target.
-  The exit code stays 0.
-  See PR [#617](https://github.com/commit-check/commit-check/pull/617).
-
-* **[CC401](rules.md#cc401) checks the tag name the remote receives** — in a
-  `pre-push` hook, `git push origin v1.0.0:refs/tags/bad-name` was checked as
-  `v1.0.0`, so `bad-name` reached the remote. The remote name is checked now.
-  See PR [#615](https://github.com/commit-check/commit-check/pull/615).
+* A setting of the wrong type, such as `subject_max_length = "50"`, is a config error (exit 2) instead of being misread. Check your config when you upgrade. ([Every option](configuration.md#every-option), [#624](https://github.com/commit-check/commit-check/pull/624))
+* The rebase check reports a skip, not a pass, when its target branch does not exist. ([CC202](rules.md#cc202), [#617](https://github.com/commit-check/commit-check/pull/617))
+* The tag check in a pre-push hook checks the tag name the remote receives. ([CC401](rules.md#cc401), [#615](https://github.com/commit-check/commit-check/pull/615))
 
 ### Fixed
 
-* **[CC013](rules.md#cc013)–[CC016](rules.md#cc016) recognise the Copilot
-  coding agent** — its commits carry an `Agent-Logs-Url:` trailer, and a
-  squash merge of its pull request adds a `copilot-swe-agent[bot]` co-author
-  line. Both passed `forbid` and `disclose`. They are now read as GitHub
-  Copilot, and under `disclose` the correction appends
-  `Assisted-by: GitHub Copilot`.
-  See PR [#632](https://github.com/commit-check/commit-check/pull/632).
-
-* **Commit text is printed inert** — a failing message, branch or tag name was
-  printed as written, so escape sequences reached the terminal, and a body
-  line starting with `::` reached a GitHub Actions runner as a workflow
-  command. Text output now shows control characters as `\xNN` and puts a
-  backslash before such a `::`. `--format json` is unchanged.
-  See PR [#620](https://github.com/commit-check/commit-check/pull/620) and
-  [Color and links](example.md#color-and-links).
-
-* **Three patterns run in linear time** — the CC001 header correction and the
-  AI trailer matching could take seconds on a line padded with spaces.
-  Verdicts are unchanged, except that a `Co-authored-by:` line with an empty
-  name before `(aider)` no longer counts.
-  See PR [#626](https://github.com/commit-check/commit-check/pull/626).
+* The Copilot coding agent is recognised. ([CC013](rules.md#cc013), [#632](https://github.com/commit-check/commit-check/pull/632))
+* Commit text is printed safely: control characters are escaped, and a line starting with `::` can no longer act as a GitHub Actions command. ([Color and links](example.md#color-and-links), [#620](https://github.com/commit-check/commit-check/pull/620))
+* Three slow patterns now run in linear time. ([#626](https://github.com/commit-check/commit-check/pull/626))
 
 ## v2.19.1 (2026-10-16) { #v2191 }
 
 ### Changed
 
-* **`develop` is accepted by default** — the Conventional Branch
-  specification counts `develop` as a trunk branch beside `main` and
-  `master`, but [CC201](rules.md#cc201) failed it unless
-  `allow_branch_names` listed it. It now passes like `main` and `master`, and
-  the spec-strict config needs only the types and the description grammar.
-  This only widens what passes.
-  See PR [#612](https://github.com/commit-check/commit-check/pull/612).
-
-* **Only merge subjects a tool wrote are exempt** — any subject starting with
-  `Merge ` skipped [CC001](rules.md#cc001) and the subject rules. Now only
-  the forms git, GitHub, GitLab and Bitbucket write are exempt, such as
-  `Merge branch 'x' into 'y'` and `Merge pull request #12 from …`. A typed
-  subject such as `Merge the parser rewrite` is judged like any other, so it
-  now fails CC001.
-  See PR [#619](https://github.com/commit-check/commit-check/pull/619).
-
-* **A commit message file is checked as git will store it** — the
-  `commit-msg` hook runs before git strips comments, so git's comment block,
-  and with `git commit -v` the whole diff, were read as part of the message.
-  Comment lines and everything from the scissors line on are now dropped
-  first. A subject-only commit written in the editor now fails
-  [CC011](rules.md#cc011) when `require_body` is on, and a `Signed-off-by:`
-  line in the diff no longer counts. `--fix` keeps the comment and diff
-  blocks in the file.
-  See PR [#618](https://github.com/commit-check/commit-check/pull/618).
+* `develop` passes the branch check by default. ([CC201](rules.md#cc201), [#612](https://github.com/commit-check/commit-check/pull/612))
+* Only merge subjects written by git or a forge skip the message rules; `Merge the parser rewrite` is now checked. ([CC001](rules.md#cc001), [#619](https://github.com/commit-check/commit-check/pull/619))
+* The `commit-msg` hook drops git's comment lines and the `git commit -v` diff before checking. ([#618](https://github.com/commit-check/commit-check/pull/618))
 
 ### Fixed
 
-* **[CC009](rules.md#cc009) rejects `squash!` and `amend!` too** — with
-  `allow_fixup_commits = false` only `fixup!` commits failed.
-  See PR [#613](https://github.com/commit-check/commit-check/pull/613).
-
-* **[CC010](rules.md#cc010) catches every WIP marker** — `WIP` followed by a
-  newline, a tab or a dash passed. Any subject that begins with the word `WIP`
-  or `[WIP]`, in any case, now fails; `wipe the cache` still passes.
-  See PR [#616](https://github.com/commit-check/commit-check/pull/616).
-
-* **[CC012](rules.md#cc012) reads only a real trailer** — `Signed-off-by:`
-  text anywhere in the message passed, including the subject and a line with
-  no name. The check now needs a trailer line with a name and an address, and
-  it runs in linear time on any input.
-  See PR [#621](https://github.com/commit-check/commit-check/pull/621).
-
-* **[CC002](rules.md#cc002) and [CC003](rules.md#cc003) skip only a real type
-  prefix** — any leading `word:` was skipped, even with
-  `conventional_commits = false`, so `Added: support for X` passed the
-  imperative check. The prefix is now skipped only when Conventional Commits
-  is on and the type is allowed.
-  See PR [#622](https://github.com/commit-check/commit-check/pull/622).
-
-* **[CC013](rules.md#cc013) sees two more AI co-author forms** — a trailer
-  with a blank before the colon, `Co-authored-by : Claude <…>`, which git
-  still reads as a trailer, and the line Cursor's agent writes,
-  `Co-authored-by: Cursor Agent <cursoragent@cursor.com>`.
-  See PR [#623](https://github.com/commit-check/commit-check/pull/623).
-
-* **The config is found from a subdirectory** — run below the top of a
-  repository, commit-check found no config and used the built-in defaults
-  without saying so. It now falls back to the top of the work tree, and a
-  relative `inherit_from` is read next to the config that names it.
-  See PR [#625](https://github.com/commit-check/commit-check/pull/625) and
-  [Where the config file lives](configuration.md#where-the-config-file-lives).
-
-* **A parent config is read up to 1 MiB** — `inherit_from` now refuses a
-  larger parent, or a local path that is not a regular file, and continues
-  with the local config as it does when a parent is unreachable.
-  See PR [#614](https://github.com/commit-check/commit-check/pull/614) and
-  [Across an organization](guides/organization.md).
+* `squash!` and `amend!` commits are rejected like `fixup!` when fixup commits are not allowed. ([CC009](rules.md#cc009), [#613](https://github.com/commit-check/commit-check/pull/613))
+* Every WIP form is caught, such as `WIP` followed by a tab or a dash. ([CC010](rules.md#cc010), [#616](https://github.com/commit-check/commit-check/pull/616))
+* The sign-off check needs a real `Signed-off-by:` trailer with a name and an address. ([CC012](rules.md#cc012), [#621](https://github.com/commit-check/commit-check/pull/621))
+* A `word:` prefix skips the case and mood checks only when it is an allowed commit type. ([CC002](rules.md#cc002), [#622](https://github.com/commit-check/commit-check/pull/622))
+* Two more AI co-author forms are recognised, including Cursor Agent's. ([CC013](rules.md#cc013), [#623](https://github.com/commit-check/commit-check/pull/623))
+* The config file is found when you run from a subdirectory. ([Where the config file lives](configuration.md#where-the-config-file-lives), [#625](https://github.com/commit-check/commit-check/pull/625))
+* A parent config from `inherit_from` larger than 1 MiB is skipped. ([Across an organization](guides/organization.md), [#614](https://github.com/commit-check/commit-check/pull/614))
 
 ## v2.19.0 (2026-10-14) { #v2190 }
 
 ### Added
 
-* **`require_description_grammar` checks what follows the branch type** —
-  `conventional_branch` checks the `<type>/` prefix and accepted anything
-  after it, so `feature/Add_Login`, `fix/header_bug` and `release/v1.-2.0`
-  all passed. With `[branch] require_description_grammar = true` the
-  description must follow the specification's grammar: lowercase letters and
-  digits, words joined by single hyphens, dots only inside a word. It is off
-  by default, because bot branches such as
-  `dependabot/npm_and_yarn/lodash-4.17.21` do not follow that grammar.
-  See PR [#581](https://github.com/commit-check/commit-check/pull/581) and
-  [CC201](rules.md#cc201).
-
-* **Amp, OpenHands, Factory Droid and Jules are recognised** — co-author and
-  sign-off lines naming them (`Amp <amp@ampcode.com>`, `openhands`,
-  `factory-droid[bot]`, `google-labs-jules[bot]`) and Amp's
-  `Amp-Thread-ID:` trailer now count as AI attribution, for
-  [CC013](rules.md#cc013) and for the `disclose` rules alike. People named
-  Jules or Amp are not flagged.
-  See PR [#606](https://github.com/commit-check/commit-check/pull/606) and
-  [Forbidding AI-attributed commits](guides/policies.md#forbidding-ai-attributed-commits).
-
-* **`--format json` says why a check was skipped** — a check skipped because
-  the author or a co-author is on an `ignore_authors` list carries a `reason`,
-  such as `author dependabot[bot] is in [commit].ignore_authors`. Every check
-  has the key; it is empty when there is no reason to give.
-  See PR [#605](https://github.com/commit-check/commit-check/pull/605) and
-  [When a check is skipped](example.md#when-a-check-is-skipped).
+* `require_description_grammar` also checks the part after `<type>/`, so `feature/Add_Login` fails. ([CC201](rules.md#cc201), [#581](https://github.com/commit-check/commit-check/pull/581))
+* Amp, OpenHands, Factory Droid and Jules are recognised. ([CC013](rules.md#cc013), [#606](https://github.com/commit-check/commit-check/pull/606))
+* `--format json` says why a check was skipped. ([When a check is skipped](example.md#when-a-check-is-skipped), [#605](https://github.com/commit-check/commit-check/pull/605))
 
 ### Fixed
 
-* **`check-tag` checks the tags a push sends** — under pre-commit the hook
-  judged the tags on `HEAD`, so a bad tag sent by `git push --follow-tags`
-  from another branch got through, and a tag push could be rejected over a
-  local tag on `HEAD` that it did not carry. It now checks the tag a tag push
-  names, and on a branch push the tags on every commit the push carries.
-  See PR [#603](https://github.com/commit-check/commit-check/pull/603).
-
-* **A GitHub Actions tag build has no branch to judge** — on a tag push,
-  `GITHUB_REF_NAME` holds the tag, so `--branch` failed
-  [CC201](rules.md#cc201) on `v1.2.0`. A tag build now falls back to `HEAD`,
-  which is always accepted, as tag builds on GitLab, Bitbucket, Azure and
-  Jenkins already did.
-  See PR [#603](https://github.com/commit-check/commit-check/pull/603).
+* The `check-tag` hook checks the tags the push sends, not the tags on `HEAD`. ([#603](https://github.com/commit-check/commit-check/pull/603))
+* A tag build on GitHub Actions no longer fails the branch check on the tag name. ([#603](https://github.com/commit-check/commit-check/pull/603))
 
 ## v2.18.3 (2026-10-07) { #v2183 }
 
 ### Added
 
-* **`--fix` corrects a commit message in place** — when every message check
-  the commit failed has a mechanical fix, the ones `--format json` reports in
-  `fix`, the message file is rewritten and the check passes, so
-  `Fix: add streaming support` is recorded as `fix: add streaming support`.
-  Anything that takes a judgment, such as a subject with no type at all,
-  leaves the file as it was and is rejected as before. It needs a message
-  file, so stdin and `--rev` are a usage error, and `--dry-run` rewrites
-  nothing. With pre-commit it is `args: [--fix]` on `check-message`.
-  See PR [#594](https://github.com/commit-check/commit-check/pull/594) and
-  [Fixing a message in place](example.md#fixing-a-message-in-place).
-
-* **`--branch` reads the branch from GitLab, Bitbucket, Azure and Jenkins** —
-  on a detached checkout git names no branch, and only GitHub's variables
-  were read, so elsewhere the name became `HEAD`, which is always allowed, and
-  every branch passed. Each CI's own variables are now read, a merge or pull
-  request's source branch first, and Jenkins' only inside a Jenkins build that
-  is not a tag build. A pipeline that runs `--branch` on a long-lived branch
-  such as `develop` now has that name judged; `allow_branch_names` can allow
-  it.
-  See PR [#600](https://github.com/commit-check/commit-check/pull/600) and
-  [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md).
-
-* **A setting nothing reads is named** — a misspelt key in `cchk.toml` was
-  ignored in silence, and its rule stayed at the default. Each one is now
-  reported on stderr with the closest real name, as in `⚠ unknown setting
-  [commit] subject_max_lenght is ignored; did you mean subject_max_length?`.
-  The exit code and the JSON do not change.
-  See PR [#593](https://github.com/commit-check/commit-check/pull/593) and
-  [Settings nothing reads](configuration.md#settings-nothing-reads).
+* `--fix` corrects mechanical slips in the message file, such as `Fix:` to `fix:`. ([Fixing a message in place](example.md#fixing-a-message-in-place), [#594](https://github.com/commit-check/commit-check/pull/594))
+* `--branch` reads the branch name on GitLab, Bitbucket, Azure and Jenkins. ([Other CI](guides/other-ci.md), [#600](https://github.com/commit-check/commit-check/pull/600))
+* A misspelt setting is reported with the closest real name. ([Settings nothing reads](configuration.md#settings-nothing-reads), [#593](https://github.com/commit-check/commit-check/pull/593))
 
 ## v2.18.2 (2026-09-28) { #v2182 }
 
 ### Fixed
 
-* **A piped message is only the message** — next to `--message`, piped stdin
-  was read by every requested check, so on a valid `feature/streaming-support`
-  branch `printf 'feat: add streaming support\n' | commit-check --message
-  --branch` failed [CC201](rules.md#cc201) on the message text, and the author
-  and tag checks did the same. The other checks now read git. A value piped
-  into one check on its own, such as `echo feature/x | commit-check --branch`,
-  is still what that check judges.
-  See PR [#579](https://github.com/commit-check/commit-check/pull/579).
-
-* **[CC301](rules.md#cc301) reports a skip when it has nothing to compare** —
-  with no push refs, no upstream, or only malformed ref lines, the force-push
-  check reported a pass. It now prints `⊘ skipped (not validated):
-  no-force-push` on stderr and reports `"skip"` in `--format json` and from
-  `validate_push`. Exit codes do not change.
-  See PR [#591](https://github.com/commit-check/commit-check/pull/591).
+* With `--message --branch`, piped input is read only as the message. ([#579](https://github.com/commit-check/commit-check/pull/579))
+* The force-push check reports a skip, not a pass, when it has nothing to compare. ([CC301](rules.md#cc301), [#591](https://github.com/commit-check/commit-check/pull/591))
 
 ## v2.18.1 (2026-09-24) { #v2181 }
 
 ### Changed
 
-* **Python 3.15 is supported.** CI now builds and installs the wheel on 3.15
-  alongside 3.10–3.14, on Linux, macOS and Windows, and the package declares
-  it. Contributed by [@itzzdev09](https://github.com/itzzdev09).
-  See PR [#583](https://github.com/commit-check/commit-check/pull/583).
+* Python 3.15 is supported. Thanks [@itzzdev09](https://github.com/itzzdev09). ([#583](https://github.com/commit-check/commit-check/pull/583))
 
 ## v2.18.0 (2026-09-13) { #v2180 }
 
 ### Added
 
-* **AI attribution gained a third policy, `"disclose"`** — for the projects
-  that welcome AI assistance and ask to be told about it. It turns on three
-  rules, one per condition, so any of them can be demoted to a warning while
-  the others keep enforcing: the assistance is disclosed with one of
-  `ai_disclosure_trailers` ([CC014](rules.md#cc014), default `Assisted-by`
-  and `Generated-by`), the tool is not credited as a co-author
-  ([CC015](rules.md#cc015)), and it did not sign off the commit
-  ([CC016](rules.md#cc016)) — a sign-off certifies the DCO, which only a
-  person can do. A failing check carries the correction: the vendor's
-  co-author line rewritten as the project's disclosure trailer, keeping the
-  name the tool gave itself. `ai_disclosure_pattern` asks for a particular
-  format, such as `agent/model`. The default stays `"ignore"`, and an
-  `ai_attribution` value that is none of the three is now a configuration
-  error rather than a silently disabled check.
-  See PR [#575](https://github.com/commit-check/commit-check/pull/575) and
-  [Asking for disclosure instead](guides/policies.md#asking-for-disclosure-instead).
-
-* **A failed check names the value it rejected, and by how much** — a long
-  subject reports `Subject is 96 characters; it must be at most 80
-  characters` and how many to cut, a custom `message_pattern` is echoed back,
-  and the rejection banner says whether it was the commit, the branch, the
-  tag or the push that was rejected.
-  See PR [#571](https://github.com/commit-check/commit-check/pull/571).
-
-* **A specification named in an error links to it** on terminals that render
-  hyperlinks, so `Conventional Commits` and `Conventional Branch` are
-  clickable instead of trailing a URL. Piped output is unchanged.
-  See PR [#568](https://github.com/commit-check/commit-check/pull/568).
+* `ai_attribution = "disclose"` accepts AI help disclosed with `Assisted-by:` and writes the fix for you. ([Asking for disclosure instead](guides/policies.md#asking-for-disclosure-instead), [#575](https://github.com/commit-check/commit-check/pull/575))
+* A failed check names the rejected value, such as "Subject is 96 characters; it must be at most 80". ([#571](https://github.com/commit-check/commit-check/pull/571))
+* Spec names in errors are links in terminals that support them. ([#568](https://github.com/commit-check/commit-check/pull/568))
 
 ### Changed
 
-* **`ai_attribution = "forbid"` now recognises the disclosure trailers too.**
-  `Assisted-by:` and `Generated-by:`, in the formats the Linux kernel, Fedora,
-  FluxCD and the ASF actually write them, are AI attribution like any other —
-  a project that forbids attribution was letting them through.
-  See PR [#575](https://github.com/commit-check/commit-check/pull/575) and
-  [CC013](rules.md#cc013).
+* `forbid` also rejects `Assisted-by:` and `Generated-by:` trailers. ([CC013](rules.md#cc013), [#575](https://github.com/commit-check/commit-check/pull/575))
 
 ### Fixed
 
-* **[CC201](rules.md#cc201) anchors a branch name at both ends** — `main-backup`,
-  `master2` and `develop-x` passed as if they were `main`, `master` and
-  `develop`. They fail now.
-  See PR [#569](https://github.com/commit-check/commit-check/pull/569).
-
-* **[CC001](rules.md#cc001) exempts only the subjects git writes itself** —
-  `Merge `, `Revert "`, `fixup! `, `squash! ` and `amend! `. Author prose that
-  merely started that way, such as `Merged stuff` or `fixup!! nonsense`, was
-  exempt too.
-  See PR [#569](https://github.com/commit-check/commit-check/pull/569).
-
-* **A setting whose regex does not compile names the setting** and exits `2`,
-  the code for a broken configuration: `[commit] message_pattern is not a
-  valid regex: '^(unclosed'`. It used to surface as a bare Python error with
-  exit code `1`, the code a rejected commit gets.
-  See PR [#574](https://github.com/commit-check/commit-check/pull/574) and
-  [Exit codes](troubleshoot.md#exit-codes).
-
-* **A configuration error exits `2` and names the file it came from**, and
-  `--dry-run` runs the checks it was asked for instead of printing nothing
-  and exiting `0`.
-  See PR [#570](https://github.com/commit-check/commit-check/pull/570).
-
-* **An `inherit_from` that cannot be loaded says so on stderr** instead of
-  falling back to the local config in silence. The run still continues.
-  See PR [#569](https://github.com/commit-check/commit-check/pull/569).
+* `main`, `master` and `develop` must match exactly, so `main-backup` fails. ([CC201](rules.md#cc201), [#569](https://github.com/commit-check/commit-check/pull/569))
+* Only subjects git writes itself, such as `Merge ` and `fixup! `, skip the message format check. ([CC001](rules.md#cc001), [#569](https://github.com/commit-check/commit-check/pull/569))
+* A regex setting that does not compile names the setting and exits 2. ([Exit codes](troubleshoot.md#exit-codes), [#574](https://github.com/commit-check/commit-check/pull/574))
+* A config error exits 2 and names the file; `--dry-run` now runs the checks. ([#570](https://github.com/commit-check/commit-check/pull/570))
+* An `inherit_from` that cannot be loaded is reported on stderr. ([#569](https://github.com/commit-check/commit-check/pull/569))
 
 ## v2.17.0 (2026-09-06) { #v2170 }
 
 ### Added
 
-* **A failed check names its correction when there is exactly one** — a type
-  written `Fix` where `fix` is allowed, a letter out of place (`feta`), a
-  missing colon after a recognised type, a `WIP:` marker, a missing
-  `Signed-off-by` trailer, a branch typed `Feature/x`, an AI attribution line
-  under `ai_attribution = "forbid"`: the suggestion now says what to use
-  (`Use "fix: add x"`) instead of restating the rule, and `--format json` and
-  the Python API carry the corrected value in a new `fix` field. `fix` stays
-  empty whenever the correction takes a judgment — a subject with no type, one
-  over the length limit, a verb that is not imperative — so a tool can apply a
-  non-empty `fix` as it stands. The pre-commit hook, the Action and the App
-  show the better suggestion with no change on their side; the MCP server
-  passes `fix` through to agents.
-  See PR [#564](https://github.com/commit-check/commit-check/pull/564) and
-  [Reading the JSON](example.md#reading-the-json).
-
-* **A rule can be reported without being enforced** — a top-level
-  `warn = ["branch", "CC003"]` runs the named rules, prints their findings in
-  full, and never fails the run. A warned rule prints `warning` in place of
-  `failed`, no rejection banner, and one closing line saying the run is not
-  failed by it; `--compact` prints one `[WARN]` line. The exit code counts
-  only enforced rules. In `--format json` the check's `status` is `warn`, the
-  top-level `status` stays `pass`, and a `warnings` count is added. A name
-  that matches no rule is a configuration error, so a typo cannot leave a rule
-  silently enforced. This is how a team adopts a rule gradually: turn it on
-  as a warning, watch what it catches, drop it from `warn` when the history
-  is clean.
-  See PR [#565](https://github.com/commit-check/commit-check/pull/565) and
-  [Report a rule without enforcing it](configuration.md#report-a-rule-without-enforcing-it).
+* A failed check gives the exact fix when there is only one, such as `Use "fix: add x"`, also as `fix` in JSON. ([Reading the JSON](example.md#reading-the-json), [#564](https://github.com/commit-check/commit-check/pull/564))
+* `warn = [...]` reports a rule without failing the run. ([Report a rule without enforcing it](configuration.md#report-a-rule-without-enforcing-it), [#565](https://github.com/commit-check/commit-check/pull/565))
 
 ### Fixed
 
-* **CC002 reads a plain subject from its first word** — the capitalisation
-  check treated any first word as a Conventional Commits type, so
-  `Add feature` failed on the `f` of `feature`, `Update` alone failed, and
-  `add Feature` passed. Only a prefix that ends in a colon is a type now:
-  the first two pass, the third fails. See PR
-  [#564](https://github.com/commit-check/commit-check/pull/564) and
-  [CC002](rules.md#cc002).
+* The case check no longer reads the first word of a plain subject as a type. ([CC002](rules.md#cc002), [#564](https://github.com/commit-check/commit-check/pull/564))
 
 ## v2.16.0 (2026-08-31) { #v2160 }
 
 ### Added
 
-* **Tag names can be checked** — `--tag` (`-t`) validates the names of the tags
-  pointing at the commit under test against a pattern, defaulting to SemVer
-  with an optional leading `v`. GitHub can require a tag name to match a
-  regular expression only through its Enterprise-plan
-  [metadata restrictions](https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#metadata-restrictions)
-  — tag rulesets themselves are not gated that high; this brings the same
-  policy to every plan and forge. A commit with no tag is a skip, not a
-  failure: the rule governs how tags are named, and the absence of one is
-  not a naming violation. A `check-tag` pre-push hook validates exactly
-  what a push carries. See [CC401](rules.md#cc401).
-
-* **The files a commit touches can be policed** — `--files` (`-f`) checks file
-  size ([CC302](rules.md#cc302)), prohibited path patterns
-  ([CC303](rules.md#cc303)) and path length ([CC304](rules.md#cc304)). GitHub
-  sells the same three as push rules, on Team and Enterprise plans for private
-  repositories.
-
-    All three read only the paths and sizes recorded in a commit — never file
-    contents, which keeps content scanning where it belongs, with tools like
-    gitleaks. All three are off until their `[files]` setting carries a usable
-    value, and a value that cannot be used says so on stderr rather than
-    disabling its rule in silence.
-
-    A `check-files` pre-push hook checks every commit a push adds, not just the
-    tip; the Action and the App check every commit of a push or pull request.
+* `--tag` checks tag names, SemVer by default. ([CC401](rules.md#cc401), [#559](https://github.com/commit-check/commit-check/pull/559))
+* `--files` checks committed file size, forbidden paths and path length. ([CC302–CC304](rules.md#push-rules), [#560](https://github.com/commit-check/commit-check/pull/560))
 
 ## v2.15.1 (2026-08-16) { #v2151 }
 
 ### Fixed
 
-* **ANSI color is emitted only where it renders** — a terminal gets color;
-  piped and redirected output (a CI log, a file, another tool) gets plain text
-  instead of escape codes. `NO_COLOR` ([no-color.org](https://no-color.org))
-  set to any non-empty value disables color everywhere, and `FORCE_COLOR`
-  overrides the detection in both directions — `0` off, anything else on —
-  outranking `NO_COLOR`, the same way the wider tooling ecosystem resolves
-  the pair. Contributed by [@larsch](https://github.com/larsch).
-  See PRs [#551](https://github.com/commit-check/commit-check/pull/551) and
-  [#552](https://github.com/commit-check/commit-check/pull/552), and
-  [Color and links](example.md#color-and-links).
+* Color is printed only to a terminal, and `NO_COLOR` and `FORCE_COLOR` are honoured. Thanks [@larsch](https://github.com/larsch). ([Color and links](example.md#color-and-links), [#551](https://github.com/commit-check/commit-check/pull/551), [#552](https://github.com/commit-check/commit-check/pull/552))
 
 ## v2.15.0 (2026-08-13) { #v2150 }
 
 ### Added
 
-* **`--rev REVISION` names the commit under test** — anything `git rev-parse`
-  understands: a SHA, `HEAD~2`, `HEAD^2`. Message checks read that commit's
-  message, and the author checks read **that commit's recorded author, never
-  the local git config** — an existing commit's identity is a fact about the
-  commit, not about whoever runs the check. Before `--rev`, CI could not
-  iterate a pull request's commits without checking each one out, and a
-  malformed author on any commit passed as long as the operator's own config
-  was valid. A revision that does not resolve is a one-line error before any
-  check runs; combining `--rev` with a message file or stdin is rejected,
-  since each would name a second subject for the same checks. See
-  [Checking a range of commits](example.md#checking-a-range-of-commits).
-
-### Fixed
-
-* **The CLI no longer hangs on an open, idle stdin** — stdin was read
-  whenever it was not a terminal, for every check type. Under CI runners and
-  process managers that hand the process a pipe nothing ever writes to or
-  closes, `commit-check --author-name` blocked forever: a stuck step, not a
-  failed one. The read is now gated on data actually being available, and
-  genuinely piped input still works unchanged.
+* `--rev` checks a given commit, with its recorded author. ([Checking a range of commits](example.md#checking-a-range-of-commits), [#544](https://github.com/commit-check/commit-check/pull/544))
 
 ### Changed
 
-* **Skipped checks are named on stderr instead of passing in silence** — a
-  check that had nothing to judge (a merge subject under the subject rules,
-  an absent message) reports a skip, and text mode prints one line naming
-  every skipped check: `⊘ skipped (not validated): subject-max-length,
-  subject-min-length`. Exit codes are unchanged and stdout is untouched. The
-  case that motivated it: on a `pull_request` checkout `HEAD` is the
-  synthetic merge commit, so a bare `commit-check -m` used to exit `0`
-  having validated nothing it was asked about. See
-  [When a check is skipped](example.md#when-a-check-is-skipped).
+* Skipped checks are named on stderr instead of passing in silence. ([When a check is skipped](example.md#when-a-check-is-skipped), [#544](https://github.com/commit-check/commit-check/pull/544))
+* Only git's own `Merge ` and `fixup! ` prefixes skip the subject rules.
 
-* **Only git's literal merge and fixup prefixes bypass the subject rules** —
-  the bypass matched any subject starting with the word "merge" in any case,
-  so an author's own `merge the parser tables` escaped judgement. Now only
-  the machine-written forms qualify: `Merge ` (and `fixup! ` for CC003).
+### Fixed
+
+* The CLI no longer hangs in CI when stdin is open but empty. ([#544](https://github.com/commit-check/commit-check/pull/544))
 
 ## v2.14.0 (2026-08-12) { #v2140 }
 
 ### Changed
 
-* **CC003 judges the word's form, not its membership in a list** — the rule
-  used to accept a subject only when its first word appeared in a list of
-  known imperative verbs, so any verb the list had not heard of was reported
-  as a mood error. Growing the list never fixed that; each release recognised
-  a few more verbs and the next contributor found the next gap.
-
-  It now works the other way round. A first word is rejected only when it
-  carries non-imperative morphology — a past tense (`fixed`), a gerund
-  (`adding`) or a third person singular (`fixes`) — and accepted otherwise.
-  Measured across 59,140 subjects from `git.git`, a project that writes
-  strictly imperative subjects, the old list rejected 45.5% of them; the new
-  rule rejects 0.97%.
-
-  Nothing that passed before fails now. Two things that used to fail now pass:
-
-    * Subjects led by a correct verb no list contained — `reword the report
-      format`, `dedupe the helper`, `backfill an absent value`.
-    * Subjects led by a noun — `parser improvements`. CC003 checks mood, and a
-      noun phrase has none to get wrong.
-
-  The practical consequence is that **`IMPERATIVES` no longer needs additions**.
-  A verb missing from it can no longer cause a failure, so there is no reason
-  to send a patch adding the verb you just used.
-
-  See PR [#540](https://github.com/commit-check/commit-check/pull/540), which
-  closes issue [#526](https://github.com/commit-check/commit-check/issues/526).
+* The imperative check rejects only `fixed`, `adding` or `fixes` forms, so any imperative verb passes. ([CC003](rules.md#cc003), [#540](https://github.com/commit-check/commit-check/pull/540))
 
 ## v2.13.1 (2026-08-05) { #v2131 }
 
-### New Features
+### Added
 
-* **Passed checks report what they checked** — `--format json` and the
-  `validate_all_detailed()` API now populate `value` on passing checks with
-  the raw input that was validated (commit subject, branch name, author
-  name/email, push refs), so tooling such as commit-check-action can show
-  exactly what passed instead of an empty string. Terminal output is
-  unchanged.
-  See PR [#522](https://github.com/commit-check/commit-check/pull/522).
+* `--format json` shows the checked value for passing checks too. ([#522](https://github.com/commit-check/commit-check/pull/522))
 
 ## v2.13.0 (2026-08-04) { #v2130 }
 
-### New Features
+### Added
 
-* **Stable rule IDs** — every diagnostic now carries an ID such as `CC003` that
-  never changes once released. The ID appears in terminal output and in
-  `--format json` as `rule_id`, alongside a `docs_url` pointing at the rule's
-  section of the [rules reference](rules.md), so a failure can be cited in
-  review, looked up, or matched by tooling.
-  See PR [#512](https://github.com/commit-check/commit-check/pull/512).
-* **More branch types accepted by default** — `docs/`, `ci/`, `test/`,
-  `refactor/`, `build/`, `perf/` and `style/` join the default
-  `allow_branch_types`, which stays a superset of the Conventional Branch
-  specification.
-  See PR [#505](https://github.com/commit-check/commit-check/pull/505).
+* Every rule has a stable ID such as `CC003`, shown in the output and the JSON with a docs link. ([Rules reference](rules.md), [#512](https://github.com/commit-check/commit-check/pull/512))
+* `docs/`, `ci/`, `test/`, `refactor/`, `build/`, `perf/` and `style/` branches pass by default. ([#505](https://github.com/commit-check/commit-check/pull/505))
 
-### Bug Fixes
+### Changed
 
-* **Rule IDs link to their documentation** — where the terminal renders OSC 8
-  hyperlinks, the ID itself is the link and the separate `Docs:` line is
-  dropped. Piped output and CI logs keep the printed URL. Failure output also
-  names rules the way the reference titles them (`subject-min-length` rather
-  than `subject_min_length`), and the advice for the length rules now names the
-  configured limit instead of referring to it.
-  See PR [#520](https://github.com/commit-check/commit-check/pull/520).
-
-### Documentation
-
-* The documentation, the landing page and the blog moved to
-  [commit-check.com](https://commit-check.com) and are published from one
-  domain. `docs.commit-check.com` URLs redirect.
-  See PRs [#514](https://github.com/commit-check/commit-check/pull/514),
-  [#515](https://github.com/commit-check/commit-check/pull/515),
-  [#518](https://github.com/commit-check/commit-check/pull/518) and
-  [#519](https://github.com/commit-check/commit-check/pull/519).
+* Rule IDs are clickable where the terminal supports links. ([#520](https://github.com/commit-check/commit-check/pull/520))
+* The docs moved to commit-check.com; `docs.commit-check.com` links redirect. ([#514](https://github.com/commit-check/commit-check/pull/514))
 
 ## v2.12.2 (2026-08-01) { #v2122 }
 
-### Bug Fixes
+### Fixed
 
-* **Space-separated AI model names** — Co-author trailers naming a model with
-  spaces rather than hyphens are now recognised by the AI attribution check.
-  See PR [#506](https://github.com/commit-check/commit-check/pull/506).
-
-### Chores
-
-* Recognised more common imperative verbs, so ordinary subjects stop being
-  rejected by `subject_imperative`.
-  See PR [#496](https://github.com/commit-check/commit-check/pull/496).
+* AI model names with spaces in co-author trailers are recognised. ([#506](https://github.com/commit-check/commit-check/pull/506))
+* More imperative verbs are recognised. ([#496](https://github.com/commit-check/commit-check/pull/496))
 
 ## v2.12.1 (2026-07-31) { #v2121 }
 
-### Bug Fixes
+### Fixed
 
-* **Running without the package installed** — `PackageNotFoundError` is handled
-  instead of crashing when the version cannot be resolved.
-  See PR [#483](https://github.com/commit-check/commit-check/pull/483).
-* Hardened the `pip install` step flagged by SonarCloud code scanning.
-  See PR [#479](https://github.com/commit-check/commit-check/pull/479).
+* No crash when the package version cannot be read. ([#483](https://github.com/commit-check/commit-check/pull/483))
 
 ## v2.12.0 (2026-07-24) { #v2120 }
 
-### New Features
+### Added
 
-* **Configurable author patterns** — `author_name_pattern` and
-  `author_email_pattern` accept a custom regex, so organisations can require
-  their own naming or email domain instead of the built-in patterns.
-  See PR [#459](https://github.com/commit-check/commit-check/pull/459).
+* `author_name_pattern` and `author_email_pattern` take your own regex. ([CC101](rules.md#cc101), [#459](https://github.com/commit-check/commit-check/pull/459))
 
-### Bug Fixes
+### Fixed
 
-* **Crash on Chinese Windows** — commit messages are no longer decoded with the
-  system GBK codec, which raised `UnicodeDecodeError`.
-  See PR [#475](https://github.com/commit-check/commit-check/pull/475).
-* **Author validation reads git config first** — `git config user.name` is the
-  identity the *next* commit will carry, so it is checked before falling back
-  to the last commit's author. A misconfigured identity used to pass whenever
-  the previous commit happened to be valid.
-  See PR [#461](https://github.com/commit-check/commit-check/pull/461).
+* No crash on Chinese Windows. ([#475](https://github.com/commit-check/commit-check/pull/475))
+* The author checks read `git config` first, the identity your next commit will use. ([#461](https://github.com/commit-check/commit-check/pull/461))
 
 ## v2.11.1 (2026-07-09) { #v2111 }
 
-### Bug Fixes
+### Fixed
 
-* `require_signed_off_by` accepts any name, and is skipped for authors listed
-  in `ignore_authors`.
-  See PRs [#462](https://github.com/commit-check/commit-check/pull/462) and
-  [#464](https://github.com/commit-check/commit-check/pull/464).
+* `require_signed_off_by` accepts any name and skips authors in `ignore_authors`. ([#462](https://github.com/commit-check/commit-check/pull/462), [#464](https://github.com/commit-check/commit-check/pull/464))
 
 ## v2.11.0 (2026-07-06) { #v2110 }
 
-### New Features
+### Added
 
-* **AI attribution governance** — Added support for forbidding known AI tool
-  signatures (e.g., `Co-authored-by: Copilot`) in commit messages. New
-  `[commit]` config option `ai_attribution` (default `"ignore"`) rejects
-  commits carrying known AI tool signatures when set to `"forbid"`. See PR [#456](https://github.com/commit-check/commit-check/pull/456).
+* `ai_attribution = "forbid"` rejects commits with known AI tool signatures. ([Policy guides](guides/policies.md#ai-attribution), [#456](https://github.com/commit-check/commit-check/pull/456))
 
-### Bug Fixes
+### Fixed
 
-* Fixed `MergeBaseValidator` branch detection — replaced `git branch -a`
-  regex matching with `git rev-parse --verify` to avoid false positives
-  (e.g., pattern `main` matching `main-staging`). See PR [#451](https://github.com/commit-check/commit-check/pull/451).
-
-### Chores
-
-* Added OpenSSF Scorecard workflow, badge, and pinned dependency SHAs for CI
-* Migrated PyPI publishing to `pypa/gh-action-pypi-publish`
-* Removed OpenSSF Scorecard badge after evaluation (moved to Scorecard dashboard)
+* The rebase check no longer takes `main-staging` for `main`. ([#451](https://github.com/commit-check/commit-check/pull/451))
 
 ## v2.10.1 (2026-06-30) { #v2101 }
 
-### Bug Fixes
+### Fixed
 
-* **WIP detection case-insensitivity** — `WIP` (`[WIP]`, `WIP:`, `wip:`,
-  etc.) is now recognized regardless of case across all common patterns.
-  See PR [#448](https://github.com/commit-check/commit-check/pull/448).
-* **Conventional commit special characters** — Allowed special characters
-  (parentheses, brackets, etc.) in the description part of conventional commit
-  messages. See PR [#447](https://github.com/commit-check/commit-check/pull/447).
-
-### Refactors
-
-* Extracted `_get_commit_message` to `BaseValidator` to remove code
-  duplication across validators. See PR [#445](https://github.com/commit-check/commit-check/pull/445).
-* Removed legacy YAML config parsing code from `util.py`.
-  See PR [#444](https://github.com/commit-check/commit-check/pull/444).
+* WIP is detected in any case. ([#448](https://github.com/commit-check/commit-check/pull/448))
+* Brackets and other special characters are allowed in a commit description. ([#447](https://github.com/commit-check/commit-check/pull/447))
 
 ## v2.10.0 (2026-06-26) { #v2100 }
 
-### New Features
+### Added
 
-* **Dependabot / Renovate as default branch type** — `dependabot/` and
-  `renovate/` branch prefixes are now included in `DEFAULT_BRANCH_TYPES`,
-  so dependency update branches are automatically recognized.
-  See PR [#442](https://github.com/commit-check/commit-check/pull/442).
+* `dependabot/` and `renovate/` branches pass by default. ([#442](https://github.com/commit-check/commit-check/pull/442))
 
 ## v2.9.0 (2026-06-22) { #v290 }
 
-### New Features
+### Added
 
-* **AI agent branch prefixes (Conventional Branch v1.1.0)** — Added
-  `ai/`, `claude/`, `codex/`, `copilot/`, and `cursor/` to
-  `DEFAULT_BRANCH_TYPES` so branches created by AI coding agents are
-  recognized as valid. See PR [#438](https://github.com/commit-check/commit-check/pull/438).
+* AI agent branches `ai/`, `claude/`, `codex/`, `copilot/` and `cursor/` pass by default. ([#438](https://github.com/commit-check/commit-check/pull/438))
 
 ## v2.8.1 (2026-06-22) { #v281 }
 
-### Chores
+### Added
 
-* Fixed 27 SonarQube code-quality issues across source and test files,
-  including path traversal vulnerability fix, cognitive complexity
-  reduction, and duplicate branch consolidation. See PR [#436](https://github.com/commit-check/commit-check/pull/436).
-* Added SchemaStore IDE autocompletion support for `cchk.toml`.
-  See PR [#433](https://github.com/commit-check/commit-check/pull/433).
+* Editors autocomplete `cchk.toml` through SchemaStore. ([#433](https://github.com/commit-check/commit-check/pull/433))
 
 ## v2.8.0 (2026-06-13) { #v280 }
 
-### New Features
+### Breaking
 
-* **Custom commit message pattern** — New `message_pattern` option in the
-  `[commit]` config section allows replacing the built-in Conventional Commits
-  regex with a user-defined regex pattern. Also supported via the
-  `CCHK_MESSAGE_PATTERN` environment variable. See PR [#427](https://github.com/commit-check/commit-check/pull/427).
+* Python 3.10 or newer is required. ([#424](https://github.com/commit-check/commit-check/pull/424))
 
-### Breaking Changes
+### Added
 
-* **Dropped Python 3.9 support** — Minimum required Python version is now
-  3.10. Type annotations have been modernized (PEP 604/585) and the
-  `py.typed` marker added for downstream type checkers.
-  See PR [#424](https://github.com/commit-check/commit-check/pull/424).
+* `message_pattern` replaces the Conventional Commits check with your own regex. ([CC001](rules.md#cc001), [#427](https://github.com/commit-check/commit-check/pull/427))
 
 ## v2.7.1 (2026-06-08) { #v271 }
 
-### Chores
+### Fixed
 
-* Added `auto` to the list of imperative verbs. See PR [#417](https://github.com/commit-check/commit-check/pull/417).
-* Added commit-check vs GitHub Rulesets comparison table to the README.
-  See PR [#419](https://github.com/commit-check/commit-check/pull/419).
+* `auto` is accepted as an imperative verb. ([#417](https://github.com/commit-check/commit-check/pull/417))
 
 ## v2.7.0 (2026-05-16) { #v270 }
 
-### New Features
+### Added
 
-* **Force push detection and blocking** — Added `--no-force-push` CLI flag and
-  `check-no-force-push` pre-push hook that inspect pushed ref ancestry via
-  `git merge-base --is-ancestor` to detect and block `git push --force` and
-  `git push -f`. A new `[push]` TOML config section with
-  `allow_force_push` (default `true`) controls the behavior. Environment
-  variable `CCHK_ALLOW_FORCE_PUSH` is also supported.
-
-* **`validate_push()` API** — New `commit_check.api.validate_push()`
-  function for programmatic push safety checks, matching the `--no-force-push`
-  CLI behavior without spawning a subprocess.
-
-* **Standalone mode** — When `--no-force-push` is run outside a pre-push hook
-  (no stdin), it checks whether pushing `HEAD` to its configured upstream
-  would require force, using `git ls-remote` and optional `git fetch` to
-  resolve the remote commit.
-
-* **Expanded imperative verbs** — Added 156 new imperative verbs across 10
-  categories (auth/security, data ops, lifecycle, I/O, debugging, UI/UX,
-  engineering, general), growing the total from 234 to 390.
-  See PR [#414](https://github.com/commit-check/commit-check/pull/414).
+* `--no-force-push` and the `check-no-force-push` hook block force pushes. ([CC301](rules.md#cc301), [#412](https://github.com/commit-check/commit-check/pull/412))
+* `validate_push()` runs the same check from Python. ([#412](https://github.com/commit-check/commit-check/pull/412))
+* 156 more imperative verbs are recognised. ([#414](https://github.com/commit-check/commit-check/pull/414))
 
 ## v2.6.0 (2026-04-20) { #v260 }
 
-### New Features
+### Added
 
-* **Lower-noise CLI failure output** — Added `--no-banner` to suppress the ASCII art header while preserving detailed errors and suggestions.
-* **Compact failure mode** — Added `--compact` to print one `[FAIL]` line per failing check for CI logs and automation-friendly terminal output. This mode also suppresses the banner.
-
-### Bug Fixes
-
-* Fixed `print_error_header` state handling so repeated validations stay consistent when `--compact` is used.
+* `--format json` and the Python API, for scripts and AI agents. ([Output for scripts and CI](example.md#output-for-scripts-and-ci), [#396](https://github.com/commit-check/commit-check/pull/396))
+* `--compact` prints one line per failure, and `--no-banner` hides the banner. ([#402](https://github.com/commit-check/commit-check/pull/402))
 
 ## v2.5.0 (2026-04-03) { #v250 }
 
-### New Features
+### Added
 
-* **Co-author bypass in `ignore_authors`** — `_should_skip_commit_validation()` now parses `Co-authored-by:` trailers in the commit message body. If any co-author name matches `ignore_authors`, all commit checks are skipped. Useful for AI bots that co-author commits (e.g., `coderabbitai[bot]`).
-* **Organization-level config inheritance via `inherit_from`** — New top-level TOML key that loads a parent config from a GitHub shorthand (`github:owner/repo:path`), a local file path, or an HTTPS URL, then deep-merges it with local settings. HTTP (non-TLS) URLs are rejected to prevent MITM attacks.
-* **Git config author validation** — `AuthorValidator` now checks `git config user.name` / `user.email` first (the identity used for the *next* commit), falling back to `git log` if unset. Previously, a misconfigured identity would pass if the last commit had a valid author.
-
-### Bug Fixes
-
-* Fixed incorrect mock target in `test_main_with_message_empty_string_no_stdin_with_git`: was patching `commit_check.util.get_commit_info` (ineffective) instead of `commit_check.engine.get_commit_info`.
+* `inherit_from` loads a shared config from GitHub, a file or an HTTPS URL. ([Across an organization](guides/organization.md))
+* `ignore_authors` also skips a commit whose co-author is listed.
+* The author checks read `git config` before the last commit.
 
 ## v2.0.0 (2025-10-01) { #v200 }
 
 !!! warning
 
-    This major release introduces significant architectural changes and breaking updates to commit-check. Please review carefully before upgrading.
+    Breaking release. Read [Migrating from v1](migration.md) before you upgrade.
 
-### What's New
+### Breaking
 
-* **TOML Configuration** — Replaces the old `.commit-check.yml` with `cchk.toml` or `commit-check.toml` for clearer syntax.
-* **Simplified CLI & Hooks** — Legacy pre-commit hooks and command-line options have been removed for a cleaner, more consistent interface.
-* **New Validation Engine** — The validation system has been completely redesigned around a new ValidationEngine to improve maintainability and flexibility.
-
-#### Breaking Changes
-
-Configuration Format:
-
-* `.commit-check.yml` has been replaced with `cchk.toml` or `commit-check.toml`.
-* All YAML configurations must be migrated to TOML from this version onward.
-* See [Migrating from v1](migration.md) for step-by-step instructions.
-
-Removed Pre-commit Hooks and CLI Options:
-
-* Several legacy hooks and command-line flags have been removed in favor of a simplified interface.
-* Removed hooks: `check-commit-signoff`, `check-merge-base`, `check-imperative`.
-* Removed CLI options: `--signoff`, `--merge-base`, `--imperative`.
-
-Module Removal:
-
-* The following legacy modules have been removed: `author.py`, `branch.py`, `commit.py`, `error.py`.
-
-Architecture Redesign:
-
-* The validation system has been completely restructured around the new `ValidationEngine`, breaking compatibility with any code or integrations relying on the old module structure.
-
-See PR [#280](https://github.com/commit-check/commit-check/pull/280)
+* The config moved from `.commit-check.yml` to `cchk.toml` or `commit-check.toml`. ([Migrating from v1](migration.md))
+* The hooks `check-commit-signoff`, `check-merge-base` and `check-imperative` and the flags `--signoff`, `--merge-base` and `--imperative` are removed. Use the matching `cchk.toml` settings.
+* The modules `author.py`, `branch.py`, `commit.py` and `error.py` are removed. ([#280](https://github.com/commit-check/commit-check/pull/280))
 
 ## v0.10.2 (2025-08-26) { #v0102 }
 

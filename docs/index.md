@@ -489,8 +489,8 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 
 ??? question "Which Python versions are supported?"
 
-    3.10 through 3.15. On every change, CI builds the wheel and installs it on
-    all six, across Linux, macOS and Windows — eighteen combinations.
+    3.11 through 3.15. On every change, CI builds the wheel and installs it on
+    all five, across Linux, macOS and Windows — fifteen combinations.
 
 ??? question "How do I know the package I installed is the one you built?"
 
