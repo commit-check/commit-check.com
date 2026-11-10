@@ -67,18 +67,21 @@ $ commit-check --message
 ```
 
 ```text
-CC001 message check failed ==> updated the parser
-The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
-Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, ...
-Docs: https://commit-check.com/rules/#cc001
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC001 message failed: updated the parser
+  The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
+  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci
+  Docs:    https://commit-check.com/rules/#cc001
 ```
 
-Four things are happening in that output, and each is deliberate:
+The first line counts the failed checks. Each failure under it carries four
+things, and each is deliberate:
 
 | Part | What it gives you |
 |---|---|
 | `CC001` | A stable rule ID. It will mean the same thing in five years. |
-| `==> updated the parser` | The exact value that failed, not just "invalid message". |
+| `updated the parser` | The exact value that failed, not just "invalid message". |
 | `Suggest:` | What to do about it. |
 | `Docs:` | Why the rule exists, and how to configure or disable it. |
 
@@ -99,10 +102,12 @@ $ commit-check --branch
 ```
 
 ```text
-CC201 branch check failed ==> my-changes
-The branch should follow Conventional Branch. See https://conventionalbranch.org
-Suggest: Use <type>/<description> with an allowed type, or add the branch to allow_branch_names in config
-Docs: https://commit-check.com/rules/#cc201
+✖ Branch rejected by Commit Check · 1 check failed
+
+✖ CC201 branch failed: my-changes
+  The branch should follow Conventional Branch. See https://conventionalbranch.org
+  Suggest: Use <type>/<description> with an allowed type, or add the branch to allow_branch_names in config
+  Docs:    https://commit-check.com/rules/#cc201
 ```
 
 Rename it to something structured and it passes:

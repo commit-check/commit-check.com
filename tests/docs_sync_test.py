@@ -29,8 +29,12 @@ def _read_doc(name: str) -> str:
     return (DOCS / name).read_text(encoding="utf-8")
 
 
-#: A pasted failure line, e.g. ``CC003 subject-imperative check failed ==> ...``
-_SAMPLE_FAILURE = re.compile(r"(CC\d{3}) (\S+) check failed ==>")
+#: A pasted failure or warning line, e.g. ``✖ CC003 subject-imperative
+#: failed: ...``, the form printed since 2.20.3. Dated blog posts keep the
+#: earlier ``CC003 subject-imperative check failed ==> ...``, so both match.
+_SAMPLE_FAILURE = re.compile(
+    r"(CC\d{3}) (\S+) (?:check failed ==>|(?:failed|warning):)"
+)
 
 #: A pasted ``--compact`` line, e.g. ``[FAIL] CC003 subject-imperative: ...``.
 #: Indented, because these samples sit inside content tabs.

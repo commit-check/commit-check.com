@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.20.3](#v2203) | Failures print a one-line header and an indented block per check, in place of the ASCII banner; an agent skill for coding agents | [Getting started](getting-started.md#2-watch-it-reject-something) · [With AI coding agents](guides/ai-agents.md#tell-the-agent) |
 | [2.20.1](#v2201) | `--ai-attribution-only` checks a pull request description against your AI policy; JSON lists the AI tools found; more AI marks recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
 | [2.20.0](#v2200) | Commits authored by an AI tool rejected; subject length `0` turns the rule off; Python 3.11+ required | [CC017](rules.md#cc017) · [CC013](rules.md#cc013) · [CC004](rules.md#cc004) |
 | [2.19.5](#v2195) | GitHub merge queue branches accepted by default; aider's default co-author trailer recognised; exit 2 when git cannot read the repository | [CC201](rules.md#cc201) · [CC013](rules.md#cc013) · [Exit codes](troubleshoot.md#exit-codes) |
@@ -37,6 +38,29 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.20.4 (2026-11-10) { #v2204 }
+
+### Fixed
+
+* `require_body` no longer takes trailers alone, such as the `Signed-off-by:` line from `git commit -s`, for a body. ([CC011](rules.md#cc011), [#689](https://github.com/commit-check/commit-check/pull/689))
+* `ignore_authors` written as one string is split on commas, instead of skipping any author whose name is part of it. ([Every option](configuration.md#every-option), [#689](https://github.com/commit-check/commit-check/pull/689))
+* `--author-name` and `--author-email` honour `git commit --author` and the `author.name` and `author.email` settings. ([Checking the committer](example.md#checking-the-committer), [#689](https://github.com/commit-check/commit-check/pull/689))
+
+## v2.20.3 (2026-11-10) { #v2203 }
+
+### Added
+
+* An agent skill teaches coding agents to check a message before they commit. ([With AI coding agents](guides/ai-agents.md#tell-the-agent), [#679](https://github.com/commit-check/commit-check/pull/679), [#686](https://github.com/commit-check/commit-check/pull/686))
+
+### Changed
+
+* A failure prints a one-line header and an indented block per check, in place of the ASCII banner. ([Getting started](getting-started.md#2-watch-it-reject-something), [#682](https://github.com/commit-check/commit-check/pull/682))
+
+### Fixed
+
+* CC017 on a message that is not committed yet suggests setting your own `user.name` and `user.email`, not amending. ([CC017](rules.md#cc017), [#685](https://github.com/commit-check/commit-check/pull/685))
+* `--ai-attribution-only` with no text piped in passes, instead of judging `HEAD`. ([Guide](guides/policies.md#checking-a-pull-request-description), [#684](https://github.com/commit-check/commit-check/pull/684))
 
 ## v2.20.2 (2026-11-08) { #v2202 }
 
