@@ -15,12 +15,12 @@ check committer name.....................................................Failed
 - hook id: check-author-name
 - exit code: 1
 
-Commit rejected by Commit-Check.
+✖ Commit rejected by Commit Check · 1 check failed
 
-CC101 author-name check failed ==> 12
-The committer name seems invalid
-Suggest: git config user.name 'Your Name'
-Docs: https://commit-check.com/rules/#cc101
+✖ CC101 author-name failed: 12
+  The committer name seems invalid
+  Suggest: git config user.name 'Your Name'
+  Docs:    https://commit-check.com/rules/#cc101
 ```
 
 `12` is the configured `user.name` — usually a sign that

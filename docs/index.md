@@ -39,9 +39,9 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 </div>
 </div>
 <!--
-  A transcript of a real run: commit-check 2.18.0 as a pre-commit
-  commit-msg hook. The hook also prints an ASCII-art banner between
-  "exit code: 1" and the CC001 line; it is left out, nothing else is.
+  A transcript of a real run: commit-check 2.20.4 as a pre-commit
+  commit-msg hook. Git's own "1 file changed" summary after the last
+  line is left out, nothing else is.
 -->
 <figure class="cc-term" aria-label="A commit-msg hook rejects a commit message, suggests the fix, then accepts the corrected message">
 <div class="cc-term__bar" aria-hidden="true"><span class="cc-dots"><i></i><i></i><i></i></span><span>~/app · feature/streaming · commit-msg hook</span></div>
@@ -50,14 +50,14 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <div class="cc-line cc-row" data-on="2500"><span>check commit message</span><span class="cc-leader" aria-hidden="true"></span><span class="cc-t-fail">Failed</span></div>
 <div class="cc-line cc-t-dim" data-on="2650">- hook id: check-message</div>
 <div class="cc-line cc-t-dim" data-on="2750">- exit code: 1</div>
-<div class="cc-line cc-gap" data-on="2900">Commit rejected by Commit-Check.</div>
-<div class="cc-line" data-on="3100"><span class="cc-t-fail cc-b">CC001</span> message check failed ==&gt; Fix: add streaming support</div>
-<div class="cc-line cc-t-dim" data-on="3250">The commit message should follow Conventional Commits. See https://www.conventionalcommits.org</div>
-<div class="cc-line" data-on="3400"><span class="cc-t-blue">Suggest:</span> Use "<span class="cc-t-pass cc-b">fix: add streaming support</span>"</div>
-<div class="cc-line cc-t-dim" data-on="3500">Docs: https://commit-check.com/rules/#cc001</div>
+<div class="cc-line cc-gap" data-on="2900"><span class="cc-t-fail cc-b">✖ Commit rejected by Commit Check</span><span class="cc-t-dim"> · 1 check failed</span></div>
+<div class="cc-line cc-gap" data-on="3100"><span class="cc-t-fail cc-b">✖ CC001</span> message failed: Fix: add streaming support</div>
+<div class="cc-line cc-t-dim" data-on="3250">  The commit message should follow Conventional Commits. See https://www.conventionalcommits.org</div>
+<div class="cc-line" data-on="3400">  <span class="cc-t-blue">Suggest:</span> Use "<span class="cc-t-pass cc-b">fix: add streaming support</span>"</div>
+<div class="cc-line cc-t-dim" data-on="3500">  Docs:    https://commit-check.com/rules/#cc001</div>
 <div class="cc-line cc-gap" data-on="5200"><span class="cc-sigil">❯ </span><span data-type="5600" data-speed="42">git commit -m "fix: add streaming support"</span><i class="cc-caret" data-from="5200" data-until="7700"></i></div>
 <div class="cc-line cc-row" data-on="7700"><span>check commit message</span><span class="cc-leader" aria-hidden="true"></span><span class="cc-t-pass">Passed</span></div>
-<div class="cc-line cc-t-dim" data-on="7900">[feature/streaming 77663ff] fix: add streaming support</div>
+<div class="cc-line cc-t-dim" data-on="7900">[feature/streaming 276fd07] fix: add streaming support</div>
 </div>
 </figure>
 </div>
@@ -409,10 +409,10 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <li><span><b>A fix you can paste</b>, whenever the correction is unambiguous.</span></li>
 </ol>
 </div>
-<!-- Real output of commit-check 2.19.2; the ASCII-art banner it prints first is left out. -->
+<!-- Real output of commit-check 2.20.4, laid out in numbered rows; the one-line header it prints first is left out. -->
 <div class="cc-diag">
 <p class="cc-t-dim">$ echo "Fix: add streaming support" | commit-check -m</p>
-<p><span class="cc-mark">1</span><span><span class="cc-t-fail cc-b">CC001</span> message check failed ==&gt;</span></p>
+<p><span class="cc-mark">1</span><span><span class="cc-t-fail cc-b">✖ CC001</span> message failed:</span></p>
 <p><span class="cc-mark">2</span><span class="cc-t-white">Fix: add streaming support</span></p>
 <p><span class="cc-mark">3</span><span class="cc-t-dim">The commit message should follow Conventional Commits. See https://www.conventionalcommits.org</span></p>
 <p><span class="cc-mark">4</span><span><span class="cc-t-blue">Suggest:</span> Use "<span class="cc-t-pass cc-b">fix: add streaming support</span>"</span></p>

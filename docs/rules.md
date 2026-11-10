@@ -7,10 +7,12 @@ review comments, issue templates, and tooling.
 Rule IDs appear in commit-check's output and in `--format json` results:
 
 ```text
-CC003 subject-imperative check failed ==> docs: revamped the profile
-Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug', 'add feature' not 'adding feature')
-Suggest: Change the first verb to imperative form, e.g., 'fix' instead of 'fixed'/'fixes'/'fixing'
-Docs: https://commit-check.com/rules/#cc003
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC003 subject-imperative failed: docs: revamped the profile
+  Commit message should use imperative mood (e.g., 'fix bug' not 'fixed bug', 'add feature' not 'adding feature')
+  Suggest: Change the first verb to imperative form, e.g., 'fix' instead of 'fixed'/'fixes'/'fixing'
+  Docs:    https://commit-check.com/rules/#cc003
 ```
 
 `--compact` prints one line per failure, keeping the rule ID and dropping the
@@ -25,10 +27,12 @@ repeating the rule — and `--format json` carries the corrected value in a
 `fix` field (see [Reading the JSON](example.md#reading-the-json)):
 
 ```text
-CC001 message check failed ==> Fix: add x
-The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
-Suggest: Use "fix: add x"
-Docs: https://commit-check.com/rules/#cc001
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC001 message failed: Fix: add x
+  The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
+  Suggest: Use "fix: add x"
+  Docs:    https://commit-check.com/rules/#cc001
 ```
 
 ## How to read this page
@@ -489,7 +493,9 @@ git commit --amend -m "feat: add a caching layer for role lookups"
 
 **What it does**
 
-Requires a non-empty body after the subject line.
+Requires a non-empty body after the subject line. Trailers alone are not a
+body: a subject followed only by the `Signed-off-by:` line that
+`git commit -s` adds still fails.
 
 A message file is judged as the message git will store: comment lines, and
 everything from the `git commit -v` scissors line on, do not count. So a
@@ -592,9 +598,9 @@ mechanically rather than relitigated in every review.
 **Example**
 
 ```text
-CC013 ai-attribution check failed ==> Claude Code
-AI attribution is forbidden in this project — detected: Claude Code
-Suggest: This project does not accept AI attribution in commit messages. Remove the AI trailer lines and re-commit.
+✖ CC013 ai-attribution failed: Claude Code
+  AI attribution is forbidden in this project — detected: Claude Code
+  Suggest: This project does not accept AI attribution in commit messages. Remove the AI trailer lines and re-commit.
 ```
 
 **Options**
@@ -632,9 +638,9 @@ commits that look much the same.
 **Example**
 
 ```text
-CC014 ai-disclosure check failed ==> Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
-AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
-Suggest: Disclose the tool with "Assisted-by: Claude Opus 5"
+✖ CC014 ai-disclosure failed: Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+  AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
+  Suggest: Disclose the tool with "Assisted-by: Claude Opus 5"
 ```
 
 The suggestion keeps the name the tool gave itself, and `--format json`
@@ -668,9 +674,9 @@ and authorship are different claims.
 **Example**
 
 ```text
-CC015 ai-co-author check failed ==> Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
-An AI tool is credited as a co-author: Claude Code
-Suggest: Use "Assisted-by: Claude Opus 5" in place of the co-author line
+✖ CC015 ai-co-author failed: Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+  An AI tool is credited as a co-author: Claude Code
+  Suggest: Use "Assisted-by: Claude Opus 5" in place of the co-author line
 ```
 
 **Options**
@@ -698,9 +704,9 @@ off by accepting it as a disclosure.
 **Example**
 
 ```text
-CC016 ai-signoff check failed ==> Signed-off-by: Claude <noreply@anthropic.com>
-An AI tool signed off the commit: Claude Code
-Suggest: Use "Assisted-by: Claude" in place of the AI sign-off, then sign off yourself (git commit --signoff)
+✖ CC016 ai-signoff failed: Signed-off-by: Claude <noreply@anthropic.com>
+  An AI tool signed off the commit: Claude Code
+  Suggest: Use "Assisted-by: Claude" in place of the AI sign-off, then sign off yourself (git commit --signoff)
 ```
 
 **Options**
@@ -721,8 +727,9 @@ ending in `(aider)`, or any name at a tool's own address such as
 An existing commit is judged by the author it records. A message piped in,
 or one the `commit-msg` hook checks before the commit exists, is judged by
 the author git would record: `GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL` when
-set, otherwise `user.name` and `user.email`. The GitHub Action passes each
-pull request commit's own author this way.
+set, then `author.name` and `author.email`, then `user.name` and
+`user.email`. The GitHub Action passes each pull request commit's own author
+this way.
 
 **Why is this bad?**
 
@@ -735,12 +742,15 @@ is, and it is what GitHub shows as the contributor.
 **Example**
 
 ```text
-CC017 ai-author check failed ==> google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
-An AI tool is the commit author: Jules
-Suggest: Author the commit yourself: git commit --amend --reset-author
+✖ CC017 ai-author failed: google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+  An AI tool is the commit author: Jules
+  Suggest: Author the commit yourself: git commit --amend --reset-author
 ```
 
-The commit fails even with a human `Co-authored-by:` line.
+The commit fails even with a human `Co-authored-by:` line. When the message
+is checked before the commit exists, there is nothing to amend yet, so the
+suggestion is to set `user.name` and `user.email` to your own and to unset
+`GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL`.
 
 **Options**
 

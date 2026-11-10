@@ -178,7 +178,7 @@ conventional_branch = true
 ```
 
 A warned rule prints the same block as a failure with `warning` in place of
-`failed`, no rejection banner, and one closing line saying the run is not
+`failed`, no rejection header, and one closing line saying the run is not
 failed by it; with `--compact` it is one `[WARN]` line. A one-line notice on
 stderr names the warned rules, so a hook that exits `0` after red-looking
 output is not mistaken for a broken hook. The exit code counts only enforced

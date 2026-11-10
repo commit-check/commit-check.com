@@ -56,10 +56,12 @@ revision.
 
 ```console
 $ echo "updated the parser" | commit-check -m
-CC001 message check failed ==> updated the parser
-The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
-Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, ...
-Docs: https://commit-check.com/rules/#cc001
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC001 message failed: updated the parser
+  The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
+  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci
+  Docs:    https://commit-check.com/rules/#cc001
 ```
 
 Fix it and it goes quiet:
@@ -140,6 +142,9 @@ tighten them.
 
 Without `--rev`, these validate the *local git config* — whoever is about to
 commit — falling back to `HEAD`'s author only when no identity is configured.
+The identity is the one git would record: `GIT_AUTHOR_NAME` and
+`GIT_AUTHOR_EMAIL` when set, then `author.name` and `author.email`, then
+`user.name` and `user.email`.
 That is the right subject for a hook and the wrong one for CI: an existing
 commit's identity is a fact about the commit, not about the operator running
 the check. Add `--rev` and both checks read that commit's recorded author, and
@@ -206,7 +211,7 @@ and how CLI, environment and file settings override each other.
 
 === "No banner"
 
-    Plain text without the ASCII art, which is noise in a CI log.
+    Plain text without the one-line header that counts the failed checks.
 
     ```console
     $ commit-check -m --no-banner

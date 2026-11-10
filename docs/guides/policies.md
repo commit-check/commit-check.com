@@ -133,10 +133,12 @@ ai_attribution = "forbid"
 Commits carrying a recognised AI signature now fail:
 
 ```text
-CC013 ai-attribution check failed ==> Claude Code
-AI attribution is forbidden in this project — detected: Claude Code
-Suggest: This project does not accept AI attribution in commit messages. Remove the AI trailer lines and re-commit.
-Docs: https://commit-check.com/rules/#cc013
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC013 ai-attribution failed: Claude Code
+  AI attribution is forbidden in this project — detected: Claude Code
+  Suggest: This project does not accept AI attribution in commit messages. Remove the AI trailer lines and re-commit.
+  Docs:    https://commit-check.com/rules/#cc013
 ```
 
 Recognised signatures are co-author and sign-off lines naming Claude Code,
@@ -255,15 +257,17 @@ A commit that a vendor stamped and nobody disclosed fails the first two, and
 the failure carries the disclosure already written:
 
 ```text
-CC014 ai-disclosure check failed ==> Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
-AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
-Suggest: Disclose the tool with "Assisted-by: Claude Opus 5"
-Docs: https://commit-check.com/rules/#cc014
+✖ Commit rejected by Commit Check · 2 checks failed
 
-CC015 ai-co-author check failed ==> Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
-An AI tool is credited as a co-author: Claude Code
-Suggest: Use "Assisted-by: Claude Opus 5" in place of the co-author line
-Docs: https://commit-check.com/rules/#cc015
+✖ CC014 ai-disclosure failed: Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+  AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
+  Suggest: Disclose the tool with "Assisted-by: Claude Opus 5"
+  Docs:    https://commit-check.com/rules/#cc014
+
+✖ CC015 ai-co-author failed: Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+  An AI tool is credited as a co-author: Claude Code
+  Suggest: Use "Assisted-by: Claude Opus 5" in place of the co-author line
+  Docs:    https://commit-check.com/rules/#cc015
 ```
 
 Both carry the same correction in `--format json`: the co-author line rewritten
@@ -306,9 +310,12 @@ ai_disclosure_pattern = '^\S+/\S+$'
 ```
 
 ```text
-CC014 ai-disclosure check failed ==> Assisted-by: Claude Code
-The Assisted-by value does not match the required pattern: ^\S+/\S+$
-Suggest: Write the Assisted-by value so that it matches ^\S+/\S+$ (set by ai_disclosure_pattern in the [commit] config)
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC014 ai-disclosure failed: Assisted-by: Claude Code
+  The Assisted-by value does not match the required pattern: ^\S+/\S+$
+  Suggest: Write the Assisted-by value so that it matches ^\S+/\S+$ (set by ai_disclosure_pattern in the [commit] config)
+  Docs:    https://commit-check.com/rules/#cc014
 ```
 
 That failure carries no correction, because the tool should not guess which
@@ -330,11 +337,11 @@ ai_attribution = "disclose"
 ```
 
 ```text
-CC014 ai-disclosure check warning ==> 🤖 Generated with [Claude
-AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
-Suggest: Disclose the tool with "Assisted-by: Claude Code"
-Docs: https://commit-check.com/rules/#cc014
-This rule is set to warn in the config; it does not fail the run.
+▲ CC014 ai-disclosure warning: 🤖 Generated with [Claude
+  AI assistance is not disclosed with Assisted-by or Generated-by — detected: Claude Code
+  Suggest: Disclose the tool with "Assisted-by: Claude Code"
+  Docs:    https://commit-check.com/rules/#cc014
+  This rule is set to warn in the config; it does not fail the run.
 ```
 
 The run still passes. The warning still suggests a disclosure that pip and
