@@ -58,9 +58,10 @@ include an AI co-author trailer." Incus and JUnit fail a commit that has one,
 and XTable fails a commit that credits Claude.
 
 **Projects that want disclosure don't agree on its form.** FreeBSD atf and
-Nextcloud want the tool named in an `Assisted-by:` trailer. Neovim wants the
-tool left out. Its check prints `Only a generic "AI-assisted" token is
-allowed`, and a trailer that names the tool fails.
+Nextcloud ask for an `Assisted-by:` trailer, and Nextcloud's example names
+both the tool and the model. Neovim wants the tool left out. Its check prints
+`Only a generic "AI-assisted" token is allowed`, and a trailer that names the
+tool fails.
 
 **Not every check blocks.** Vim and Nextcloud add an "AI assisted" label and
 leave the decision to reviewers. Nextcloud fails only when an agent signs
