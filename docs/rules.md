@@ -493,9 +493,12 @@ git commit --amend -m "feat: add a caching layer for role lookups"
 
 **What it does**
 
-Requires a non-empty body after the subject line. Trailers alone are not a
-body: a subject followed only by the `Signed-off-by:` line that
-`git commit -s` adds still fails.
+Requires a non-empty body after the subject line. A closing block of
+trailers is not a body, so a subject followed only by the `Signed-off-by:`
+line that `git commit -s` adds still fails. A line counts as a trailer when
+its key has a hyphen, as in `Co-authored-by:` or `Change-Id:`, or is one of
+`Fixes`, `Closes`, `Resolves`, `Refs`, `Link`, `Cc` and `Bug`. Any other
+one-word key, such as `Note:`, is read as body text.
 
 A message file is judged as the message git will store: comment lines, and
 everything from the `git commit -v` scissors line on, do not count. So a
@@ -750,7 +753,9 @@ is, and it is what GitHub shows as the contributor.
 The commit fails even with a human `Co-authored-by:` line. When the message
 is checked before the commit exists, there is nothing to amend yet, so the
 suggestion is to set `user.name` and `user.email` to your own and to unset
-`GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL`.
+`GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL`. If `author.name` or `author.email`
+names the tool, unset those as well: they outrank `user.name` and
+`user.email`.
 
 **Options**
 

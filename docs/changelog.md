@@ -45,7 +45,7 @@ page that documents it.
 
 * `require_body` no longer takes trailers alone, such as the `Signed-off-by:` line from `git commit -s`, for a body. ([CC011](rules.md#cc011), [#689](https://github.com/commit-check/commit-check/pull/689))
 * `ignore_authors` written as one string is split on commas, instead of skipping any author whose name is part of it. ([Every option](configuration.md#every-option), [#689](https://github.com/commit-check/commit-check/pull/689))
-* `--author-name` and `--author-email` read the author git will record, so `git commit --author` and `author.email` are honoured. ([Checking the committer](example.md#checking-the-committer), [#689](https://github.com/commit-check/commit-check/pull/689))
+* `--author-name` and `--author-email` honour `git commit --author` and the `author.name` and `author.email` settings. ([Checking the committer](example.md#checking-the-committer), [#689](https://github.com/commit-check/commit-check/pull/689))
 
 ## v2.20.3 (2026-11-10) { #v2203 }
 

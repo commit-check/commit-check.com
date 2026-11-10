@@ -142,7 +142,7 @@ tighten them.
 
 Without `--rev`, these validate the *local git config* — whoever is about to
 commit — falling back to `HEAD`'s author only when no identity is configured.
-The identity is the one git would record: `GIT_AUTHOR_NAME` and
+The identity is read in git's order: `GIT_AUTHOR_NAME` and
 `GIT_AUTHOR_EMAIL` when set, then `author.name` and `author.email`, then
 `user.name` and `user.email`.
 That is the right subject for a hook and the wrong one for CI: an existing
