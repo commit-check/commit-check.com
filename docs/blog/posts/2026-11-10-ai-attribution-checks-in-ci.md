@@ -78,15 +78,16 @@ because a squash merge makes it the commit message on main. It fails on the
 for "one plain sentence instead, for example: Prepared with Claude Code."
 
 [Solana web3.js][solana] makes the author tick exactly one of two boxes in
-the description: "No AI tooling was used" or "AI tooling was used". For
-outside contributors it also looks for a tool's signature left in the title,
-the description, the commits or the branch name, and says what it takes that
-to mean: "the change was opened without its author reading it."
+the description: "No AI tooling was used" or "AI tooling was used". The second
+box also needs a filled-in "Tool and extent:" line. For outside contributors
+the check also looks for a tool's signature left in the title, the
+description, the commits or the branch name, and says what it takes that to
+mean: "the change was opened without its author reading it."
 
 ## Eight shell scripts and three config files
 
-Eight of the eleven checks are shell scripts written for one repository. Each
-carries its own list of tools: XTable's has one name, Incus's nine,
+Eight of the eleven checks are shell scripts the project wrote itself. Most
+carry their own list of tools: XTable's has one name, Incus's nine,
 Nextcloud's fourteen. A list like that is out of date when the next agent
 ships. And a pattern loose enough to find `claude` on an author line also
 stops a contributor whose name is Claude.
@@ -144,7 +145,7 @@ $ echo $?
 0
 ```
 
-With JUnit's settings:
+With JUnit's settings, in a directory with no config file:
 
 ```console
 $ export CCHK_AI_ATTRIBUTION=forbid CCHK_CONVENTIONAL_COMMITS=false
