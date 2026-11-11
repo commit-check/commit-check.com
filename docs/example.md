@@ -144,7 +144,9 @@ Without `--rev`, these validate the *local git config* — whoever is about to
 commit — falling back to `HEAD`'s author only when no identity is configured.
 The identity is read in git's order: `GIT_AUTHOR_NAME` and
 `GIT_AUTHOR_EMAIL` when set, then `author.name` and `author.email`, then
-`user.name` and `user.email`.
+`user.name` and `user.email`. From 2.20.5 on that identity is checked on a
+repository's first commit too; earlier versions skipped both checks until a
+commit existed.
 That is the right subject for a hook and the wrong one for CI: an existing
 commit's identity is a fact about the commit, not about the operator running
 the check. Add `--rev` and both checks read that commit's recorded author, and
@@ -167,7 +169,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.20.4
+    rev: v2.20.5
     hooks:
       - id: check-no-force-push
         stages: [pre-push]

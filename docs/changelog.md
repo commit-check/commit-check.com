@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.20.5](#v2205) | The author checks cover a repository's first commit; a run takes about half the time to start; releases on PyPI carry provenance | [Checking the committer](example.md#checking-the-committer) · [CC017](rules.md#cc017) |
 | [2.20.3](#v2203) | Failures print a one-line header and an indented block per check, in place of the ASCII banner; an agent skill for coding agents | [Getting started](getting-started.md#2-watch-it-reject-something) · [With AI coding agents](guides/ai-agents.md#tell-the-agent) |
 | [2.20.1](#v2201) | `--ai-attribution-only` checks a pull request description against your AI policy; JSON lists the AI tools found; more AI marks recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
 | [2.20.0](#v2200) | Commits authored by an AI tool rejected; subject length `0` turns the rule off; Python 3.11+ required | [CC017](rules.md#cc017) · [CC013](rules.md#cc013) · [CC004](rules.md#cc004) |
@@ -38,6 +39,18 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.20.5 (2026-11-11) { #v2205 }
+
+### Changed
+
+* A run takes about half the time to start: the AI signature patterns are compiled when first used. ([#693](https://github.com/commit-check/commit-check/pull/693))
+* Releases on PyPI carry provenance attestations. ([#691](https://github.com/commit-check/commit-check/pull/691))
+
+### Fixed
+
+* `--author-name` and `--author-email` check a repository's first commit, instead of being skipped until a commit exists. ([Checking the committer](example.md#checking-the-committer), [#692](https://github.com/commit-check/commit-check/pull/692))
+* CC017's advice for a message not yet committed names `author.name` and `author.email` among the settings to unset. ([CC017](rules.md#cc017), [#692](https://github.com/commit-check/commit-check/pull/692))
 
 ## v2.20.4 (2026-11-10) { #v2204 }
 

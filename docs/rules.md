@@ -753,9 +753,8 @@ is, and it is what GitHub shows as the contributor.
 The commit fails even with a human `Co-authored-by:` line. When the message
 is checked before the commit exists, there is nothing to amend yet, so the
 suggestion is to set `user.name` and `user.email` to your own and to unset
-`GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL`. If `author.name` or `author.email`
-names the tool, unset those as well: they outrank `user.name` and
-`user.email`.
+`author.name`, `author.email`, `GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL` if a
+tool set them. All four outrank `user.name` and `user.email`.
 
 **Options**
 
