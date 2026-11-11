@@ -137,13 +137,13 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <header class="cc-head cc-head--center">
 <p class="cc-eyebrow">commit-check-action</p>
 <h2 id="cc-action-title" class="cc-h2">Every pull request, checked and explained.</h2>
-<p class="cc-sub">The Action reports where your reviewers already look — a PR comment, the job summary, inline annotations — and exposes a JSON result the next step can gate on.</p>
+<p class="cc-sub">The Action reports where your reviewers already look — a PR comment, the job summary, annotations on the run — and exposes a JSON result the next step can gate on.</p>
 </header>
 <!--
-  The reports below follow the formats commit-check-action writes (see the
-  comment block above _report_footer in its main.py). The footer shows only
-  "Rules reference": the real one also names the installed version, which
-  would go stale here.
+  The reports below follow the formats commit-check-action writes since
+  v2.22.0 (see the "Output specification" comment block in its main.py). The
+  status marks are the ones in commit-check/.github branding/status. The
+  footer leaves out the installed version, which would go stale here.
 -->
 <div class="cc-demo" data-cycle="8200">
 <div class="cc-tabs" role="tablist" aria-label="What the Action reports">
@@ -169,23 +169,27 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <div class="cc-comment__box">
 <p class="cc-comment__head"><b>github-actions</b><span class="cc-chip">bot</span> commented<span class="cc-chip cc-chip--end" data-on="3600">edited</span></p>
 <div class="cc-comment__body">
-<p class="cc-report__title">Commit Check</p>
 <div data-until="3600">
-<p class="cc-verdict"><i class="cc-st cc-st--fail" aria-hidden="true"></i>2 of 5 checks failed</p>
-<table class="cc-table">
-<thead><tr><th>Scope</th><th>Checked value</th><th>Failed checks</th></tr></thead>
-<tbody>
-<tr data-on="800"><td class="cc-lnk">Commit 2/3 (5584f46)</td><td><code>bad msg</code></td><td class="cc-lnk">CC001 message</td></tr>
-<tr data-on="1150"><td class="cc-lnk">Commit 3/3 (37d6def)</td><td><code>Fix: handle empty password</code></td><td class="cc-lnk">CC001 message</td></tr>
-</tbody>
-</table>
-<p class="cc-fold">▸ Show all 5 checks</p>
+<p class="cc-report__title"><svg class="cc-smark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0B1620"/><path d="M21 10V54" stroke="#F85149" stroke-opacity=".4" stroke-width="4" stroke-linecap="round"/><path d="M32 23L50 45M50 23L32 45" fill="none" stroke="#F85149" stroke-width="7" stroke-linecap="round"/><circle cx="21" cy="34" r="6.5" fill="#0B1620" stroke="#F85149" stroke-width="4"/></svg>Commit Check failed</p>
+<p class="cc-groups"><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Pull request: passed</span><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M34 22L54 46M54 22L34 46" fill="none" stroke="#E5484D" stroke-width="8" stroke-linecap="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#E5484D" stroke-width="6"/></svg>Commits: 2 of 3 failed</span><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Branch: passed</span></p>
+<div class="cc-diff">
+<div class="cc-diff__hunk" data-on="800">@@ 5584f46 @@</div>
+<div class="cc-diff__del" data-on="800">- bad msg</div>
+<div class="cc-diff__note" data-on="800"># Use &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</div>
+<div class="cc-diff__hunk" data-on="1150">@@ 37d6def @@</div>
+<div class="cc-diff__del" data-on="1150">- Fix: handle empty password</div>
+<div class="cc-diff__add" data-on="1150">+ fix: handle empty password</div>
+</div>
+<p class="cc-report__links">Commits: <code class="cc-lnk">5584f46</code> <code class="cc-lnk">37d6def</code> &nbsp;|&nbsp; Rules: <span class="cc-lnk">CC001</span></p>
+<p class="cc-fold"><b>▸ How to fix</b></p>
+<p class="cc-fold">▸ All 5 checks</p>
 </div>
 <div class="cc-flash" data-from="3600">
-<p class="cc-verdict"><i class="cc-st cc-st--pass" aria-hidden="true"></i>All 5 checks passed</p>
-<p class="cc-fold">▸ Show all 5 checks</p>
+<p class="cc-report__title"><svg class="cc-smark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0B1620"/><path d="M21 10V54" stroke="#3FB950" stroke-opacity=".4" stroke-width="4" stroke-linecap="round"/><path d="M21 34L30 43L47 22" fill="none" stroke="#3FB950" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="34" r="6.5" fill="#0B1620" stroke="#3FB950" stroke-width="4"/></svg>Commit Check passed</p>
+<p class="cc-groups"><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Pull request: passed</span><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Commits: 3 passed</span><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Branch: passed</span></p>
+<p class="cc-fold">▸ All 5 checks</p>
 </div>
-<p class="cc-report__foot">Rules reference</p>
+<p class="cc-report__foot">Checked by <span class="cc-lnk">Commit Check</span> · <span class="cc-lnk">Rules</span> · <span class="cc-lnk">Check before you push</span></p>
 </div>
 </div>
 </div>
@@ -202,28 +206,36 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <div class="cc-window__body cc-run">
 <div class="cc-run__side" aria-hidden="true"><span class="is-active">Summary</span><span class="cc-run__label">Jobs</span><span><i class="cc-st cc-st--fail"></i>commit-check</span><span class="cc-run__label">Run details</span><span class="cc-dim">Usage</span><span class="cc-dim">Workflow file</span></div>
 <div class="cc-run__main">
-<div class="cc-run__meta"><p>Triggered via pull_request<b>alex pushed 5584f46</b></p><p>Status<b>Failure</b></p><p>Total duration<b>14s</b></p></div>
 <div class="cc-card">
 <p class="cc-card__head">commit-check summary</p>
 <div class="cc-card__body">
-<p class="cc-report__title">Commit Check</p>
-<p class="cc-verdict"><i class="cc-st cc-st--fail" aria-hidden="true"></i>2 of 5 checks failed</p>
-<p class="cc-fold">▾ Show all 5 checks</p>
-<div class="cc-tree">
-<div class="cc-b" data-on="500">Commit message</div>
-<div data-on="670">  <span class="cc-t-okd">✔</span> PR title (feat: add login page)</div>
-<div data-on="840">  <span class="cc-t-okd">✔</span> Commit 1/3 (d87faca) (feat: add login page)</div>
-<div data-on="1010">  <span class="cc-t-bad">✖</span> Commit 2/3 (5584f46) (1 failure)</div>
-<div class="cc-b" data-on="1180">      CC001 message</div>
-<div class="cc-dim" data-on="1350">        value: bad msg</div>
-<div class="cc-dim cc-hang" data-on="1520">        Suggest: Use &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;, where &lt;type&gt; is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci</div>
-<div data-on="1690">  <span class="cc-t-bad">✖</span> Commit 3/3 (37d6def) (1 failure)</div>
-<div class="cc-b" data-on="1860">      CC001 message</div>
-<div class="cc-dim" data-on="2030">        value: Fix: handle empty password</div>
-<div class="cc-t-okd cc-b" data-on="2200">        Fix: fix: handle empty password</div>
-<div class="cc-b" data-on="2370">Branch</div>
-<div data-on="2540">  <span class="cc-t-okd">✔</span> Branch (feature/add-login)</div>
+<p class="cc-report__title"><svg class="cc-smark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0B1620"/><path d="M21 10V54" stroke="#F85149" stroke-opacity=".4" stroke-width="4" stroke-linecap="round"/><path d="M32 23L50 45M50 23L32 45" fill="none" stroke="#F85149" stroke-width="7" stroke-linecap="round"/><circle cx="21" cy="34" r="6.5" fill="#0B1620" stroke="#F85149" stroke-width="4"/></svg>Commit Check failed</p>
+<p class="cc-groups"><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Pull request: passed</span><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M34 22L54 46M54 22L34 46" fill="none" stroke="#E5484D" stroke-width="8" stroke-linecap="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#E5484D" stroke-width="6"/></svg>Commits: 2 of 3 failed</span><span><svg class="cc-lmark" viewBox="0 0 64 64" aria-hidden="true"><path d="M26 34L34 42L52 20" fill="none" stroke="#2DA44E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="34" r="7" fill="none" stroke="#2DA44E" stroke-width="6"/></svg>Branch: passed</span></p>
+<div class="cc-diff">
+<div class="cc-diff__hunk">@@ 5584f46 @@</div>
+<div class="cc-diff__del">- bad msg</div>
+<div class="cc-diff__note"># Use &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</div>
+<div class="cc-diff__hunk">@@ 37d6def @@</div>
+<div class="cc-diff__del">- Fix: handle empty password</div>
+<div class="cc-diff__add">+ fix: handle empty password</div>
 </div>
+<p class="cc-report__links">Commits: <code class="cc-lnk">5584f46</code> <code class="cc-lnk">37d6def</code> &nbsp;|&nbsp; Rules: <span class="cc-lnk">CC001</span></p>
+<p class="cc-fold"><b>▾ How to fix</b></p>
+<div class="cc-howto">
+<p data-on="500"><b>With an AI coding agent.</b> Paste this prompt:</p>
+<div class="cc-tree" data-on="900">
+<div>Fix these Commit Check findings without changing any code:</div>
+<div>- Commit 5584f46 "bad msg": Use &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</div>
+<div>- Commit 37d6def: change "Fix: handle empty password" to "fix: handle empty password"</div>
+</div>
+<p data-on="1900"><b>Commit messages.</b> Reword them, then force-push:</p>
+<div class="cc-tree" data-on="2300">
+<div>git rebase -i 5584f46~1   <span class="cc-dim"># change "pick" to "reword" on the commits above</span></div>
+<div>git push --force-with-lease</div>
+</div>
+</div>
+<p class="cc-fold">▸ All 5 checks</p>
+<p class="cc-report__foot">Checked by <span class="cc-lnk">Commit Check</span> · <span class="cc-lnk">Rules</span> · <span class="cc-lnk">Check before you push</span></p>
 </div>
 </div>
 </div>
@@ -277,8 +289,8 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 </div>
 <div class="cc-card">
 <p class="cc-card__head">Annotations <span class="cc-dim">2 errors</span></p>
-<div class="cc-annot" data-on="2000"><p class="cc-annot__title"><i class="cc-st cc-st--fail" aria-hidden="true"></i>CC001 message</p><p class="cc-mono">Commit 2/3 (5584f46): The commit message should follow Conventional Commits.<br>value: bad msg<br>Suggest: Use &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;, where &lt;type&gt; is one of: feat, fix, docs, …</p></div>
-<div class="cc-annot" data-on="2700"><p class="cc-annot__title"><i class="cc-st cc-st--fail" aria-hidden="true"></i>CC001 message</p><p class="cc-mono">Commit 3/3 (37d6def): The commit message should follow Conventional Commits.<br>value: Fix: handle empty password<br><b class="cc-t-okd">Fix: fix: handle empty password</b></p></div>
+<div class="cc-annot" data-on="2000"><p class="cc-annot__title"><i class="cc-st cc-st--fail" aria-hidden="true"></i>CC001 message</p><p class="cc-mono">Commit 2/3 (5584f46) "bad msg": Use &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;<br>The commit message should follow Conventional Commits.</p></div>
+<div class="cc-annot" data-on="2700"><p class="cc-annot__title"><i class="cc-st cc-st--fail" aria-hidden="true"></i>CC001 message</p><p class="cc-mono">Commit 3/3 (37d6def): change "Fix: handle empty password" to "<b class="cc-t-okd">fix: handle empty password</b>"<br>The commit message should follow Conventional Commits.</p></div>
 </div>
 </div>
 </div>

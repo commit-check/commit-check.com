@@ -948,8 +948,10 @@
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
+/* As tall as the tallest panel, so the page below does not move when the
+   tabs cycle or the report in the comment turns from failed to passed. */
 .cc-demo.is-ready .cc-window {
-  min-height: 600px;
+  min-height: 722px;
 }
 
 .cc-window .cc-dim {
@@ -1217,65 +1219,119 @@
 .cc-comment__body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px 18px 14px;
+  gap: 10px;
+  padding: 14px 18px 12px;
 }
 
 .cc-comment__body > div {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   border-radius: 8px;
 }
 
 .md-typeset .cc-report__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid #e3e9ed;
   font-size: 19px;
   font-weight: 700;
 }
 
-.md-typeset .cc-verdict {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 700;
+/* The status marks the Action links to (commit-check/.github,
+   branding/status): the tile for the heading, the bare mark for a line. */
+.cc-smark {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
 }
 
-.md-typeset .cc-table {
-  width: 100%;
-  border: 1px solid var(--w-line);
-  border-radius: 8px;
-  border-collapse: separate;
-  border-spacing: 0;
-  overflow: hidden;
+.cc-lmark {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.md-typeset .cc-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   font-size: 13.5px;
 }
 
-.md-typeset .cc-table th,
-.md-typeset .cc-table td {
-  padding: 9px 12px;
-  border-bottom: 1px solid #e8edf0;
-  text-align: left;
-  vertical-align: top;
+.cc-groups > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
-.md-typeset .cc-table th {
+/* A ```diff block as GitHub colours it: removed, added, hunk, comment. */
+.cc-diff {
+  padding: 6px 0;
+  border-radius: 8px;
   background: var(--w-soft);
-  font-weight: 600;
+  font-family: var(--cc-mono);
+  font-size: 12.5px;
+  line-height: 19px;
 }
 
-.md-typeset .cc-table tr:last-child td {
-  border-bottom: 0;
+.cc-diff > div {
+  padding: 0 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
-.md-typeset .cc-table code {
+.cc-diff__hunk {
+  font-weight: 700;
+  color: #8250df;
+}
+
+.cc-diff__del {
+  background: #ffebe9;
+  color: #82071e;
+}
+
+.cc-diff__add {
+  background: #dafbe1;
+  color: #116329;
+}
+
+.cc-diff__note {
+  color: #59636e;
+}
+
+/* The opened "How to fix" fold: a sentence, then the block to copy. */
+.cc-howto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13.5px;
+}
+
+.cc-howto .cc-tree {
+  padding: 9px 14px;
+}
+
+/* The prompt and the commands are long lines: wrap them at every width, so
+   a narrow window never cuts their end off. */
+.cc-howto .cc-tree > div {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .cc-report__links {
+  font-size: 12px;
+  color: var(--w-muted);
+}
+
+.md-typeset .cc-report__links code {
   padding: 1px 5px;
   border-radius: 4px;
   background: #f1f4f6;
   font-family: var(--cc-mono);
-  font-size: 12.5px;
+  font-size: 11.5px;
 }
 
 .cc-lnk {
@@ -1291,10 +1347,18 @@
   color: var(--w-muted);
 }
 
+.md-typeset .cc-fold b {
+  color: var(--w-text);
+}
+
+/* Two folds in a row sit closer than the report's other parts. */
+.md-typeset .cc-fold + .cc-fold {
+  margin-top: -5px;
+}
+
 .md-typeset .cc-report__foot {
-  font-size: 12.5px;
-  font-style: italic;
-  color: #176b89;
+  font-size: 12px;
+  color: var(--w-muted);
 }
 
 .md-typeset .cc-event {
@@ -1373,28 +1437,6 @@
   flex-grow: 1;
   min-width: 0;
   padding: 20px 24px;
-}
-
-.cc-run__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 36px;
-  padding: 12px 16px;
-  border: 1px solid var(--w-line);
-  border-radius: 10px;
-  background: #ffffff;
-}
-
-.md-typeset .cc-run__meta p {
-  display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  color: #5b6d7a;
-}
-
-.cc-run__meta b {
-  font-size: 14px;
-  color: var(--w-text);
 }
 
 .cc-card {
@@ -2358,27 +2400,6 @@
   .md-typeset .cc-event,
   .md-typeset .cc-note {
     margin-left: 0;
-  }
-
-  /* The report table turns into one block per failing scope. */
-  .md-typeset .cc-table thead {
-    display: none;
-  }
-
-  .md-typeset .cc-table tr {
-    display: flex;
-    flex-direction: column;
-    padding: 8px 10px;
-    border-bottom: 1px solid #e8edf0;
-  }
-
-  .md-typeset .cc-table tr:last-child {
-    border-bottom: 0;
-  }
-
-  .md-typeset .cc-table td {
-    padding: 1px 0;
-    border: 0;
   }
 
   .cc-tree {
