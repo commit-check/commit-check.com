@@ -1314,6 +1314,13 @@
   padding: 9px 14px;
 }
 
+/* The prompt and the commands are long lines: wrap them at every width, so
+   a narrow window never cuts their end off. */
+.cc-howto .cc-tree > div {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .md-typeset .cc-report__links {
   font-size: 12px;
   color: var(--w-muted);
