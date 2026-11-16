@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.21.0](#v2210) | A pull request description must tick one of its template's AI declaration checkboxes (opt-in) | [CC501](rules.md#cc501) · [Requiring the template's AI declaration](guides/policies.md#requiring-the-templates-ai-declaration) |
 | [2.20.5](#v2205) | The author checks cover a repository's first commit; a run takes about half the time to start; releases on PyPI carry provenance | [Checking the committer](example.md#checking-the-committer) · [CC017](rules.md#cc017) |
 | [2.20.3](#v2203) | Failures print a one-line header and an indented block per check, in place of the ASCII banner; an agent skill for coding agents | [Getting started](getting-started.md#2-watch-it-reject-something) · [With AI coding agents](guides/ai-agents.md#tell-the-agent) |
 | [2.20.1](#v2201) | `--ai-attribution-only` checks a pull request description against your AI policy; JSON lists the AI tools found; more AI marks recognised | [Checking a pull request description](guides/policies.md#checking-a-pull-request-description) · [CC013](rules.md#cc013) |
@@ -39,6 +40,16 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.21.0 (2026-11-16) { #v2210 }
+
+### Added
+
+* CC501 checks that a pull request description ticks exactly one of the AI declaration checkboxes listed in `[pull_request] ai_declaration_checkboxes`. ([CC501](rules.md#cc501), [#699](https://github.com/commit-check/commit-check/pull/699))
+
+### Fixed
+
+* CC014's advice names the trailer to add when the message has no blank line before the AI mark. ([CC014](rules.md#cc014), [#696](https://github.com/commit-check/commit-check/pull/696))
 
 ## v2.20.5 (2026-11-11) { #v2205 }
 

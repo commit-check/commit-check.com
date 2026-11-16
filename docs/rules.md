@@ -1141,3 +1141,75 @@ git tag v1.2.3-rc.1
 
 * `tag.regex` — the pattern a tag name must match. An empty value disables the
   pattern match.
+
+## Pull request rules
+
+### ai-declaration (CC501) { #cc501 }
+
+**What it does**
+
+Checks that a pull request description answers the AI question its template
+asks, often under an "AI disclosure" heading: exactly one of the boxes listed in
+`pull_request.ai_declaration_checkboxes` is ticked. It runs only under `--ai-attribution-only`, the mode that reads a
+pull request description, and only when that option is set.
+
+A box is a task-list item (`- [ ]`, `* [x]`, `1. [X]`) whose text starts with
+one of the options, compared without case, emphasis or extra spaces, on whole
+words. `- [ ] **No AI tools were used** in preparing this PR.` is a box for
+the option `No AI tools were used`. Boxes inside HTML comments or code blocks
+are not read, so the template's own instructions never count as an answer.
+When two options both fit a box, the longer one wins.
+
+The rule fails when:
+
+* no box is ticked,
+* more than one option is ticked, or
+* the description has no box at all, as when the template was deleted.
+
+Authors in `commit.ignore_authors` are skipped, so a bot's pull request does
+not need the declaration.
+
+**Why is this bad?**
+
+A project that asks contributors to declare AI use can only rely on the answer
+if it is there. An unticked box reads the same as "I did not look", and a
+deleted template the same as a missing answer. Projects that ask the question
+end up checking the description in CI, each with its own script.
+
+**Example**
+
+```toml title="cchk.toml"
+[pull_request]
+ai_declaration_checkboxes = ["No AI tools were used", "If AI tools were used"]
+```
+
+```markdown
+#### AI Assistance Disclosure (REQUIRED)
+- [ ] **No AI tools were used** in preparing this PR.
+- [ ] **If AI tools were used**, I have disclosed which ones.
+```
+
+```console
+$ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only
+✖ Commit rejected by Commit Check · 1 check failed
+
+✖ CC501 ai-declaration failed: - [ ] **No AI tools were used** in preparing this PR. (+1 more line)
+  No AI declaration box is ticked
+  Suggest: Tick the box that applies: "No AI tools were used" or "If AI tools were used"
+  Docs:    https://commit-check.com/rules/#cc501
+```
+
+Use instead:
+
+```markdown
+- [x] **No AI tools were used** in preparing this PR.
+- [ ] **If AI tools were used**, I have disclosed which ones.
+```
+
+**Options**
+
+* `pull_request.ai_declaration_checkboxes` — the text each box starts with, one
+  string per box. Unset (the default) turns the rule off. The
+  [Action](guides/github-actions.md) runs it with `pr-body-ai-attribution: true`
+  and the [GitHub App](guides/github-app.md) with
+  `[pull_request] body_ai_attribution = true`.

@@ -87,10 +87,10 @@ $ echo "feat: add streaming support" | commit-check -m
 ```
 
 It is a warning, not an error: the exit code and the JSON on stdout do not
-change. The top-level `warn` list and the GitHub App's
+change. The top-level `warn` list and the
 [`[jira]`](guides/github-app.md#jira-ticket-references) and
 [`[pull_request]`](#pull-requests-every-commit-or-the-squash-message) sections
-are read elsewhere and are not reported. The Python API reads no file at all
+are not checked for unknown settings. The Python API reads no file at all
 (it takes a `config` dict), and the MCP server loads the file itself without
 reporting unknown settings.
 
@@ -274,7 +274,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.20.5
+    rev: v2.21.0
     hooks:
       - id: check-message
         args:
@@ -415,3 +415,4 @@ the same thing twice, so read the description rather than the cell:
 | files | prohibited_patterns | list[str] | [] (empty list) | fnmatch patterns a committed path may not match, e.g. `["*.pem", ".env", "id_rsa*"]`. A bare pattern also matches the file name at any depth. Matching is case-sensitive on every platform, like git pathspecs. Empty disables the rule. |
 | files | max_path_length | int | 0 (disabled) | Longest a committed file path may be, in characters. `0` disables the rule. |
 | pull_request | check | str | "commits" | GitHub App only. `"commits"` checks every commit of a pull request on its own; `"squash"` checks the one message a squash merge would land, built from the repository's merge settings. See [Pull requests](#pull-requests-every-commit-or-the-squash-message). |
+| pull_request | ai_declaration_checkboxes | list[str] | [] (rule off) | The texts of the AI declaration boxes in the pull request template, one per box. When set, a pull request description checked with `--ai-attribution-only` must tick exactly one of them; see [CC501](rules.md#cc501). Read by the CLI, the Action and the App. |
