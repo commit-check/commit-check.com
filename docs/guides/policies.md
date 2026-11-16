@@ -228,6 +228,40 @@ $ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only --form
 ["Devin"]
 ```
 
+### Requiring the template's AI declaration
+
+Many pull request templates ask the author to tick one of two boxes, such as
+"No AI tools were used" or "If AI tools were used, I have disclosed which
+ones". Django, statsmodels and Frigate each run their own script in CI to make
+sure one of them is ticked. List the boxes' texts and
+[CC501](../rules.md#cc501) does that check:
+
+```toml title="cchk.toml"
+[pull_request]
+ai_declaration_options = ["No AI tools were used", "If AI tools were used"]
+```
+
+```console
+$ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only
+✖ CC501 ai-declaration failed: - [ ] **No AI tools were used** in preparing this PR. (+1 more line)
+  No AI declaration box is ticked
+  Suggest: Tick the box that applies: "No AI tools were used" or "If AI tools were used"
+  Docs:    https://commit-check.com/rules/#cc501
+```
+
+Each option is the start of a box's text, so `**If AI tools were used**, I
+have disclosed which ones.` matches `If AI tools were used`. The rule fails
+when no box is ticked, when both are, and when the description has no boxes
+at all. Boxes inside an HTML comment are ignored, so instructions in the
+template do not count as an answer.
+
+It works on its own: `ai_attribution` can stay at `"ignore"`. In the
+[Action](github-actions.md), turn on `pr-body-ai-attribution: true`; in the
+[GitHub App](github-app.md), set `body_ai_attribution = true` under
+`[pull_request]`. The App checks the description again whenever it is
+edited; the Action does too once its workflow lists `edited` under
+`pull_request` `types`.
+
 ### Asking for disclosure instead
 
 Most projects that allow AI assistance ask to be told about it.
