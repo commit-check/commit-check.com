@@ -1142,15 +1142,15 @@ git tag v1.2.3-rc.1
 * `tag.regex` — the pattern a tag name must match. An empty value disables the
   pattern match.
 
-## Pull request description rules
+## Pull request rules
 
 ### ai-declaration (CC501) { #cc501 }
 
 **What it does**
 
 Checks that a pull request description answers the AI question its template
-asks: exactly one of the boxes listed in `pull_request.ai_declaration_options`
-is ticked. It runs only under `--ai-attribution-only`, the mode that reads a
+asks, often under an "AI disclosure" heading: exactly one of the boxes listed in
+`pull_request.ai_declaration_checkboxes` is ticked. It runs only under `--ai-attribution-only`, the mode that reads a
 pull request description, and only when that option is set.
 
 A box is a task-list item (`- [ ]`, `* [x]`, `1. [X]`) whose text starts with
@@ -1180,7 +1180,7 @@ end up checking the description in CI, each with its own script.
 
 ```toml title="cchk.toml"
 [pull_request]
-ai_declaration_options = ["No AI tools were used", "If AI tools were used"]
+ai_declaration_checkboxes = ["No AI tools were used", "If AI tools were used"]
 ```
 
 ```markdown
@@ -1206,7 +1206,7 @@ Use instead:
 
 **Options**
 
-* `pull_request.ai_declaration_options` — the text each box starts with, one
+* `pull_request.ai_declaration_checkboxes` — the text each box starts with, one
   string per box. Unset (the default) turns the rule off. The
   [Action](guides/github-actions.md) runs it with `pr-body-ai-attribution: true`
   and the [GitHub App](guides/github-app.md) with

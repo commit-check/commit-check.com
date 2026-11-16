@@ -104,7 +104,7 @@ push or pull request, in the same four places: `cchk.toml`, `commit-check.toml`,
 applies, precedence included; the `[push]`, `[files]` and `[tag]` sections are
 read but have nothing to act on here. Nothing is App-specific to set apart
 from `[pull_request]` (above) and `[jira]` (below); the CLI and the Action ignore
-them, except `[pull_request] ai_declaration_options`
+them, except `[pull_request] ai_declaration_checkboxes`
 ([CC501](../rules.md#cc501)), which all three read.
 
 [`inherit_from`](organization.md) works, and a `github:` target is fetched with

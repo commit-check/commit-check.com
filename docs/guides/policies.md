@@ -238,7 +238,7 @@ sure one of them is ticked. List the boxes' texts and
 
 ```toml title="cchk.toml"
 [pull_request]
-ai_declaration_options = ["No AI tools were used", "If AI tools were used"]
+ai_declaration_checkboxes = ["No AI tools were used", "If AI tools were used"]
 ```
 
 ```console
