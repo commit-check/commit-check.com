@@ -132,16 +132,13 @@ repository root — or in `.github/` — to make the policy explicit:
 ```toml title="cchk.toml"
 [commit]
 conventional_commits = true
-subject_imperative = true          # (1)
+subject_imperative = true          # off by default: rejects "fixed a bug", wants "fix a bug"
 subject_max_length = 72
-allow_wip_commits = false          # (2)
+allow_wip_commits = false          # allow_* says what is permitted; false enforces
 
 [branch]
 conventional_branch = true
 ```
-
-1. Off by default. Turning it on rejects `fixed a bug` in favour of `fix a bug`.
-2. `allow_*` options describe what is *permitted*. Set to `false` to enforce.
 
 Run it again and the new rules apply:
 
@@ -163,7 +160,7 @@ belongs:
 
 <div class="grid cards" markdown>
 
--   :lucide-git-commit-horizontal:{ .lg .middle } __Before the commit lands__
+-   :lucide-git-commit-horizontal: __Before the commit lands__
 
     ---
 
@@ -172,7 +169,7 @@ belongs:
 
     [:lucide-arrow-right: Pre-commit hook](guides/integrations.md#as-a-pre-commit-hook)
 
--   :brand-github:{ .lg .middle } __On every pull request__
+-   :brand-github: __On every pull request__
 
     ---
 

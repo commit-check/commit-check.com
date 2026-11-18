@@ -146,6 +146,26 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* Code ----------------------------------------------------------------------
+   JetBrains Mono draws `!=` as ≠ and `->` as an arrow unless ligatures are
+   off. Sumi turns them off for every code element, but its `font` shorthand
+   on `.sumi-prose pre` resets that, so a reader copying a block by eye sees a
+   character the shell does not have. Set it again after the shorthand. */
+.sumi-prose pre,
+.sumi-prose pre code {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+/* Sumi lets inline code break anywhere, which in a table also shrinks the
+   column to one character: an auto-sized table then splits `message` into
+   `messag` and `e`. break-word still wraps a value too long for its cell, but
+   leaves the column wide enough for each word. */
+.sumi-prose td code,
+.sumi-prose th code {
+  overflow-wrap: break-word;
+}
+
 /* Buttons -------------------------------------------------------------------
    A primary button is Signal Blue with Ink text: white on this blue is 3.1:1,
    under the 4.5:1 a button label needs; Ink on it is 5.9:1. */

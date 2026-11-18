@@ -107,6 +107,23 @@ message file to rewrite, so with stdin or `--rev` it is a usage error, and
 `--dry-run` rewrites nothing. In the `commit-msg` hook it is one argument:
 see [Fixing the message instead of rejecting it](guides/pre-commit.md#fixing-the-message-instead-of-rejecting-it).
 
+### Checking a pull request title
+
+With squash merges the pull request title becomes the commit, so check it the
+same way. `--pr-title` reads the title from stdin and runs the message rules a
+one-line title can meet: every `--message` rule except a body
+([CC011](rules.md#cc011)), a sign-off ([CC012](rules.md#cc012)) and an AI
+author ([CC017](rules.md#cc017)).
+
+```console
+$ gh pr view 42 --json title -q .title | commit-check --pr-title --compact
+[FAIL] CC001 message: Add GitLab support
+```
+
+The [GitHub Action](guides/github-actions.md#inputs) does this with
+`pr-title: true`; on GitLab and Bitbucket see
+[Merge request title and description](guides/other-ci.md#merge-request-title-and-description).
+
 ## Checking the branch
 
 ```console
@@ -323,7 +340,8 @@ For any other skip, such as a merge subject, `reason` is empty.
     On a `pull_request` checkout, `HEAD` is the synthetic merge commit — so a
     bare `commit-check -m` exits `0` with every subject rule skipped. The
     notice makes that visible; the fix is to check what you actually mean:
-    the PR title piped on stdin, or each branch commit via `--rev` as above.
+    the PR title piped into `commit-check --pr-title`, or each branch commit
+    via `--rev` as above.
 
 ### Reading the JSON
 

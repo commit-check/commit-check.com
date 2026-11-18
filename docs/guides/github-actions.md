@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0        # (1)
+          fetch-depth: 0        # recommended, see below
       - uses: commit-check/commit-check-action@v2
         with:
           message: true
@@ -31,10 +31,10 @@ jobs:
           author-email: true
 ```
 
-1. Recommended, not required: the Action then reads the pull request's
-   commits from the clone. With a shallow clone it lists them through the
-   GitHub API instead (up to 250), and if it cannot, it warns and checks the
-   head commit alone.
+`fetch-depth: 0` is recommended, not required: the Action then reads the pull
+request's commits from the clone. With a shallow clone it lists them through
+the GitHub API instead (up to 250), and if it cannot, it warns and checks the
+head commit alone.
 
 The Action reads the same `cchk.toml` as the CLI, so a repository that already
 has one needs no Action-specific configuration.
@@ -60,13 +60,17 @@ has one needs no Action-specific configuration.
 | `author-name` | `false` | Check each commit's author name |
 | `author-email` | `false` | Check each commit's author email |
 | `files` | `false` | Check the files each commit changes against the [`[files]` rules](../rules.md#push-rules) of `cchk.toml` (size, prohibited paths, path length). Needs `fetch-depth: 0`: a commit the clone holds without its parent is skipped. Since v2.24.0 |
-| `pr-title` | `false` | Check the pull request title against Conventional Commits, the one that matters for squash merges. Pull request events only |
-| `pr-comments` | `false` | Post the report as a pull request comment, edited in place on later runs |
+| `pr-title` | `false` | Check the pull request title, the one that matters for squash merges, against the message rules a one-line title can meet: every `message` rule except a body (CC011), a sign-off (CC012) and an AI author (CC017). Pull request events only |
+| `message-ai-attribution` | `false` | Check every commit against the [AI rules](policies.md#checking-ai-attribution-and-nothing-else) of `cchk.toml` (`ai_attribution`) only, author included, without the format rules. Takes the place of `message` |
+| `pr-body-ai-attribution` | `false` | Check the [pull request description](policies.md#checking-a-pull-request-description) against the AI rules of `cchk.toml`, and its [AI declaration boxes](../rules.md#cc501) when `[pull_request] ai_declaration_checkboxes` is set. Pull request events only |
+| `ai-label` | `false` | Label the pull request when an AI tool wrote any of it (a commit, the description, or an agent's app that opened it): `true` for `ai-assisted`, or the label's name. Labels are only added, never removed. Needs `pull-requests: write`; skipped on fork pull requests under `pull_request` |
+| `pr-comments` | `false` | Post the report as a pull request comment, edited in place on later runs. Needs `pull-requests: write`; skipped on fork pull requests |
 | `job-summary` | `true` | Write the report to the job summary |
 | `dry-run` | `false` | Report failures as warnings and always exit `0` |
 
-`pull_request` does not fire when a title is edited. With `pr-title: true`,
-add `types: [opened, synchronize, reopened, edited]` to re-check a renamed pull
+`pull_request` does not fire when a title or description is edited. With
+`pr-title` or `pr-body-ai-attribution`, add
+`types: [opened, synchronize, reopened, edited]` to re-check an edited pull
 request.
 
 The Action also sets a `result` output: the check results as JSON, read with

@@ -69,6 +69,15 @@
   overflow-x: clip;
 }
 
+/* The navigation drawer (see landing.html). Sumi turns `.sumi-sidebar` into
+   the slide-in drawer at 920px and below; above that the landing has no
+   sidebar, so it is not shown at all. */
+@media screen and (min-width: 921px) {
+  .cc-landing-drawer {
+    display: none;
+  }
+}
+
 .cc-landing > .md-typeset {
   max-width: var(--cc-page-w, 1220px);
   margin: 0 auto;

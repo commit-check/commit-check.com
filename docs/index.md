@@ -1,8 +1,11 @@
 ---
 hide:
-  - navigation
   - toc
 template: landing.html
+# Sumi gives a landing.html page the "landing" layout, which has no sidebar and
+# so no menu button on a phone. "docs" keeps the button; landing.html draws
+# the page itself and shows the sidebar only as the phone drawer.
+layout: docs
 title: Commit Check
 seo_title: Commit Check — Commit policy as code for teams and AI agents
 description: Commit policy as code for teams and AI agents. Messages, branches, authors and AI attribution, checked from your commit hook to every pull request.
