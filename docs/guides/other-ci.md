@@ -29,7 +29,8 @@ The branch check (`--branch`) also covers `require_rebase_target` (CC202),
 which needs the target branch in the clone. Neither GitLab nor Bitbucket
 fetches it for a merge or pull request, so each job fetches it first. Without
 it the rule reports itself as skipped (`rebase target 'main' not found`) and
-the job passes.
+the job passes. The jobs fetch the request's target branch; if
+`require_rebase_target` names a different branch, fetch that one instead.
 
 !!! note "On 2.18.2 or older"
 
@@ -70,7 +71,10 @@ commit-check:
 
 - `GIT_DEPTH: "0"` turns shallow cloning off.
 - A merge request pipeline fetches only the commit it runs on, so the job
-  fetches the target branch for the rebase check.
+  fetches the target branch for the rebase check. A merge request from a fork
+  runs its pipeline in the fork, where `origin` is the fork: fetch from
+  `"$CI_MERGE_REQUEST_PROJECT_URL.git"` instead of `origin` there, so the
+  branch comes from the target project.
 - In a merged results pipeline, `HEAD` is a merge commit GitLab made, and
   `CI_MERGE_REQUEST_SOURCE_BRANCH_SHA` names the merge request's own last
   commit. In a plain merge request pipeline that variable is empty and
@@ -81,7 +85,7 @@ commit-check:
 ### Merge request title and description
 
 GitLab passes both to the job, so they are piped in as they are. Add these
-lines to the `script`:
+lines to the `script`, before the commit loop (its `exit` ends the script):
 
 ```yaml
     - printf '%s\n' "$CI_MERGE_REQUEST_TITLE" | commit-check --pr-title
@@ -97,9 +101,15 @@ lines to the `script`:
   is set, that it ticks exactly one AI declaration box (CC501). GitLab task
   lists (`- [x]`, `* [x]`, `1. [x]`) are read like GitHub's.
 - GitLab cuts `CI_MERGE_REQUEST_DESCRIPTION` to its first 2700 characters
-  (`CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED` is then `true`). Put the AI
-  declaration boxes near the top of the merge request template, so a long
-  description does not cut them off.
+  (`CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED` is then `true`), so only that
+  part is checked. Put the AI declaration boxes near the top of the merge
+  request template, so a long description does not cut them off. To fail a
+  description that was cut rather than check part of it, add before the
+  description check:
+
+    ```yaml
+        - test "$CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED" != "true" || { echo "The description is over 2700 characters; GitLab passed only part of it"; exit 1; }
+    ```
 - Editing the title or description does not start a pipeline. Run the
   pipeline again from the merge request's **Pipelines** tab after an edit.
 
@@ -141,18 +151,25 @@ Bitbucket gives the step the pull request's id but not its title or
 description, so the step reads them from the Bitbucket API. Create a
 [repository access token](https://support.atlassian.com/bitbucket-cloud/docs/repository-access-tokens/)
 with the **Pull requests: Read** scope, store it as a secured repository
-variable named `PR_READ_TOKEN`, and add to the `script`:
+variable named `PR_READ_TOKEN`, and add to the `script`, before the commit
+loop:
 
 ```yaml
             - >-
               curl -fsS -H "Authorization: Bearer $PR_READ_TOKEN"
               "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_REPO_FULL_NAME/pullrequests/$BITBUCKET_PR_ID"
               -o pr.json
-            - python -c 'import json; print(json.load(open("pr.json"))["title"])' | commit-check --pr-title
-            - python -c 'import json; print(json.load(open("pr.json"))["description"])' | commit-check --ai-attribution-only
+            - >-
+              python -c 'import json; pr = json.load(open("pr.json"));
+              open("title.txt", "w").write(pr["title"]);
+              open("description.txt", "w").write(pr["description"])'
+            - commit-check --pr-title < title.txt
+            - commit-check --ai-attribution-only < description.txt
 ```
 
-`--pr-title` and `--ai-attribution-only` work as in the
+Reading the fields in a step of their own makes a failed API read fail the
+step, instead of piping empty text into the check. `--pr-title` and
+`--ai-attribution-only` work as in the
 [GitLab section](#merge-request-title-and-description). Editing a pull
 request does not start a pipeline, so run the step again after an edit.
 
