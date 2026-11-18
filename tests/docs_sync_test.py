@@ -200,16 +200,21 @@ class TestDocumentedRevisions:
         assert not stale, "install snippets are out of date:\n  " + "\n  ".join(stale)
 
 
+# The options reference lists each config section under its own heading,
+# "### `[commit]`", with one table row per option below it.
+_OPTIONS_SECTION = re.compile(r"^###\s+`\[(\w+)\]`\s*$")
 _OPTIONS_ROW = re.compile(
-    r"^\|\s*(commit|branch|push|files|tag)\s*"  # section
-    r"\|\s*(\w+)\s*"  # option name
+    r"^\|\s*`(\w+)`\s*"  # option name
     r"\|\s*(bool|int|str|list\[str\])\s*"  # type
-    # A default may itself contain a pipe (a regex alternation, say), which a
-    # table cell can only carry escaped -- so the cell runs to the first
-    # *unescaped* pipe.
-    r"\|\s*((?:[^|\\]|\\.)+?)\s*\|",  # documented default
-    re.M,
+    # A default may itself contain a pipe (a regex alternation, say). Inside a
+    # code span the table keeps it as part of the cell, and outside one it can
+    # only be carried escaped -- so the cell runs to the first pipe that is
+    # neither.
+    r"\|\s*((?:`[^`]*`|[^|`\\]|\\.)+?)\s*\|",  # documented default
 )
+# The sections get_default_config() returns. [pull_request] is read by the
+# App alone and has no CLI default to compare against.
+_RUNTIME_SECTIONS = ("commit", "branch", "push", "files", "tag")
 
 # Markdown code spans use single backticks.
 _QUOTED = re.compile(r'^(?:`+(.*?)`+|"(.*?)")')
@@ -217,10 +222,21 @@ _QUOTED = re.compile(r'^(?:`+(.*?)`+|"(.*?)")')
 
 def _parse_options_table(content: str) -> dict[tuple[str, str], tuple[str, str]]:
     """Map ``(section, option) -> (type, raw default cell)``."""
-    return {
-        (section, option): (type_, cell)
-        for section, option, type_, cell in _OPTIONS_ROW.findall(content)
-    }
+    documented: dict[tuple[str, str], tuple[str, str]] = {}
+    section = None
+    for line in content.splitlines():
+        heading = _OPTIONS_SECTION.match(line)
+        if heading:
+            section = heading.group(1)
+            continue
+        if line.startswith("#"):
+            section = None
+            continue
+        row = _OPTIONS_ROW.match(line)
+        if row and section in _RUNTIME_SECTIONS:
+            option, type_, cell = row.groups()
+            documented[(section, option)] = (type_, cell)
+    return documented
 
 
 def _documented_default(type_: str, cell: str) -> Any:
@@ -250,17 +266,17 @@ class TestDocumentedDefaults:
     """The documented defaults match the ones the package actually uses."""
 
     def test_every_runtime_option_is_documented(self):
-        """Every option the runtime defines has a row in the options table."""
+        """Every option the runtime defines is listed in the options reference."""
         documented = _parse_options_table(_read_doc("configuration.md"))
         for section, options in get_default_config().items():
             for option in options:
                 assert (section, option) in documented, (
                     f"[{section}] {option} exists in get_default_config() but "
-                    f"has no row in the options table of docs/configuration.md"
+                    f"is not listed under 'Every option' in docs/configuration.md"
                 )
 
     def test_no_invented_options_are_documented(self):
-        """The options table does not document options that do not exist."""
+        """The options reference does not document options that do not exist."""
         runtime = get_default_config()
         for section, option in _parse_options_table(_read_doc("configuration.md")):
             assert option in runtime.get(section, {}), (

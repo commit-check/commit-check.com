@@ -372,7 +372,7 @@ true.
 
 A default shown as `""` means the option is
 unset, which is never the same as the check being off — but it does not mean
-the same thing twice, so read the description rather than the cell:
+the same thing twice, so read the description rather than the default:
 
 - `message_pattern` unset leaves `conventional_commits` to generate the
   pattern. [CC001](rules.md#cc001) still runs.
@@ -381,38 +381,77 @@ the same thing twice, so read the description rather than the cell:
 - `require_rebase_target` unset is the one case where the check really does not
   run — there is no branch to compare against.
 
-| Section | Option | Type | Default | Description |
-|---|---|---|---|---|
-| commit | conventional_commits | bool | true | Enforce Conventional Commits specification. |
-| commit | message_pattern | str | "" (no custom pattern) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
-| commit | subject_capitalized | bool | false | Subject must start with a capital letter. |
-| commit | subject_imperative | bool | false | Subject must be in imperative mood. Judged on the first word's form, so a verb no list contains is still accepted — see [CC003](rules.md#cc003). |
-| commit | subject_max_length | int | 80 | Maximum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
-| commit | subject_min_length | int | 5 | Minimum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
-| commit | allow_commit_types | list[str] | ["feat", "fix", "docs", "style", "refactor", "test", "chore", "perf", "build", "ci"] | Allowed commit types when conventional_commits is true. |
-| commit | allow_merge_commits | bool | true | Allow merge commits. |
-| commit | allow_revert_commits | bool | true | Allow revert commits. |
-| commit | allow_empty_commits | bool | true | Allow empty commits. |
-| commit | allow_fixup_commits | bool | true | Allow fixup commits: `fixup!`, `squash!` and `amend!` subjects. |
-| commit | allow_wip_commits | bool | true | Allow work-in-progress commits (e.g., "WIP: <commit message>"). |
-| commit | require_body | bool | false | Require a body in the commit message. |
-| commit | ignore_authors | list[str] | [] (none ignored) | List of commit authors **or co-authors** (`Co-authored-by:` lines) to bypass all commit checks. Useful for bots (e.g., `"dependabot[bot]"`, `"coderabbitai[bot]"`). |
-| commit | author_email_pattern | str | `^.+@.+$` | Custom regex for the author email check. When empty, the built-in default pattern is used. This option only takes effect when the author_email check is enabled (`-e` / `--author-email`). |
-| commit | author_name_pattern | str | "" (built-in default) | Custom regex for the author name check. When empty, the built-in default pattern is used (it is not disabled). This option only takes effect when the author_name check is enabled (`-n` / `--author-name`). |
-| commit | require_signed_off_by | bool | false | Require "Signed-off-by" line in the commit message footer. |
-| commit | ai_attribution | str | "ignore" | AI attribution policy. `"forbid"` rejects any commit carrying AI attribution — a co-author or sign-off line naming a known tool, a disclosure trailer, a vendor mark ([CC013](rules.md#cc013)). `"disclose"` accepts AI assistance that is disclosed with one of `ai_disclosure_trailers` ([CC014](rules.md#cc014)) and rejects the tool as a co-author ([CC015](rules.md#cc015)) or as a sign-off ([CC016](rules.md#cc016)). `"ignore"` disables the check. Any other value is a configuration error. |
-| commit | ai_disclosure_trailers | list[str] | ["Assisted-by", "Generated-by"] | The trailers that disclose AI assistance under `"disclose"`. The first one is what a correction is written with. Listing `Co-authored-by` says the project accepts the tool as a co-author, and CC015 then passes. `Signed-off-by` is refused: only a person can certify the DCO. |
-| commit | ai_disclosure_pattern | str | "" (any value) | A regex the disclosure trailer's value must match under `"disclose"`, e.g. `'^\S+/\S+$'` for an `agent/model` format. Empty accepts any value, but a trailer with no value at all is reported whatever the pattern is. |
-| branch | conventional_branch | bool | true | Enforce Conventional Branch specification. |
-| branch | allow_branch_types | list[str] | ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix", "build", "ci", "docs", "perf", "refactor", "style", "test", "ai", "claude", "codex", "copilot", "cursor", "agents", "dependabot", "renovate"] | Allowed branch types when `conventional_branch` is true. The default is a superset of the [Conventional Branch spec](https://conventionalbranch.org/): the spec's types (`feature`, `bugfix`, `hotfix`, `release`, `chore`, their aliases `feat` and `fix`, and the AI agent prefixes `ai`, `claude`, `codex`, `copilot`, `cursor`) plus the other Conventional Commit types (`build`, `ci`, `docs`, `perf`, `refactor`, `style`, `test`), `agents` (the prefix VS Code's Agents window uses) and bot prefixes (`dependabot`, `renovate`). For strict spec-only validation, set this option explicitly to the spec's types; [CC201](rules.md#cc201) has the full config. |
-| branch | require_description_grammar | bool | false | Also hold the description after `<type>/` to the Conventional Branch grammar: lowercase letters and digits, words joined by single hyphens, dots only inside a word. Off by default, because bot branches such as `dependabot/npm_and_yarn/lodash-4.17.21` do not follow it. See [CC201](rules.md#cc201). |
-| branch | allow_branch_names | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["staging", "production"]). By default, main, master, develop, HEAD, PR-* and gh-readonly-queue/* (GitHub merge queue branches) are always allowed. |
-| branch | require_rebase_target | str | "" (no requirement) | Target branch for rebase requirement. If not set, no rebase validation is performed. |
-| push | allow_force_push | bool | true | Allow force pushes. Set to `false` to block force pushes when used as a pre-push hook or with `--no-force-push`. |
-| branch | ignore_authors | list[str] | [] (none ignored) | List of authors to ignore (i.e., always allow). |
-| tag | regex | str | `^v?(?:0\|[1-9]\d*)\.(?:0\|[1-9]\d*)\.(?:0\|[1-9]\d*)(?:-(?:0\|[1-9]\d*\|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0\|[1-9]\d*\|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$` | Pattern a tag name must match. The default is the [official SemVer pattern](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string) with an optional leading `v`, so both `v1.2.3` and `1.2.3` pass. An empty value disables the pattern match. |
-| files | max_size | str | "" (disabled) | Largest a committed file may be, in bytes or with a `KB`/`MB`/`GB` suffix (binary units, so `5MB` is 5 × 1024²). Empty disables the rule. |
-| files | prohibited_patterns | list[str] | [] (empty list) | fnmatch patterns a committed path may not match, e.g. `["*.pem", ".env", "id_rsa*"]`. A bare pattern also matches the file name at any depth. Matching is case-sensitive on every platform, like git pathspecs. Empty disables the rule. |
-| files | max_path_length | int | 0 (disabled) | Longest a committed file path may be, in characters. `0` disables the rule. |
-| pull_request | check | str | "commits" | GitHub App only. `"commits"` checks every commit of a pull request on its own; `"squash"` checks the one message a squash merge would land, built from the repository's merge settings. See [Pull requests](#pull-requests-every-commit-or-the-squash-message). |
-| pull_request | ai_declaration_checkboxes | list[str] | [] (rule off) | The texts of the AI declaration boxes in the pull request template, one per box. When set, a pull request description checked with `--ai-attribution-only` must tick exactly one of them; see [CC501](rules.md#cc501). Read by the CLI, the Action and the App. |
+### `[commit]`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `conventional_commits` | bool | true | Enforce Conventional Commits specification. |
+| `message_pattern` | str | "" (no custom pattern) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
+| `subject_capitalized` | bool | false | Subject must start with a capital letter. |
+| `subject_imperative` | bool | false | Subject must be in imperative mood. Judged on the first word's form, so a verb no list contains is still accepted — see [CC003](rules.md#cc003). |
+| `subject_max_length` | int | 80 | Maximum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
+| `subject_min_length` | int | 5 | Minimum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
+| `allow_commit_types` | list[str] | ["feat", "fix", "docs", "style", "refactor", "test", "chore", "perf", "build", "ci"] | Allowed commit types when conventional_commits is true. |
+| `allow_merge_commits` | bool | true | Allow merge commits. |
+| `allow_revert_commits` | bool | true | Allow revert commits. |
+| `allow_empty_commits` | bool | true | Allow empty commits. |
+| `allow_fixup_commits` | bool | true | Allow fixup commits: `fixup!`, `squash!` and `amend!` subjects. |
+| `allow_wip_commits` | bool | true | Allow work-in-progress commits (e.g., "WIP: <commit message>"). |
+| `require_body` | bool | false | Require a body in the commit message. |
+| `ignore_authors` | list[str] | [] (none ignored) | List of commit authors **or co-authors** (`Co-authored-by:` lines) to bypass all commit checks. Useful for bots (e.g., `"dependabot[bot]"`, `"coderabbitai[bot]"`). |
+| `author_email_pattern` | str | `^.+@.+$` | Custom regex for the author email check. When empty, the built-in default pattern is used. This option only takes effect when the author_email check is enabled (`-e` / `--author-email`). |
+| `author_name_pattern` | str | "" (built-in default) | Custom regex for the author name check. When empty, the built-in default pattern is used (it is not disabled). This option only takes effect when the author_name check is enabled (`-n` / `--author-name`). |
+| `require_signed_off_by` | bool | false | Require "Signed-off-by" line in the commit message footer. |
+| `ai_attribution` | str | "ignore" | AI attribution policy. `"forbid"` rejects any commit carrying AI attribution — a co-author or sign-off line naming a known tool, a disclosure trailer, a vendor mark ([CC013](rules.md#cc013)). `"disclose"` accepts AI assistance that is disclosed with one of `ai_disclosure_trailers` ([CC014](rules.md#cc014)) and rejects the tool as a co-author ([CC015](rules.md#cc015)) or as a sign-off ([CC016](rules.md#cc016)). `"ignore"` disables the check. Any other value is a configuration error. |
+| `ai_disclosure_trailers` | list[str] | ["Assisted-by", "Generated-by"] | The trailers that disclose AI assistance under `"disclose"`. The first one is what a correction is written with. Listing `Co-authored-by` says the project accepts the tool as a co-author, and CC015 then passes. `Signed-off-by` is refused: only a person can certify the DCO. |
+| `ai_disclosure_pattern` | str | "" (any value) | A regex the disclosure trailer's value must match under `"disclose"`, e.g. `'^\S+/\S+$'` for an `agent/model` format. Empty accepts any value, but a trailer with no value at all is reported whatever the pattern is. |
+
+{.fields}
+
+### `[branch]`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `conventional_branch` | bool | true | Enforce Conventional Branch specification. |
+| `allow_branch_types` | list[str] | ["feature", "bugfix", "hotfix", "release", "chore", "feat", "fix", "build", "ci", "docs", "perf", "refactor", "style", "test", "ai", "claude", "codex", "copilot", "cursor", "agents", "dependabot", "renovate"] | Allowed branch types when `conventional_branch` is true. The default is a superset of the [Conventional Branch spec](https://conventionalbranch.org/): the spec's types (`feature`, `bugfix`, `hotfix`, `release`, `chore`, their aliases `feat` and `fix`, and the AI agent prefixes `ai`, `claude`, `codex`, `copilot`, `cursor`) plus the other Conventional Commit types (`build`, `ci`, `docs`, `perf`, `refactor`, `style`, `test`), `agents` (the prefix VS Code's Agents window uses) and bot prefixes (`dependabot`, `renovate`). For strict spec-only validation, set this option explicitly to the spec's types; [CC201](rules.md#cc201) has the full config. |
+| `require_description_grammar` | bool | false | Also hold the description after `<type>/` to the Conventional Branch grammar: lowercase letters and digits, words joined by single hyphens, dots only inside a word. Off by default, because bot branches such as `dependabot/npm_and_yarn/lodash-4.17.21` do not follow it. See [CC201](rules.md#cc201). |
+| `allow_branch_names` | list[str] | [] (empty list) | Additional standalone branch names allowed when conventional_branch is true (e.g., ["staging", "production"]). By default, main, master, develop, HEAD, PR-* and gh-readonly-queue/* (GitHub merge queue branches) are always allowed. |
+| `require_rebase_target` | str | "" (no requirement) | Target branch for rebase requirement. If not set, no rebase validation is performed. |
+| `ignore_authors` | list[str] | [] (none ignored) | List of authors to ignore (i.e., always allow). |
+
+{.fields}
+
+### `[push]`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `allow_force_push` | bool | true | Allow force pushes. Set to `false` to block force pushes when used as a pre-push hook or with `--no-force-push`. |
+
+{.fields}
+
+### `[tag]`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `regex` | str | `^v?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$` | Pattern a tag name must match. The default is the [official SemVer pattern](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string) with an optional leading `v`, so both `v1.2.3` and `1.2.3` pass. An empty value disables the pattern match. |
+
+{.fields}
+
+### `[files]`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `max_size` | str | "" (disabled) | Largest a committed file may be, in bytes or with a `KB`/`MB`/`GB` suffix (binary units, so `5MB` is 5 × 1024²). Empty disables the rule. |
+| `prohibited_patterns` | list[str] | [] (empty list) | fnmatch patterns a committed path may not match, e.g. `["*.pem", ".env", "id_rsa*"]`. A bare pattern also matches the file name at any depth. Matching is case-sensitive on every platform, like git pathspecs. Empty disables the rule. |
+| `max_path_length` | int | 0 (disabled) | Longest a committed file path may be, in characters. `0` disables the rule. |
+
+{.fields}
+
+### `[pull_request]`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `check` | str | "commits" | GitHub App only. `"commits"` checks every commit of a pull request on its own; `"squash"` checks the one message a squash merge would land, built from the repository's merge settings. See [Pull requests](#pull-requests-every-commit-or-the-squash-message). |
+| `ai_declaration_checkboxes` | list[str] | [] (rule off) | The texts of the AI declaration boxes in the pull request template, one per box. When set, a pull request description checked with `--ai-attribution-only` must tick exactly one of them; see [CC501](rules.md#cc501). Read by the CLI, the Action and the App. |
+
+{.fields}
