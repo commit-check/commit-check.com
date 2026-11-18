@@ -94,21 +94,23 @@ Two things decide whether a failed check stops the merge request:
   a second pipeline for each merge request, with the `commit-check` job alone
   in it. That pipeline is the one the merge request shows and the one
   **Pipelines must succeed** looks at: a failed test in the branch pipeline
-  no longer blocks the merge. These rules put every job in one pipeline
-  again:
+  no longer blocks the merge. These rules start one pipeline for a merge
+  request, and jobs with no `rules` run in it:
 
     ```yaml
     workflow:
       rules:
         - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
           when: never
         - if: $CI_COMMIT_BRANCH
         - if: $CI_COMMIT_TAG
     ```
 
-    If your jobs already run in merge request pipelines, there is nothing to
-    change.
+    A job with `rules` of its own that only allow branch pipelines
+    (`if: $CI_COMMIT_BRANCH`, for example) stays out of the merge request
+    pipeline until its rules allow `merge_request_event` too. If your jobs
+    already run in merge request pipelines, there is nothing to change.
 
 ### Merge request title and description
 
