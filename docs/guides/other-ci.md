@@ -82,6 +82,34 @@ commit-check:
 - The `python` image ships with git. A `-slim` image does not, and needs it
   installed first.
 
+### Making a failed check block the merge
+
+Two things decide whether a failed check stops the merge request:
+
+- **Pipelines must succeed** (Settings > Merge requests > Merge checks) is
+  what makes a failed pipeline block the merge. Without it GitLab shows the
+  failure and still lets the request merge.
+- **Your other jobs have to run in the merge request pipeline too.** Jobs
+  with no `rules` of their own run in branch pipelines only, so GitLab starts
+  a second pipeline for each merge request, with the `commit-check` job alone
+  in it. That pipeline is the one the merge request shows and the one
+  **Pipelines must succeed** looks at: a failed test in the branch pipeline
+  no longer blocks the merge. These rules put every job in one pipeline
+  again:
+
+    ```yaml
+    workflow:
+      rules:
+        - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+          when: never
+        - if: $CI_COMMIT_BRANCH
+        - if: $CI_COMMIT_TAG
+    ```
+
+    If your jobs already run in merge request pipelines, there is nothing to
+    change.
+
 ### Merge request title and description
 
 GitLab passes both to the job, so they are piped in as they are. Add these
