@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.22.0](#v2220) | `--pr-title` checks a pull or merge request title on any CI; the rebase check works in Bitbucket pull request steps and GitLab merged results pipelines | [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md#merge-request-title-and-description) · [CC202](rules.md#cc202) |
 | [2.21.1](#v2211) | Subject length rules leave out a squash merge's ` (#123)` and skip Dependabot and Renovate commits | [CC004](rules.md#cc004) · [CC005](rules.md#cc005) |
 | [2.21.0](#v2210) | A pull request description must tick one of its template's AI declaration checkboxes (opt-in) | [CC501](rules.md#cc501) · [Requiring the template's AI declaration](guides/policies.md#requiring-the-templates-ai-declaration) |
 | [2.20.5](#v2205) | The author checks cover a repository's first commit; a run takes about half the time to start; releases on PyPI carry provenance | [Checking the committer](example.md#checking-the-committer) · [CC017](rules.md#cc017) |
@@ -41,6 +42,16 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.22.0 (2026-11-18) { #v2220 }
+
+### Added
+
+* `--pr-title` checks a pull or merge request title piped on stdin with the message rules a one-line title can meet: every `--message` rule except a body (CC011), a sign-off (CC012) and an AI author (CC017). ([Merge request title and description](guides/other-ci.md#merge-request-title-and-description), [#709](https://github.com/commit-check/commit-check/pull/709))
+
+### Fixed
+
+* CC202 judges the merge or pull request's own last commit in a Bitbucket pull request step and a GitLab merged results pipeline. Both check out a merge with the target branch, so the rule used to pass there even when the branch was not rebased. ([Bitbucket Pipelines](guides/other-ci.md#bitbucket-pipelines), [#710](https://github.com/commit-check/commit-check/pull/710))
 
 ## v2.21.1 (2026-11-18) { #v2211 }
 
