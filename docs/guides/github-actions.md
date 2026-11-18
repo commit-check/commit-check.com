@@ -59,6 +59,7 @@ has one needs no Action-specific configuration.
 | `branch` | `true` | Check the branch name |
 | `author-name` | `false` | Check each commit's author name |
 | `author-email` | `false` | Check each commit's author email |
+| `files` | `false` | Check the files each commit changes against the [`[files]` rules](../rules.md#push-rules) of `cchk.toml` (size, prohibited paths, path length). Needs `fetch-depth: 0`: a commit the clone holds without its parent is skipped. Since v2.24.0 |
 | `pr-title` | `false` | Check the pull request title against Conventional Commits, the one that matters for squash merges. Pull request events only |
 | `pr-comments` | `false` | Post the report as a pull request comment, edited in place on later runs |
 | `job-summary` | `true` | Write the report to the job summary |
