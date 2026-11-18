@@ -39,9 +39,13 @@
   --sumi-code-head: #eef2f4;
   --sumi-code-inline: #eef2f4;
 
-  /* The page width the site has always had: a 1220px column with the header
-     aligned to it, and both sidebars at the same width. */
-  --cc-page-w: 1220px;
+  /* Docs pages use Sumi's own 1480px frame, and the article fills the column
+     between the sidebars (56rem, about 110 characters a line) instead of
+     Sumi's 48rem: the 1220px frame the site carried over from Material left
+     a 632px article, too narrow for the option lists and CI snippets. The
+     landing page keeps its 1220px column (below). */
+  --cc-page-w: 1480px;
+  --sumi-content-w: 56rem;
   --sumi-side-w: 242px;
   --sumi-rail-w: 242px;
   --sumi-header-h: 48px;
@@ -68,6 +72,12 @@
 }
 
 /* Page frame ---------------------------------------------------------------- */
+/* The landing page is laid out for a 1220px column; its header and footer
+   stay aligned to it. */
+html:has(.cc-landing) {
+  --cc-page-w: 1220px;
+}
+
 .sumi-header-inner,
 .sumi-shell,
 .sumi-footer-inner {
@@ -180,4 +190,24 @@ body {
    than a rule for every table. */
 .sumi-prose .rules-index td code {
   white-space: nowrap;
+}
+
+/* No sideways scrolling -----------------------------------------------------
+   A long line wraps instead of hiding behind a scrollbar that, on macOS, only
+   shows while scrolling. Code blocks wrap at spaces first; copying a block
+   still copies the original lines. */
+.sumi-prose pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* Tab bars with many tabs (the MCP client list) wrap onto a second row, and
+   a label longer than a phone screen wraps inside itself. */
+.sumi-prose .tabbed-labels {
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+
+.sumi-prose .tabbed-labels > label {
+  white-space: normal;
 }
