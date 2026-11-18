@@ -318,6 +318,16 @@ same root cause.
 * `commit.subject_max_length` — the limit, in characters. Defaults to `80`.
   `50` and `72` are the other conventional choices. `0` turns the rule off.
 
+**Not counted**
+
+* The ` (#123)` GitHub adds to the end of a squash-merged subject. Those
+  characters are GitHub's, not the author's, so a pull request title that
+  fits still fits after the merge. A failure says what was left out:
+  `Subject is 86 characters, not counting "(#1698)"; it must be at most 80 characters`.
+* Commits by `dependabot[bot]` and `renovate[bot]` skip this rule and CC005.
+  Those bots build the subject from the package name and versions, which the
+  author cannot shorten. Their other checks still run.
+
 ### subject-min-length (CC005) { #cc005 }
 
 **What it does**
@@ -346,6 +356,9 @@ fix: reject config files with a null inherit_from
 
 * `commit.subject_min_length` — the minimum, in characters. Defaults to `5`.
   `0` turns the rule off.
+
+The squash-merge ` (#123)` and the two dependency bots are treated as for
+[CC004](#cc004).
 
 ### allow-merge-commits (CC006) { #cc006 }
 
