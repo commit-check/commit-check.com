@@ -50,9 +50,11 @@ way everywhere:
 
 ### Which rules
 
-The App runs the commit message, author and branch rules — [CC001–CC016](../rules.md#commit-message-rules),
+The App runs the commit message, author and branch rules — [CC001–CC017](../rules.md#commit-message-rules),
 [CC101–CC102](../rules.md#author-rules) and [CC201–CC202](../rules.md#branch-rules) —
-with the commit's own branch as the branch under test. One thing it does not
+with the commit's own branch as the branch under test, and, when it checks the
+pull request description, the AI declaration rule [CC501](../rules.md#cc501)
+(see [AI-written pull requests](#ai-written-pull-requests)). One thing it does not
 do: the push, file and tag rules ([CC301–CC304](../rules.md#push-rules),
 [CC401](../rules.md#tag-rules)) run where a push or a tag happens, in the
 [pre-commit hooks](pre-commit.md) and the CLI.
@@ -82,6 +84,35 @@ repository's merge settings, pull request number included. Editing the title or
 description re-runs it. The [configuration page](../configuration.md#pull-requests-every-commit-or-the-squash-message)
 has the table of what is checked under each merge setting.
 
+### AI-written pull requests
+
+Two settings for pull requests an AI tool helped write. Both read the same
+[`ai_attribution`](policies.md#ai-attribution) rules and the same detection as
+the commit checks:
+
+```toml title="cchk.toml"
+[pull_request]
+body_ai_attribution = true   # check the description against the AI rules
+ai_label = true              # label AI-written pull requests "ai-assisted"
+# ai_label = "AI generated"  # or a label name of your own
+```
+
+- `body_ai_attribution = true` checks the pull request description with the
+  AI rules only (CC013 to CC016): under `forbid` an AI footer such as
+  "Generated with Claude Code" fails, under `disclose` it has to be disclosed.
+  The result joins the head commit's check as a `PR description` row, and
+  editing the description re-runs it. With `ai_declaration_checkboxes` set,
+  the description also has to tick exactly one of the template's AI
+  declaration boxes ([CC501](../rules.md#cc501)).
+- `ai_label` adds the label when an AI tool wrote any of the pull request: a
+  commit message or author, the description, or an AI agent's app that opened
+  it (Copilot coding agent, Devin, Jules, Codex, ...). It does not depend on
+  the policy, so `ai_attribution = "ignore"` with a label marks pull requests
+  without ever failing one. The label is only added, never removed, and is
+  created if the repository does not have it. Labelling needs the App's
+  **Pull requests: write** permission; an installation approved before the App
+  asked for it has to accept the new permission first.
+
 ### Bots, re-runs, and commits checked twice
 
 - Commits by bots (any author whose name ends in `[bot]`: dependabot,
@@ -103,8 +134,8 @@ push or pull request, in the same four places: `cchk.toml`, `commit-check.toml`,
 [configuration page](../configuration.md) that belongs to a rule the App runs
 applies, precedence included; the `[push]`, `[files]` and `[tag]` sections are
 read but have nothing to act on here. Nothing is App-specific to set apart
-from `[pull_request]` (above) and `[jira]` (below); the CLI and the Action ignore
-them, except `[pull_request] ai_declaration_checkboxes`
+from `[pull_request]` (above), `[jira]` and `[commit] require_verified` (below);
+the CLI and the Action ignore them, except `[pull_request] ai_declaration_checkboxes`
 ([CC501](../rules.md#cc501)), which all three read.
 
 [`inherit_from`](organization.md) works, and a `github:` target is fetched with
@@ -158,6 +189,29 @@ suggestion = "Add the ticket, e.g. PROJ-123"
 
 It reports as `JIRA jira-ticket` in the same table as the other rules. It
 checks the reference's shape, not whether the ticket exists.
+
+### Verified commits
+
+The other App-side check. With `require_verified = true` under `[commit]`,
+every commit has to show **Verified** on GitHub: signed with a GPG, SSH or
+S/MIME key that is on the signer's GitHub account.
+
+```toml title="cchk.toml"
+[commit]
+require_verified = true
+```
+
+It reports as `VERIFIED verified-commit`, and a failure says why GitHub did not
+verify the commit (not signed, unknown key, unverified email, ...) with the
+command that re-signs it. The verdict is GitHub's own, read from the API, so
+nobody gives the App public keys and the result always matches the badge.
+Unlike GitHub's "Require signed commits" branch rule, which only refuses the
+push, the check names each commit that is not verified and says why.
+
+- Commits by bots the App skips (dependabot, renovate, ...) are not checked.
+- In squash mode the branch commits do not land, and GitHub signs the squash
+  commit it creates, so nothing is checked.
+- The CLI and the Action cannot read GitHub's verdict and ignore this setting.
 
 ## Enforcing it
 

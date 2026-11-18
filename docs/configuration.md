@@ -381,6 +381,17 @@ the same thing twice, so read the description rather than the default:
 - `require_rebase_target` unset is the one case where the check really does not
   run — there is no branch to compare against.
 
+### Top level
+
+These two sit above every section, at the top of the file.
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `inherit_from` | str | "" (none) | A shared config to start from: a path, a URL, or `github:owner/repo:path`. This file's own settings override it. See [Inheriting a shared config](#inheriting-a-shared-config) and [Across an organization](guides/organization.md). |
+| `warn` | list[str] | [] (nothing warned) | Checks or rule IDs to report without failing, e.g. `["branch", "CC003"]`. See [Report a rule without enforcing it](#report-a-rule-without-enforcing-it). |
+
+{.fields}
+
 ### `[commit]`
 
 | Option | Type | Default | Description |
@@ -407,6 +418,10 @@ the same thing twice, so read the description rather than the default:
 | `ai_disclosure_pattern` | str | "" (any value) | A regex the disclosure trailer's value must match under `"disclose"`, e.g. `'^\S+/\S+$'` for an `agent/model` format. Empty accepts any value, but a trailer with no value at all is reported whatever the pattern is. |
 
 {.fields}
+
+The GitHub App also reads `require_verified` (bool, default `false`) in this
+section: every commit has to show **Verified** on GitHub. The CLI and the
+Action do not check signatures; see [Verified commits](guides/github-app.md#verified-commits).
 
 ### `[branch]`
 
@@ -453,5 +468,20 @@ the same thing twice, so read the description rather than the default:
 |---|---|---|---|
 | `check` | str | "commits" | GitHub App only. `"commits"` checks every commit of a pull request on its own; `"squash"` checks the one message a squash merge would land, built from the repository's merge settings. See [Pull requests](#pull-requests-every-commit-or-the-squash-message). |
 | `ai_declaration_checkboxes` | list[str] | [] (rule off) | The texts of the AI declaration boxes in the pull request template, one per box. When set, a pull request description checked with `--ai-attribution-only` must tick exactly one of them; see [CC501](rules.md#cc501). Read by the CLI, the Action and the App. |
+| `body_ai_attribution` | bool | false | GitHub App only. Check the pull request description against the AI rules (CC013 to CC016), and its AI declaration boxes when `ai_declaration_checkboxes` is set. The Action's `pr-body-ai-attribution` input does the same. See [AI-written pull requests](guides/github-app.md#ai-written-pull-requests). |
+| `ai_label` | bool or str | false | GitHub App only. Label a pull request an AI tool wrote any of: `true` for `ai-assisted`, or the label's name. Labels are only added, never removed. |
+
+{.fields}
+
+### `[jira]`
+
+GitHub App only; the CLI and the Action ignore the section. See
+[Jira ticket references](guides/github-app.md#jira-ticket-references).
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `required` | bool | false | Every commit message, or the squash message, has to reference a Jira ticket. |
+| `pattern` | str | `[A-Z]+-\d+` | Regex for a ticket reference, e.g. `"PROJ-\\d+"` in TOML for one project. |
+| `suggestion` | str | "" (built-in text) | The fix shown when the reference is missing. |
 
 {.fields}

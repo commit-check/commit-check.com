@@ -110,6 +110,7 @@ lines to the `script`, before the commit loop (its `exit` ends the script):
     ```yaml
         - test "$CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED" != "true" || { echo "The description is over 2700 characters; GitLab passed only part of it"; exit 1; }
     ```
+
 - Editing the title or description does not start a pipeline. Run the
   pipeline again from the merge request's **Pipelines** tab after an edit.
 
