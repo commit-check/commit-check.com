@@ -17,17 +17,11 @@
 {% endblock %}
 
 {#
-  The site navigation as the phone drawer, the same one every other page has.
-  Sumi shows its menu button only when the page has a sidebar, so the page
-  keeps its navigation (no `hide: navigation`) and renders the sidebar here;
-  landing.css hides it on wide screens, where the landing takes the full width.
+  Sumi's sidebar partial gives a landing page the site navigation as the phone
+  drawer only; it is part of the layout block, so this override includes it.
 #}
 {% block layout %}
-  <aside class="sumi-sidebar cc-landing-drawer" id="sumi-sidebar" aria-label="{{ t('navigation') }}">
-    <div class="sumi-sidebar-inner">
-      <nav class="sumi-nav">{{ m.nav_tree(nav.items, 1) }}</nav>
-    </div>
-  </aside>
+  {%- include "partials/sidebar.html" %}
   <main class="sumi-main cc-landing" id="content">
     <div class="md-typeset" data-pagefind-body>
       {{ page.content }}

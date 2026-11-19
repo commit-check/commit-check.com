@@ -69,12 +69,16 @@
   overflow-x: clip;
 }
 
-/* The navigation drawer (see landing.html). Sumi turns `.sumi-sidebar` into
-   the slide-in drawer at 920px and below; above that the landing has no
-   sidebar, so it is not shown at all. */
-@media screen and (min-width: 921px) {
-  .cc-landing-drawer {
-    display: none;
+/* Sumi narrows the header and footer of a page with no sidebar to 1200px;
+   here they line up with the 1220px column instead, as on the docs pages. */
+@media (min-width: 921px) {
+  html[data-chrome="narrow"] :is(.sumi-header-inner, .sumi-footer-inner, .sumi-footer-links) {
+    max-width: var(--cc-page-w);
+    padding-inline: 20px;
+  }
+
+  html[data-chrome="narrow"] .sumi-footer-links::after {
+    inset-inline: 20px;
   }
 }
 
