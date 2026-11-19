@@ -1,49 +1,15 @@
 # GitLab CI, Bitbucket and Azure Pipelines
 
-On GitHub, the [Action](github-actions.md) and the [App](github-app.md) do
-this work for you. Everywhere else Commit Check runs as one job in the
-pipeline: it is a Python package with no runtime dependencies, so any runner
-that can `pip install` can run it, and it reads the same `cchk.toml` as the
-hook and the Action.
+On GitHub, the [Action](github-actions.md) and the [App](github-app.md) check
+every pull request for you. On GitLab CI and Bitbucket Pipelines one command
+does that job: `commit-check-ci`, which comes with the package from 2.23.0
+on. It finds the merge or pull request from the variables the CI system sets
+and checks the source branch and every commit the request adds, against the
+same `cchk.toml` as the hook and the Action. The title, the description, each
+commit's author and the files it changes are one option away.
 
-Two things are different from running it on your own machine, and each
-example below handles both:
-
-- **The checkout can be a detached HEAD**, as it is on GitLab and Azure, and
-  then git has no branch to report. `commit-check --branch` reads the name
-  from the CI's own variables instead, the merge or pull request's source
-  branch first, so the jobs call it as is.
-- **A merge request has more than one commit.** `--rev` checks one commit, so
-  the job loops over the commits the merge request adds, as in
-  [Checking a range of commits](../example.md#checking-a-range-of-commits).
-  The loop needs the history those commits sit on, so each example turns
-  shallow cloning off. If the range cannot be read, the job fails rather than
-  passing with nothing checked.
-
-Each job runs on merge or pull requests only, because the variables it reads
-exist only there. Add `--author-name --author-email` to the `commit-check`
-call in the loop to check each commit's author as well, and `--files` to
-check the files each commit adds (configured in the `[files]` section).
-
-The branch check (`--branch`) also covers `require_rebase_target` (CC202),
-which needs the target branch in the clone. Neither GitLab nor Bitbucket
-fetches it for a merge or pull request, so each job fetches it first. Without
-it the rule reports itself as skipped (`rebase target 'main' not found`) and
-the job passes. The jobs fetch the request's target branch; if
-`require_rebase_target` names a different branch, fetch that one instead.
-
-!!! note "On 2.18.2 or older"
-
-    Releases before 2.18.3 read only GitHub's variables, so on a detached
-    checkout `--branch` judges `HEAD`, which is always allowed, and passes
-    whatever the branch is called. Pipe the name in instead: a value piped
-    into `--branch` on its own is the name it checks.
-
-    ```console
-    $ echo "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" | commit-check --branch          # GitLab
-    $ echo "$BITBUCKET_BRANCH" | commit-check --branch                             # Bitbucket
-    $ echo "${SYSTEM_PULLREQUEST_SOURCEBRANCH#refs/heads/}" | commit-check --branch  # Azure
-    ```
+On Azure Pipelines, and on any other CI, the job is
+[written by hand](#azure-pipelines).
 
 ## GitLab CI
 
@@ -56,31 +22,66 @@ commit-check:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
     - pip install commit-check
-    - target="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-    - git fetch --quiet origin "+refs/heads/$target:refs/remotes/origin/$target"
-    - commit-check --branch
-    - |
-      head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"
-      shas=$(git rev-list "$CI_MERGE_REQUEST_DIFF_BASE_SHA..$head") || exit 1
-      status=0
-      for sha in $shas; do
-        commit-check --message --rev "$sha" --compact || status=1
-      done
-      exit $status
+    - commit-check-ci
 ```
 
-- `GIT_DEPTH: "0"` turns shallow cloning off.
-- A merge request pipeline fetches only the commit it runs on, so the job
-  fetches the target branch for the rebase check. A merge request from a fork
-  runs its pipeline in the fork, where `origin` is the fork: fetch from
-  `"$CI_MERGE_REQUEST_PROJECT_URL.git"` instead of `origin` there, so the
-  branch comes from the target project.
-- In a merged results pipeline, `HEAD` is a merge commit GitLab made, and
-  `CI_MERGE_REQUEST_SOURCE_BRANCH_SHA` names the merge request's own last
-  commit. In a plain merge request pipeline that variable is empty and
-  `CI_COMMIT_SHA` is that commit.
+Every check is listed under a heading of its own, and one failure fails the
+job:
+
+```text
+$ commit-check-ci
+Branch
+  passed
+Commit ccdfc043 added the login form
+✖ CC001 message failed: added the login form
+  The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
+  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci
+  Docs:    https://commit-check.com/rules/#cc001
+
+Commit 20119d2e fix: trim the user name
+  passed
+
+1 of 3 failed.
+```
+
+- `GIT_DEPTH: "0"` turns shallow cloning off, for this job only. The command
+  needs every commit of the merge request and the commit they start from.
+  With a clone that ends inside the merge request the job fails and names
+  this setting, rather than pass with commits unchecked.
+- The command fetches the target branch itself, which
+  `require_rebase_target` ([CC202](../rules.md#cc202)) compares with. For a
+  merge request from a fork it fetches from the target project. A pipeline
+  that runs in a fork of a private project cannot fetch it: with that rule
+  set the branch check fails there, and without the rule the branch name is
+  checked as usual.
+- In a merged results pipeline, `HEAD` is a merge commit GitLab made. The
+  checks stop at the merge request's own last commit.
+- `rules` keeps the job to merge request pipelines. In any other pipeline the
+  command checks the branch and the last commit only, and says so.
 - The `python` image ships with git. A `-slim` image does not, and needs it
   installed first.
+
+### Options
+
+Each check has an option, named after the
+[Action's input](github-actions.md#inputs) and on or off by default as it is
+there:
+
+| Option | Default | What it checks |
+|---|---|---|
+| `--message` | on | The message of every commit the request adds. |
+| `--branch` | on | The name of the source branch, and `require_rebase_target` if it is set. |
+| `--author-name` | off | The author name of every commit. |
+| `--author-email` | off | The author email of every commit. |
+| `--files` | off | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules). |
+| `--pr-title` | off | The title, with the message rules a one-line title can meet. |
+| `--pr-body-ai-attribution` | off | The description, against the AI attribution rules. |
+
+An option alone switches its check on, and `=false` switches one off:
+
+```yaml
+    - commit-check-ci --author-email --branch=false
+```
 
 ### Making a failed check block the merge
 
@@ -114,28 +115,26 @@ Two things decide whether a failed check stops the merge request:
 
 ### Merge request title and description
 
-GitLab passes both to the job, so they are piped in as they are. Add these
-lines to the `script`, before the commit loop (its `exit` ends the script):
+GitLab passes both to the job, so two options are all it takes:
 
 ```yaml
-    - printf '%s\n' "$CI_MERGE_REQUEST_TITLE" | commit-check --pr-title
-    - printf '%s\n' "$CI_MERGE_REQUEST_DESCRIPTION" | commit-check --ai-attribution-only
+    - commit-check-ci --pr-title --pr-body-ai-attribution
 ```
 
 - `--pr-title` checks the title with the message rules a one-line title can
   meet: everything `--message` runs except a body (CC011), a sign-off (CC012)
   and an AI author (CC017). With squash merges the title is often the commit
-  message that lands.
-- `--ai-attribution-only` checks the description against your
+  message that lands. A draft marker (`Draft:`, `[Draft]`, `(Draft)`) is not
+  part of the title that is checked.
+- `--pr-body-ai-attribution` checks the description against your
   `ai_attribution` policy, and, when `[pull_request] ai_declaration_checkboxes`
   is set, that it ticks exactly one AI declaration box (CC501). GitLab task
   lists (`- [x]`, `* [x]`, `1. [x]`) are read like GitHub's.
-- GitLab cuts `CI_MERGE_REQUEST_DESCRIPTION` to its first 2700 characters
-  (`CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED` is then `true`), so only that
-  part is checked. Put the AI declaration boxes near the top of the merge
-  request template, so a long description does not cut them off. To fail a
-  description that was cut rather than check part of it, add before the
-  description check:
+- GitLab passes a job only the first 2700 characters of a description, so
+  only that part is checked, and the job says so when it happens. Put the AI
+  declaration boxes near the top of the merge request template, so a long
+  description does not cut them off. To fail a description that was cut
+  rather than check part of it, add before the `commit-check-ci` line:
 
     ```yaml
         - test "$CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED" != "true" || { echo "The description is over 2700 characters; GitLab passed only part of it"; exit 1; }
@@ -158,53 +157,57 @@ pipelines:
             depth: full
           script:
             - pip install commit-check
-            - target="$BITBUCKET_PR_DESTINATION_BRANCH"
-            - git fetch --quiet origin "+refs/heads/$target:refs/remotes/origin/$target"
-            - commit-check --branch
-            - |
-              shas=$(git rev-list "$BITBUCKET_PR_DESTINATION_COMMIT..$BITBUCKET_COMMIT") || exit 1
-              status=0
-              for sha in $shas; do
-                commit-check --message --rev "$sha" --compact || status=1
-              done
-              exit $status
+            - commit-check-ci
 ```
 
-- `depth: full` turns off the default clone depth of 50 commits.
+- `depth: full` gives the step the pull request's whole history. With a clone
+  that ends inside the pull request the step fails and names this setting,
+  rather than pass with commits unchecked.
 - Bitbucket merges the destination branch into the pull request before the
-  step runs. The range stops at `BITBUCKET_COMMIT`, the pull request's own
+  step runs. The checks stop at `BITBUCKET_COMMIT`, the pull request's own
   last commit, so commits that only came in with that merge are not checked.
   The rebase check judges that commit too, not the merge.
+- The output and the [options](#options) are the same as on GitLab.
 
 ### Pull request title and description
 
 Bitbucket gives the step the pull request's id but not its title or
-description, so the step reads them from the Bitbucket API. Create a
+description, so the command reads them from the Bitbucket API. Create a
 [repository access token](https://support.atlassian.com/bitbucket-cloud/docs/repository-access-tokens/)
 with the **Pull requests: Read** scope, store it as a secured repository
-variable named `PR_READ_TOKEN`, and add to the `script`, before the commit
-loop:
+variable named `BITBUCKET_ACCESS_TOKEN`, and switch the two checks on:
 
 ```yaml
-            - >-
-              curl -fsS -H "Authorization: Bearer $PR_READ_TOKEN"
-              "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_REPO_FULL_NAME/pullrequests/$BITBUCKET_PR_ID"
-              -o pr.json
-            - >-
-              python -c 'import json; pr = json.load(open("pr.json"));
-              open("title.txt", "w").write(pr["title"]);
-              open("description.txt", "w").write(pr["description"])'
-            - commit-check --pr-title < title.txt
-            - commit-check --ai-attribution-only < description.txt
+            - commit-check-ci --pr-title --pr-body-ai-attribution
 ```
 
-Reading the fields in a step of their own makes a failed API read fail the
-step, instead of piping empty text into the check. `--pr-title` and
-`--ai-attribution-only` work as in the
+Without the variable, or with a token Bitbucket refuses, the two checks fail
+and say why: a title that could not be read is never checked as empty text.
+`--pr-title` and `--pr-body-ai-attribution` work as in the
 [GitLab section](#merge-request-title-and-description). Editing a pull
 request does not start a pipeline, so run the step again after an edit.
 
 ## Azure Pipelines
+
+`commit-check-ci` knows GitLab's and Bitbucket's variables. Anywhere else it
+checks the branch and the last commit only, so on Azure Pipelines, or a CI of
+your own, the job calls `commit-check` itself. Commit Check is a Python
+package with no runtime dependencies: any runner that can `pip install` can
+run it.
+
+Two things are different from running it on your own machine, and the
+example below handles both:
+
+- **The checkout can be a detached HEAD**, as it is on Azure, and then git
+  has no branch to report. `commit-check --branch` reads the name from the
+  CI's own variables instead, the pull request's source branch first, so the
+  job calls it as is.
+- **A pull request has more than one commit.** `--rev` checks one commit, so
+  the job loops over the commits the pull request adds, as in
+  [Checking a range of commits](../example.md#checking-a-range-of-commits).
+  The loop needs the history those commits sit on, so the example turns
+  shallow cloning off. If the range cannot be read, the job fails rather than
+  passing with nothing checked.
 
 ```yaml title="azure-pipelines.yml"
 trigger: none
@@ -250,3 +253,21 @@ steps:
   [build validation branch policy](https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies#set-build-validation)
   on the target branch, and `System.PullRequest.SourceBranch` is only set for
   builds a branch policy started.
+- Add `--author-name --author-email` to the `commit-check` call in the loop
+  to check each commit's author as well, and `--files` to check the files
+  each commit adds (configured in the `[files]` section).
+- The branch check also covers `require_rebase_target` (CC202), which needs
+  the target branch in the clone as `origin/<branch>`. Without it the rule
+  reports itself as skipped (`rebase target 'main' not found`) and the job
+  passes.
+
+!!! note "On 2.18.2 or older"
+
+    Releases before 2.18.3 read only GitHub's variables, so on a detached
+    checkout `--branch` judges `HEAD`, which is always allowed, and passes
+    whatever the branch is called. Pipe the name in instead: a value piped
+    into `--branch` on its own is the name it checks.
+
+    ```console
+    $ echo "${SYSTEM_PULLREQUEST_SOURCEBRANCH#refs/heads/}" | commit-check --branch
+    ```
