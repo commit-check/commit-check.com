@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.23.0](#v2230) | `commit-check-ci` checks a whole merge or pull request in one GitLab CI job or Bitbucket Pipelines step | [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md) |
 | [2.22.0](#v2220) | `--pr-title` checks a pull or merge request title on any CI; the rebase check works in Bitbucket pull request steps and GitLab merged results pipelines | [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md#merge-request-title-and-description) · [CC202](rules.md#cc202) |
 | [2.21.1](#v2211) | Subject length rules leave out a squash merge's ` (#123)` and skip Dependabot and Renovate commits | [CC004](rules.md#cc004) · [CC005](rules.md#cc005) |
 | [2.21.0](#v2210) | A pull request description must tick one of its template's AI declaration checkboxes (opt-in) | [CC501](rules.md#cc501) · [Requiring the template's AI declaration](guides/policies.md#requiring-the-templates-ai-declaration) |
@@ -42,6 +43,16 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.23.0 (2026-11-19) { #v2230 }
+
+### Added
+
+* `commit-check-ci` checks the merge or pull request a GitLab CI job or Bitbucket Pipelines step runs for: the source branch and every commit the request adds, and with an option each the title, the description, the commits' authors and their files. ([GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md), [#714](https://github.com/commit-check/commit-check/pull/714))
+
+### Fixed
+
+* A pull request title or description that fails is headed `Rejected by Commit Check`, not `Commit rejected`: neither is a commit. ([Requiring the template's AI declaration](guides/policies.md#requiring-the-templates-ai-declaration), [#713](https://github.com/commit-check/commit-check/pull/713))
 
 ## v2.22.0 (2026-11-18) { #v2220 }
 

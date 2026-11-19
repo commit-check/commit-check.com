@@ -9,7 +9,8 @@ developer sees locally and what is enforced on the pull request.
 | [Pre-commit hook](pre-commit.md) | As the message is written | Yes — `--no-verify` | `.pre-commit-config.yaml` in each repository |
 | [GitHub Action](github-actions.md) | On every push and pull request, in CI | No | A workflow file in each repository |
 | [GitHub App](github-app.md) | On every push and pull request, hosted | No | Install once for the organization |
-| [GitLab CI, Bitbucket, Azure Pipelines](other-ci.md) | On every merge or pull request, in CI | No | A job in each repository's pipeline file |
+| [GitLab CI, Bitbucket Pipelines](other-ci.md) | On every merge or pull request, in CI | No | Two lines in each repository's pipeline file |
+| [Azure Pipelines, any other CI](other-ci.md#azure-pipelines) | On every pull request, in CI | No | A job in each repository's pipeline file |
 | [Command line](../example.md) | Wherever you call it: a range of commits, a CI you write yourself | — | `pip install commit-check` |
 | [MCP server](mcp.md) | Before the commit exists, inside an AI coding agent | — | One entry in the agent's MCP config |
 | [Python API](python-api.md) | Wherever your own code runs: a bot, a server-side hook, an agent you build | — | `pip install commit-check`, then `import commit_check.api` |
@@ -22,7 +23,8 @@ developer sees locally and what is enforced on the pull request.
   not after a CI round trip.
 - **A policy needs a check that cannot be skipped.** Anyone can pass
   `--no-verify` to a hook. The Action and the App run where that is not
-  possible, and a required check keeps a violating change from merging.
+  possible, and a required check keeps a violating change from merging. On
+  GitLab and Bitbucket the pipeline job is that check.
 - **More than a handful of repositories wants one config.** `inherit_from`
   lets every repository share a base policy and override only what it
   genuinely needs, whichever of the above runs the checks.
@@ -64,6 +66,12 @@ Hosted. Install it once on an organization and every repository, including
 ones created later, gets a **Commit Check** result on each commit of every
 push and pull request, with no workflow file and no CI minutes.
 [Set it up →](github-app.md)
+
+## GitLab CI and Bitbucket Pipelines { #gitlab-ci-and-bitbucket-pipelines }
+
+One job in the pipeline runs `commit-check-ci`, which finds the merge or pull
+request and checks its branch, every commit it adds and, if asked, its title
+and description. [Set it up →](other-ci.md)
 
 ## MCP server
 

@@ -243,7 +243,7 @@ ai_declaration_checkboxes = ["No AI tools were used", "If AI tools were used"]
 
 ```console
 $ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only
-✖ Commit rejected by Commit Check · 1 check failed
+✖ Rejected by Commit Check · 1 check failed
 
 ✖ CC501 ai-declaration failed: - [ ] **No AI tools were used** in preparing this PR. (+1 more line)
   No AI declaration box is ticked

@@ -4,7 +4,7 @@ hide:
 template: landing.html
 title: Commit Check
 seo_title: Commit Check — Commit policy as code for teams and AI agents
-description: Commit policy as code for teams and AI agents. Messages, branches, authors and AI attribution, checked from your commit hook to every pull request.
+description: Commit policy as code for teams and AI agents. Messages, branches, authors and AI attribution, checked from your commit hook to every pull request, on GitHub, GitLab and Bitbucket.
 ---
 
 <!-- markdownlint-disable MD041 MD033 MD036 MD025 -->
@@ -64,7 +64,7 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <li>MIT licensed, no account needed</li>
 <li>Python 3.11 – 3.15 on Linux, macOS and Windows</li>
 <li>Signed build provenance on every release</li>
-<li>CLI and hook work with any Git host</li>
+<li>GitHub, GitLab, Bitbucket and any Git host</li>
 </ul>
 </section>
 
@@ -87,7 +87,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <ul class="cc-surfaces">
 <li><a class="cc-surface" href="getting-started/">
 <span class="cc-surface__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7l4.5 4.5L5 16M12 17h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-<span class="cc-surface__kicker">Any forge, any CI</span>
+<span class="cc-surface__kicker">GitLab, Bitbucket, any CI</span>
 <span class="cc-surface__name">Command line</span>
 <span class="cc-surface__desc">The engine itself, with JSON output and a Python API for scripts.</span>
 <code class="cc-surface__code">pip install commit-check</code>
@@ -127,7 +127,8 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <span class="cc-surface__go">MCP guide →</span>
 </a></li>
 </ul>
-<p class="cc-more-link"><a href="guides/integrations/">Not sure which? Compare them side by side →</a></p>
+<p class="cc-more-link">On GitLab CI or Bitbucket Pipelines? <a href="guides/other-ci/">One job checks every merge request →</a></p>
+<p class="cc-more-link cc-more-link--next"><a href="guides/integrations/">Not sure which? Compare them side by side →</a></p>
 </div>
 </section>
 
@@ -490,9 +491,12 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 
 ??? question "Does it only work on GitHub?"
 
-    The CLI and the pre-commit hook run anywhere Git does — GitLab, Gitea,
-    Bitbucket, a local machine. The Action and the App are GitHub-specific
-    because they integrate with GitHub's check runs.
+    No. On GitLab CI and Bitbucket Pipelines one command, `commit-check-ci`,
+    checks every merge or pull request: see the
+    [GitLab and Bitbucket guide](guides/other-ci.md). The CLI and the
+    pre-commit hook run anywhere Git does — Gitea, Azure Pipelines, a local
+    machine. The Action and the App are GitHub-specific because they
+    integrate with GitHub's check runs.
 
 ??? question "Do I need Node.js?"
 
