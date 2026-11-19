@@ -800,6 +800,11 @@
   font-weight: 600;
 }
 
+/* A second link under the first: the two read as one block. */
+.md-typeset .cc-more-link--next {
+  margin-top: 8px;
+}
+
 /* On a phone the five cards become a list of rows: the icon, the name and
    what it is for. The details are one tap away on the guide. */
 @media screen and (max-width: 599px) {
