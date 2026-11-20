@@ -74,24 +74,15 @@ ID and a link to the rule's documentation.
 
     "Restating the built-in behaviour" is nearly true, not exactly true, and
     the gap is silent — the shorter file above accepts slightly less than the
-    v1 one it replaces. Two types in that v1 example are missing from the v2
-    defaults:
+    v1 one it replaces. One type in that v1 example is missing from the v2
+    defaults: `task` as a branch type. `task/CC-42` passed under v1 and is
+    rejected by the default `allow_branch_types`. (`revert` as a commit type
+    is in the v2 defaults, as it was in v1.)
 
-    - `revert` as a commit type. `revert: drop the cache` passed under v1 and
-      is rejected by the default `allow_commit_types`. (Unrelated to
-      `allow_revert_commits`, which governs Git's own `Revert "..."` commits
-      and is on by default.)
-    - `task` as a branch type. `task/CC-42` passed under v1 and is rejected by
-      the default `allow_branch_types`.
-
-    Keep them by naming the list you want, remembering that setting either
-    option replaces the default rather than adding to it:
+    Keep it by naming the list you want, remembering that setting the option
+    replaces the default rather than adding to it:
 
     ```toml
-    [commit]
-    allow_commit_types = ["build", "chore", "ci", "docs", "feat", "fix",
-                          "perf", "refactor", "revert", "style", "test"]
-
     [branch]
     allow_branch_types = ["bugfix", "chore", "feature", "hotfix", "release", "task"]
     ```

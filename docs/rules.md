@@ -170,6 +170,12 @@ whether merge commits are allowed at all is [CC006](#cc006)'s call. A subject
 someone typed that merely starts with `Merge `, such as `Merge the parser
 rewrite`, is judged like any other.
 
+The same goes for the subjects `git revert` writes: `Revert "<subject>"`, and
+`Reapply "<subject>"` when the commit reverted is itself a revert. GitHub's
+and GitLab's revert buttons write the same `Revert "` subject. Whether reverts
+are allowed at all is [CC007](#cc007)'s call. A revert written by hand takes
+the `revert` type, which is in the default list: `revert: drop the cache`.
+
 **Why is this bad?**
 
 A free-form subject can only be read by a human. A structured one can be read by
@@ -327,6 +333,8 @@ same root cause.
 * Commits by `dependabot[bot]` and `renovate[bot]` skip this rule and CC005.
   Those bots build the subject from the package name and versions, which the
   author cannot shorten. Their other checks still run.
+* The `Revert "..."` and `Reapply "..."` subjects `git revert` writes, which
+  add nine characters to a subject that already fit. CC005 skips them too.
 
 ### subject-min-length (CC005) { #cc005 }
 
@@ -398,7 +406,8 @@ git config --global pull.rebase true
 
 **What it does**
 
-Rejects the `Revert "..."` commits that `git revert` generates.
+Rejects the `Revert "..."` commits that `git revert` generates, and the
+`Reapply "..."` it writes when the commit reverted is itself a revert.
 
 **Why is this bad?**
 

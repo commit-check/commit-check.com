@@ -60,7 +60,7 @@ $ echo "updated the parser" | commit-check -m
 
 ✖ CC001 message failed: updated the parser
   The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
-  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci
+  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci, revert
   Docs:    https://commit-check.com/rules/#cc001
 ```
 
