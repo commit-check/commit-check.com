@@ -35,7 +35,7 @@ Branch
 Commit ccdfc043 added the login form
 ✖ CC001 message failed: added the login form
   The commit message should follow Conventional Commits. See https://www.conventionalcommits.org
-  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci
+  Suggest: Use <type>(<scope>): <description>, where <type> is one of: feat, fix, docs, style, refactor, test, chore, perf, build, ci, revert
   Docs:    https://commit-check.com/rules/#cc001
 
 Commit 20119d2e fix: trim the user name
