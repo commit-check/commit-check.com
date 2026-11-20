@@ -201,10 +201,6 @@
   text-wrap: balance;
 }
 
-.md-typeset .cc-accent {
-  color: var(--cc-blue);
-}
-
 .md-typeset .cc-h2 {
   font-family: var(--cc-display);
   font-size: clamp(32px, 4.2vw, 50px);
@@ -316,11 +312,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  height: 52px;
+  height: 48px;
   padding: 0 22px;
-  border-radius: 11px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 10px;
+  font-size: 15.5px;
+  font-weight: 500;
   text-decoration: none;
   transition: background-color 150ms, border-color 150ms;
 }
@@ -330,16 +326,19 @@
   height: 16px;
 }
 
-/* Ink on Signal Blue is 5.9:1; white on it would be 3.1:1. */
+/* The primary button is the brightest thing on the ground: near-white on
+   Ink, Ink on white (see the light scheme at the end). Signal Blue stays an
+   accent, in the glow under it. */
 .md-typeset .cc-btn--primary,
 .md-typeset .cc-btn--primary:hover,
 .md-typeset .cc-btn--primary:focus {
-  background: var(--cc-blue);
-  color: #06131b;
+  background: #f1f5f7;
+  color: var(--cc-ink);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 10px 28px -10px rgba(44, 156, 205, 0.55);
 }
 
 .md-typeset .cc-btn--primary:hover {
-  background: #5bb8e0;
+  background: #ffffff;
 }
 
 .md-typeset .cc-btn--ghost {
@@ -369,31 +368,31 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  height: 52px;
+  height: 48px;
   box-sizing: border-box;
-  padding: 0 5px 0 16px;
-  border: 1px solid #2a3b48;
-  border-radius: 11px;
-  background: var(--cc-ink-3);
+  padding: 0 6px 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
   font-family: var(--cc-mono);
   font-size: 14.5px;
   color: var(--cc-on-ink);
 }
 
 .cc-install__sigil {
-  color: var(--cc-blue);
+  color: var(--cc-on-ink-3);
 }
 
 .md-typeset .cc-copy {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border: 0;
-  border-radius: 8px;
-  background: #16252f;
-  color: #9db0be;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--cc-on-ink-3);
   cursor: pointer;
 }
 
@@ -424,38 +423,62 @@
 
 /* ------------------------------------------------------------------ hero -- */
 
+/* Headline, lede and the two ways in, then the stage: the commit hook on the
+   left and the same policy on a pull request on the right, then the projects
+   that run it. The ground carries one soft Signal Blue glow behind the stage
+   and a fine grid that fades out towards the edges. */
 .md-typeset .cc-hero {
-  padding-top: 72px;
+  padding-top: 112px;
   padding-bottom: 0;
   overflow: hidden;
+  isolation: isolate;
 }
 
-.md-typeset .cc-hero__graph {
+.md-typeset .cc-hero::before,
+.md-typeset .cc-hero::after {
+  content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 480px;
-  height: 100%;
+  inset: 0;
+  z-index: -1;
   pointer-events: none;
 }
 
-.cc-hero__grid {
-  display: grid;
-  gap: 48px;
-  align-items: center;
+.md-typeset .cc-hero::before {
+  background: radial-gradient(48% 42% at 66% 64%, rgba(44, 156, 205, 0.2), transparent 72%);
 }
 
-@media screen and (min-width: 960px) {
-  .cc-hero__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 600px);
-    gap: 56px;
-  }
+.md-typeset .cc-hero::after {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center -1px;
+  mask-image: radial-gradient(64% 54% at 50% 34%, #000 12%, transparent 76%);
 }
 
 .cc-hero__copy {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 28px;
+}
+
+.md-typeset .cc-hero .cc-display {
+  max-width: 940px;
+  font-size: clamp(44px, 6.4vw, 80px);
+}
+
+/* The second half of the headline, a step back rather than a second colour. */
+.md-typeset .cc-accent {
+  display: block;
+  color: #6f8494;
+}
+
+.cc-hero__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px 56px;
 }
 
 .md-typeset .cc-pill {
@@ -464,42 +487,194 @@
   align-items: center;
   gap: 8px;
   height: 30px;
-  padding: 0 12px;
-  border: 1px solid #22404f;
+  padding: 0 13px 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
-  background: #102836;
-  color: var(--cc-blue-soft);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--cc-on-ink-2);
   font-size: 13.5px;
   font-weight: 500;
 }
 
 .cc-pill__dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--cc-blue);
+  box-shadow: 0 0 0 3px rgba(44, 156, 205, 0.18);
 }
 
 .md-typeset .cc-lede {
+  flex: 1 1 420px;
+  max-width: 580px;
   font-size: 19px;
   line-height: 1.55;
-  color: var(--cc-on-ink-2);
+  color: var(--cc-on-ink-3);
   text-wrap: pretty;
 }
 
-.md-typeset .cc-lede code {
+.md-typeset .cc-lede strong {
+  font-weight: 500;
   color: var(--cc-on-ink);
 }
 
-.md-typeset ul.cc-facts {
+.md-typeset .cc-lede code {
+  color: var(--cc-on-ink-2);
+}
+
+.md-typeset .cc-hero .cc-actions {
+  flex-wrap: nowrap;
+}
+
+/* The stage. Both panels are drawn dark in either scheme: they stand for a
+   terminal and a check run, which the reader knows as dark surfaces. */
+.cc-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  margin-top: 72px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--cc-ink-3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 40px 120px -30px rgba(0, 0, 0, 0.75);
+}
+
+.md-typeset .cc-stage .cc-term {
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.md-typeset .cc-stage .cc-term__bar,
+.md-typeset .cc-prcheck .cc-term__bar {
+  height: 44px;
+  font-family: var(--cc-mono);
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.md-typeset .cc-stage .cc-term__body {
+  padding: 22px 26px 26px;
+  font-size: 13.5px;
+  line-height: 23px;
+}
+
+.md-typeset .cc-stage .cc-line {
+  min-height: 23px;
+  overflow-wrap: break-word;
+}
+
+.md-typeset .cc-stage .cc-gap {
+  margin-top: 23px;
+}
+
+/* A figure, which the theme lays out as a centred flex column. */
+.md-typeset .cc-prcheck {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: left;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  color: #d6e1e8;
+}
+
+.md-typeset .cc-prcheck__head {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 22px 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--cc-on-ink-3);
+}
+
+.cc-prcheck__sum {
+  color: #ff7a6e;
+}
+
+.md-typeset .cc-prcheck__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14.5px;
+}
+
+.md-typeset .cc-prcheck__row.is-fail {
+  background: rgba(255, 122, 110, 0.05);
+}
+
+.md-typeset .cc-prcheck__row code {
+  margin-left: auto;
+  font-family: var(--cc-mono);
+  font-size: 12px;
+  color: var(--cc-on-ink-3);
+}
+
+.md-typeset .cc-prcheck__fix {
+  padding: 2px 22px 16px 52px;
+  background: rgba(255, 122, 110, 0.05);
+}
+
+.md-typeset .cc-prcheck__fix code {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.18);
+  font-family: var(--cc-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+/* The projects that run it, straight under the stage. */
+.md-typeset .cc-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 32px;
-  margin-top: 64px;
-  padding: 22px 0 30px;
-  border-top: 1px solid #1a2934;
-  font-size: 14px;
+  align-items: baseline;
+  gap: 14px 40px;
+  padding: 44px 0 52px;
+}
+
+.cc-trust span {
+  font-size: 13.5px;
   color: var(--cc-on-ink-3);
+}
+
+.md-typeset .cc-trust a {
+  font-family: var(--cc-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #7d92a1;
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.md-typeset .cc-trust a:hover {
+  color: #ffffff;
+}
+
+.md-typeset .cc-trust a:last-child {
+  font-family: var(--sumi-font);
+  font-size: 14.5px;
+  letter-spacing: 0;
+  color: var(--cc-blue-soft);
+}
+
+@media screen and (max-width: 959px) {
+  .cc-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .cc-prcheck {
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
 }
 
 /* -------------------------------------------------------------- terminal -- */
@@ -2105,45 +2280,6 @@
   color: var(--cc-muted);
 }
 
-.md-typeset .cc-users {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 12px 40px;
-  margin-top: 44px;
-  padding-top: 32px;
-  border-top: 1px solid var(--cc-line);
-}
-
-.cc-users span {
-  font-size: 14px;
-  color: var(--cc-muted);
-}
-
-.md-typeset .cc-users a {
-  font-family: var(--cc-display);
-  font-size: 23px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: #5b6d7a;
-}
-
-[data-theme="dark"] .md-typeset .cc-users a {
-  color: #a3b4c0;
-}
-
-.md-typeset .cc-users a:hover {
-  color: var(--cc-text);
-}
-
-.md-typeset .cc-users a:last-child {
-  font-family: "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--cc-blue-deep);
-}
-
 /* -------------------------------------------------------------- pricing -- */
 
 .md-typeset ul.cc-plans {
@@ -2345,16 +2481,53 @@
   }
 
   .md-typeset .cc-hero {
-    padding-top: 40px;
+    padding-top: 48px;
     padding-bottom: 0;
   }
 
-  .md-typeset .cc-hero__graph {
-    display: none;
+  .cc-hero__copy {
+    gap: 22px;
   }
 
   .md-typeset .cc-lede {
+    flex-basis: auto;
     font-size: 16.5px;
+  }
+
+  .md-typeset .cc-hero .cc-actions {
+    flex-wrap: wrap;
+  }
+
+  .cc-stage {
+    margin-top: 48px;
+    border-radius: 14px;
+  }
+
+  .md-typeset .cc-stage .cc-term__body {
+    padding: 16px 16px 20px;
+    font-size: 12px;
+    line-height: 19px;
+  }
+
+  .md-typeset .cc-stage .cc-line { min-height: 19px; }
+  .md-typeset .cc-stage .cc-gap { margin-top: 19px; }
+
+  /* On a phone the stage tells the hook half of the story only. */
+  .md-typeset .cc-prcheck {
+    display: none;
+  }
+
+  .md-typeset .cc-trust {
+    gap: 10px 24px;
+    padding: 32px 0 40px;
+  }
+
+  .cc-trust span {
+    flex-basis: 100%;
+  }
+
+  .md-typeset .cc-trust a {
+    font-size: 17px;
   }
 
   .cc-actions,
@@ -2369,11 +2542,6 @@
 
   .md-typeset .cc-install code {
     flex-grow: 1;
-  }
-
-  .md-typeset ul.cc-facts {
-    margin-top: 40px;
-    flex-direction: column;
   }
 
   .cc-term__body {
@@ -2508,10 +2676,6 @@
     padding: 18px 20px;
   }
 
-  .md-typeset .cc-users a {
-    font-size: 19px;
-  }
-
   .cc-sitemap__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2548,14 +2712,22 @@
 /* --------------------------------------------------- hero, light scheme -- */
 
 /* In the light scheme the hero is light too, so the theme toggle changes what
-   is on screen at the top of the page. The terminal and the install command
-   stay dark: they stand for a terminal, which is dark in either theme. The
-   Action band and the closing band stay Ink in both schemes as a stage for
-   the demo. */
+   is on screen at the top of the page. The stage stays dark: it stands for a
+   terminal and a check run, which are dark in either theme. The Action band
+   and the closing band stay Ink in both schemes as a stage for the demo. */
 [data-theme="light"] .md-typeset .cc-hero {
-  background: #ffffff;
+  background: var(--cc-ground);
   color: var(--cc-text);
-  box-shadow: inset 0 -1px 0 var(--cc-line);
+}
+
+[data-theme="light"] .md-typeset .cc-hero::before {
+  background: radial-gradient(48% 42% at 66% 64%, rgba(44, 156, 205, 0.12), transparent 72%);
+}
+
+[data-theme="light"] .md-typeset .cc-hero::after {
+  background-image:
+    linear-gradient(rgba(11, 22, 32, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 22, 32, 0.05) 1px, transparent 1px);
 }
 
 [data-theme="light"] .md-typeset .cc-hero .cc-display {
@@ -2563,40 +2735,65 @@
 }
 
 [data-theme="light"] .md-typeset .cc-hero .cc-accent {
-  /* Signal Blue is 3.1:1 on white, enough for display type (3:1 from 24px). */
-  color: var(--cc-blue);
+  /* 3.2:1 on white, enough for display type (3:1 from 24px). */
+  color: #8396a3;
 }
 
 [data-theme="light"] .md-typeset .cc-hero .cc-lede {
   color: var(--cc-muted);
 }
 
-[data-theme="light"] .md-typeset .cc-hero .cc-lede code {
+[data-theme="light"] .md-typeset .cc-hero :is(.cc-lede strong, .cc-lede code) {
   color: var(--cc-text);
 }
 
 [data-theme="light"] .md-typeset .cc-hero .cc-pill {
-  border-color: #b9dcec;
-  background: var(--cc-tint);
-  color: #135a74;
-}
-
-[data-theme="light"] .md-typeset .cc-hero ul.cc-facts {
-  border-top-color: var(--cc-line);
+  border-color: var(--cc-line);
+  background: #f7f9fa;
   color: var(--cc-muted);
 }
 
-[data-theme="light"] .md-typeset .cc-hero .cc-install {
-  border-color: var(--cc-ink);
+[data-theme="light"] .md-typeset .cc-hero .cc-btn--primary {
   background: var(--cc-ink);
+  color: #ffffff;
+  box-shadow: 0 10px 28px -12px rgba(11, 22, 32, 0.6);
 }
 
-[data-theme="light"] .md-typeset .cc-hero .cc-term {
-  box-shadow: 0 24px 60px rgba(11, 22, 32, 0.22);
+[data-theme="light"] .md-typeset .cc-hero .cc-btn--primary:hover {
+  background: #1a2a36;
 }
 
-/* The history-line motif's nodes are filled with the ground colour so the
-   lines pass behind them; on the light hero that ground is white. */
-[data-theme="light"] .md-typeset .cc-hero__graph circle {
-  fill: #ffffff;
+[data-theme="light"] .md-typeset .cc-hero .cc-install {
+  border-color: var(--cc-line);
+  background: #f7f9fa;
+  color: var(--cc-text);
+}
+
+[data-theme="light"] .md-typeset .cc-hero :is(.cc-install__sigil, .cc-copy) {
+  color: #7d8f9b;
+}
+
+[data-theme="light"] .md-typeset .cc-hero .cc-copy:hover {
+  color: var(--cc-text);
+}
+
+[data-theme="light"] .cc-stage {
+  background: var(--cc-ink);
+  box-shadow: 0 0 0 1px rgba(11, 22, 32, 0.9), 0 40px 90px -36px rgba(11, 22, 32, 0.55);
+}
+
+[data-theme="light"] .md-typeset .cc-trust span {
+  color: var(--cc-muted);
+}
+
+[data-theme="light"] .md-typeset .cc-trust a {
+  color: #8395a2;
+}
+
+[data-theme="light"] .md-typeset .cc-trust a:hover {
+  color: var(--cc-text);
+}
+
+[data-theme="light"] .md-typeset .cc-trust a:last-child {
+  color: var(--cc-blue-deep);
 }
