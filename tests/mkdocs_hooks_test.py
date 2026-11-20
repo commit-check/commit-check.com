@@ -1,5 +1,4 @@
-"""Tests for ``scripts/mkdocs_hooks.py``: the header's star count, and the
-redirect stubs it writes after a build.
+"""Tests for the redirect stubs ``scripts/mkdocs_hooks.py`` writes after a build.
 
 Run them with the rest of the suite::
 
@@ -119,38 +118,3 @@ def test_the_pages_the_cli_links_to_never_move():
     # links to configuration/; those two pages must stay where they are.
     assert "rules" not in hooks.MOVED_URLS
     assert "configuration" not in hooks.MOVED_URLS
-
-
-@pytest.mark.parametrize(
-    ("count", "shown"),
-    [(0, "0"), (101, "101"), (999, "999"), (1000, "1k"), (1234, "1.2k"), (9960, "10k"), (12345, "12k")],
-)
-def test_star_counts_read_the_way_github_shows_them(count, shown):
-    assert hooks.format_stars(count) == shown
-
-
-def test_a_failed_star_lookup_leaves_the_header_without_a_number(monkeypatch):
-    # Offline, rate limited or slow: the build carries on and the header shows
-    # "Star" alone.
-    def fail(*args, **kwargs):
-        raise OSError("no network")
-
-    monkeypatch.setattr(hooks.urllib.request, "urlopen", fail)
-    monkeypatch.setattr(hooks, "_stars", {})
-
-    config = hooks.on_config({"repo_name": "commit-check/commit-check", "extra": {}})
-
-    assert config["extra"]["repo_stars"] is None
-
-
-def test_the_star_count_is_fetched_once_per_session(monkeypatch):
-    # ``mkdocs serve`` runs on_config on every rebuild.
-    calls = []
-    monkeypatch.setattr(hooks, "_stars", {})
-    monkeypatch.setattr(hooks, "fetch_stars", lambda repo: calls.append(repo) or "101")
-
-    for _ in range(3):
-        config = hooks.on_config({"repo_name": "commit-check/commit-check", "extra": {}})
-
-    assert config["extra"]["repo_stars"] == "101"
-    assert calls == ["commit-check/commit-check"]

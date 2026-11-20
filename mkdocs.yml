@@ -44,6 +44,22 @@ theme:
   navigation_tabs: false
   # The preview image for pages that do not set their own `image:`.
   social_image: assets/social.png
+  # Links beside the brand and a button at the end of the header. A link is
+  # highlighted on the pages whose URL starts with its path or one of its
+  # `match` prefixes; Pricing points into the homepage, so it never is.
+  header_links:
+    - text: Docs
+      link: getting-started.md
+      match: [guides/, configuration/, example/, troubleshoot/, migration/, compare/]
+    - {text: Rules, link: rules.md}
+    - {text: Pricing, link: "index.md#pricing"}
+    - {text: Blog, link: blog/}
+    - {text: Changelog, link: changelog.md}
+  header_button:
+    text: Install App
+    link: https://github.com/apps/commit-check
+  # The repository's star count on its icon, read from GitHub at build time.
+  repo_stars: true
 
 extra_css:
   # Brand colours and typography. The landing page adds its own layout in
@@ -58,27 +74,6 @@ extra:
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/commit-check/
       name: commit-check on PyPI
-  # The links and the button in the header, beside the brand
-  # (overrides/partials/header.html). A link is highlighted on the pages whose
-  # URL starts with it; Docs, marked `fallback`, is highlighted on every other
-  # page except the homepage. The star count next to them is fetched when the
-  # site is built (scripts/mkdocs_hooks.py).
-  header:
-    links:
-      - title: Docs
-        link: getting-started/
-        fallback: true
-      - title: Rules
-        link: rules/
-      - title: Pricing
-        link: "#pricing"
-      - title: Blog
-        link: blog/
-      - title: Changelog
-        link: changelog/
-    cta:
-      title: Install App
-      link: https://github.com/apps/commit-check
   analytics:
     provider: google
     property: G-TSR5L4JL2V
