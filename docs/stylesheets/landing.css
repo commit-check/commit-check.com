@@ -40,7 +40,7 @@
 
   /* Literal stacks: the theme defines its font variables below :root, so a
      var() of them here would resolve to nothing. */
-  --cc-display: "Bricolage Grotesque", "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
+  --cc-display: "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
   --cc-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
@@ -179,8 +179,8 @@
   font-family: var(--cc-display);
   font-size: clamp(42px, 6.2vw, 70px);
   line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  letter-spacing: -0.045em;
   color: #ffffff;
   text-wrap: balance;
 }
@@ -193,8 +193,8 @@
   font-family: var(--cc-display);
   font-size: clamp(32px, 4.2vw, 50px);
   line-height: 1.05;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   color: inherit;
   text-wrap: balance;
 }
@@ -766,8 +766,8 @@
 .cc-surface__name {
   font-family: var(--cc-display);
   font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.15;
 }
 
@@ -1860,8 +1860,8 @@
   gap: 12px;
   font-family: var(--cc-display);
   font-size: 23px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
@@ -2079,8 +2079,8 @@
 .cc-stats b {
   font-family: var(--cc-display);
   font-size: clamp(38px, 4.4vw, 52px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   line-height: 1.1;
 }
 
@@ -2107,8 +2107,8 @@
 .md-typeset .cc-users a {
   font-family: var(--cc-display);
   font-size: 23px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: #5b6d7a;
 }
 
@@ -2165,8 +2165,8 @@
 .md-typeset .cc-plan__price {
   font-family: var(--cc-display);
   font-size: 44px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   line-height: 1.15;
 }
 
