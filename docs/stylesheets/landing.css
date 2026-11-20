@@ -216,12 +216,31 @@
 }
 
 .md-typeset .cc-eyebrow {
-  font-family: var(--cc-mono);
-  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--cc-blue-deep);
+}
+
+.md-typeset .cc-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* The second half of a section heading steps back, as in the hero. */
+.md-typeset .cc-h2 .cc-soft {
+  display: block;
+  color: #8396a3;
+}
+
+[data-theme="dark"] .md-typeset .cc-h2 .cc-soft,
+.md-typeset .cc-band--ink .cc-h2 .cc-soft {
+  color: #6f8494;
 }
 
 .md-typeset .cc-band--ink .cc-eyebrow {
@@ -891,41 +910,41 @@
   border-radius: 14px;
   background: var(--cc-card);
   color: var(--cc-text);
-  transition: border-color 150ms, box-shadow 150ms, transform 150ms;
+  transition: border-color 150ms;
 }
 
 .md-typeset .cc-surface:hover,
 .md-typeset .cc-surface:focus-visible {
   border-color: var(--cc-blue);
   color: var(--cc-text);
-  transform: translateY(-2px);
 }
 
+/* The suggested start: a Signal Blue hairline and a faint wash from the top,
+   no heavier frame. */
 .md-typeset .cc-surface--main {
-  padding: 19px;
-  border: 2px solid var(--cc-blue);
-  box-shadow: 0 12px 30px rgba(44, 156, 205, 0.16);
+  border-color: var(--cc-blue);
+  background: linear-gradient(180deg, rgba(44, 156, 205, 0.07), transparent 55%), var(--cc-card);
 }
 
 .cc-surface__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 11px;
-  background: var(--cc-ink);
-  color: var(--cc-blue);
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--cc-line);
+  border-radius: 10px;
+  color: var(--cc-blue-deep);
 }
 
 .cc-surface--main .cc-surface__icon {
-  background: var(--cc-blue);
-  color: #06131b;
+  border-color: rgba(44, 156, 205, 0.45);
 }
 
 .cc-surface__icon svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Sits on the card's top edge, like a tab, so it never crowds the icon. */
@@ -1070,14 +1089,15 @@
 }
 
 .md-typeset .cc-tab:hover {
-  border-color: var(--cc-blue);
+  border-color: #4a5d6b;
   color: #ffffff;
 }
 
+/* The chosen tab is lit the way the primary button is. */
 .md-typeset .cc-tab[aria-selected="true"] {
-  border-color: var(--cc-blue);
-  background: var(--cc-blue);
-  color: #06131b;
+  border-color: #f1f5f7;
+  background: #f1f5f7;
+  color: var(--cc-ink);
 }
 
 .cc-tab__bar {
@@ -1272,7 +1292,8 @@
 .md-typeset .cc-window .cc-ref {
   padding: 2px 6px;
   border-radius: 5px;
-  background: var(--cc-tint);
+  /* The window is drawn light in both schemes, so not var(--cc-tint). */
+  background: #e3f2f9;
   color: #135a74;
   font-family: var(--cc-mono);
   font-size: 12.5px;
@@ -2092,13 +2113,23 @@
 }
 
 .md-typeset .cc-ex--bad {
-  background: #fcefed;
-  color: #8e231e;
+  background: rgba(200, 50, 43, 0.06);
+  color: #a62a24;
 }
 
 .md-typeset .cc-ex--ok {
-  background: #e6f4ec;
+  background: rgba(26, 127, 75, 0.07);
   color: #146b3e;
+}
+
+[data-theme="dark"] .md-typeset .cc-ex--bad {
+  background: rgba(255, 122, 110, 0.09);
+  color: #ff8f85;
+}
+
+[data-theme="dark"] .md-typeset .cc-ex--ok {
+  background: rgba(79, 201, 139, 0.09);
+  color: #62d29b;
 }
 
 .md-typeset .cc-ex > span:first-child {
@@ -2299,14 +2330,11 @@
 }
 
 .md-typeset .cc-plan--soon {
-  padding: 27px;
-  border: 2px dashed #9fc9dc;
-  background: #f5fafd;
+  background: var(--cc-paper);
 }
 
 [data-theme="dark"] .md-typeset .cc-plan--soon {
-  border-color: #2e5467;
-  background: #10222d;
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .md-typeset .cc-plan__name {
@@ -2361,23 +2389,29 @@
   border-top: 0;
 }
 
+/* A plain list of questions between hairlines, not a stack of boxes. */
 .md-typeset .cc-faq details {
-  margin: 0 0 10px;
-  border: 1px solid var(--cc-line);
-  border-radius: 12px;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--cc-hair);
+  border-radius: 0;
   padding: 0;
-  background: var(--cc-card);
+  background: none;
   box-shadow: none;
-  font-size: 15px;
+  font-size: 15.5px;
+}
+
+.md-typeset .cc-faq h2 + details {
+  border-top: 1px solid var(--cc-hair);
 }
 
 .md-typeset .cc-faq details > summary {
   margin: 0;
-  padding: 14px 18px;
+  padding: 20px 32px 20px 0;
   background: none;
   color: var(--cc-text);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 500;
 }
 
 .md-typeset .cc-faq details > summary::before {
@@ -2391,7 +2425,8 @@
 }
 
 .md-typeset .cc-faq details > p {
-  margin: 0 18px 14px;
+  margin: 0 32px 20px 0;
+  color: var(--cc-muted);
 }
 
 /* ------------------------------------------------------------------ CTA -- */
@@ -2787,7 +2822,7 @@
 }
 
 [data-theme="light"] .md-typeset .cc-trust a {
-  color: #8395a2;
+  color: var(--cc-muted);
 }
 
 [data-theme="light"] .md-typeset .cc-trust a:hover {

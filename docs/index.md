@@ -66,12 +66,12 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <div class="cc-term__bar" aria-hidden="true"><span>acme/widgets · pull request #128</span></div>
 <p class="cc-prcheck__head"><span>Commit Check</span><span class="cc-prcheck__sum">1 failing</span></p>
 <ul>
-<li class="cc-prcheck__row is-fail"><i class="cc-st cc-st--fail" aria-hidden="true"></i><span>Branch name</span><code>CC201</code></li>
+<li class="cc-prcheck__row is-fail"><i class="cc-st cc-st--fail" aria-hidden="true"></i><span class="cc-sr">Failed: </span><span>Branch name</span><code>CC201</code></li>
 <li class="cc-prcheck__fix"><code><span class="cc-t-fail">− Feature/Add-Login</span><span class="cc-t-pass">+ feature/Add-Login</span></code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Commit messages</span><code>CC001</code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Author email</span><code>CC102</code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Signed-off-by</span><code>CC012</code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>AI attribution</span><code>CC013</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>Commit messages</span><code>CC001</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>Author email</span><code>CC102</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>Signed-off-by</span><code>CC012</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>AI attribution</span><code>CC013</code></li>
 </ul>
 </figure>
 </div>
@@ -82,7 +82,7 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <div class="cc-wrap">
 <header class="cc-head cc-head--center">
 <p class="cc-eyebrow">Where it runs</p>
-<h2 id="cc-paths-title" class="cc-h2">One config file. Five places to enforce it.</h2>
+<h2 id="cc-paths-title" class="cc-h2">One config file. <span class="cc-soft">Five places to enforce it.</span></h2>
 <p class="cc-sub">Pick the entry point that matches how your team works. Every one reads the same <code>cchk.toml</code> and reports the same rule IDs — start with one, add the rest later.</p>
 </header>
 <div class="cc-config">
@@ -146,7 +146,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <div class="cc-wrap">
 <header class="cc-head cc-head--center">
 <p class="cc-eyebrow">commit-check-action</p>
-<h2 id="cc-action-title" class="cc-h2">Every pull request, checked and explained.</h2>
+<h2 id="cc-action-title" class="cc-h2">Every pull request, <span class="cc-soft">checked and explained.</span></h2>
 <p class="cc-sub">The Action reports where your reviewers already look — a PR comment, the job summary, annotations on the run — and exposes a JSON result the next step can gate on.</p>
 </header>
 <!--
@@ -373,7 +373,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <header class="cc-head cc-head--split">
 <div>
 <p class="cc-eyebrow">What it checks</p>
-<h2 id="cc-rules-title" class="cc-h2">Rules grouped by what they protect.</h2>
+<h2 id="cc-rules-title" class="cc-h2">Rules grouped <span class="cc-soft">by what they protect.</span></h2>
 <p class="cc-sub">A few are on by default. Turn on what your project needs, rule by rule, or set any rule to warn instead of fail.</p>
 </div>
 <a class="cc-btn cc-btn--quiet" href="rules/#rule-index">Browse all rules →</a>
@@ -423,7 +423,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <div class="cc-wrap cc-anatomy__grid">
 <div>
 <p class="cc-eyebrow">Every finding</p>
-<h2 id="cc-anatomy-title" class="cc-h2">Not just “failed”. What failed, and the fix.</h2>
+<h2 id="cc-anatomy-title" class="cc-h2">Not just “failed”. <span class="cc-soft">What failed, and the fix.</span></h2>
 <ol class="cc-steps">
 <li><span><b>A stable rule ID</b> that links to its documentation.</span></li>
 <li><span><b>The exact value</b> that was checked.</span></li>
@@ -456,7 +456,7 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <div class="cc-wrap">
 <header class="cc-head">
 <p class="cc-eyebrow">Pricing</p>
-<h2 id="cc-pricing-title" class="cc-h2">Free for open source. Team plan, soon.</h2>
+<h2 id="cc-pricing-title" class="cc-h2">Free for open source. <span class="cc-soft">Team plan, soon.</span></h2>
 <p class="cc-sub">The CLI, the hook, the Action and the MCP server are MIT licensed — nothing to buy. Plans only cover the hosted GitHub App, the one surface we run for you.</p>
 </header>
 <ul class="cc-plans">
