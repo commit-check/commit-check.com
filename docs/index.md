@@ -66,12 +66,12 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <div class="cc-term__bar" aria-hidden="true"><span>acme/widgets · pull request #128</span></div>
 <p class="cc-prcheck__head"><span>Commit Check</span><span class="cc-prcheck__sum">1 failing</span></p>
 <ul>
-<li class="cc-prcheck__row is-fail"><i class="cc-st cc-st--fail" aria-hidden="true"></i><span>Branch name</span><code>CC201</code></li>
+<li class="cc-prcheck__row is-fail"><i class="cc-st cc-st--fail" aria-hidden="true"></i><span class="cc-sr">Failed: </span><span>Branch name</span><code>CC201</code></li>
 <li class="cc-prcheck__fix"><code><span class="cc-t-fail">− Feature/Add-Login</span><span class="cc-t-pass">+ feature/Add-Login</span></code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Commit messages</span><code>CC001</code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Author email</span><code>CC102</code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Signed-off-by</span><code>CC012</code></li>
-<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>AI attribution</span><code>CC013</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>Commit messages</span><code>CC001</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>Author email</span><code>CC102</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>Signed-off-by</span><code>CC012</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span class="cc-sr">Passed: </span><span>AI attribution</span><code>CC013</code></li>
 </ul>
 </figure>
 </div>

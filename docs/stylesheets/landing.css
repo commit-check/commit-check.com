@@ -2787,7 +2787,7 @@
 }
 
 [data-theme="light"] .md-typeset .cc-trust a {
-  color: #8395a2;
+  color: var(--cc-muted);
 }
 
 [data-theme="light"] .md-typeset .cc-trust a:hover {
