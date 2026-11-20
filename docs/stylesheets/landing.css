@@ -34,6 +34,10 @@
   --cc-text: #0e1b24;
   --cc-muted: #4f6270;
 
+  /* The page's one ground and the hairline between its sections. */
+  --cc-ground: #ffffff;
+  --cc-hair: #e6ebee;
+
   --cc-pass: #1a7f4b;
   --cc-fail: #c8322b;
   --cc-wait: #9a6a00;
@@ -52,6 +56,8 @@
   --cc-muted: #a3b4c0;
   --cc-tint: #16303e;
   --cc-blue-deep: #7fc6e6;
+  --cc-ground: var(--cc-ink);
+  --cc-hair: #1a2934;
 }
 
 /* ---------------------------------------------------------------- chrome -- */
@@ -61,7 +67,7 @@
    and the bands below reach past it to the window edges. */
 .sumi-main.cc-landing {
   padding: 0;
-  background: var(--cc-paper);
+  background: var(--cc-ground);
   /* The bands below span the window with `margin-inline: calc(50% - 50vw)`.
      100vw includes a classic scrollbar, so they can end a few pixels wide;
      `clip` rather than `hidden`, because `hidden` would make this a scroll
@@ -144,7 +150,12 @@
 
 /* ----------------------------------------------------------------- bands -- */
 
-/* Each band spans the window while its text stays in the content column:
+/* The page is one ground, white or Ink with the scheme, and a hairline marks
+   where a section starts; the bands do not change colour from one section to
+   the next. The Action demo and the closing call to action keep their Ink
+   stage in the light scheme too.
+
+   Each band spans the window while its text stays in the content column:
    the negative margin pulls the edges out, the padding puts the text back.
    Percentages, not viewport units, for the margin: the column is a grid
    item, and a `-100vw` margin counts towards its min-content width, which
@@ -153,6 +164,7 @@
   position: relative;
   margin-inline: calc(50% - 50vw);
   padding: 104px calc(50vw - 50%);
+  background: var(--cc-ground);
   color: var(--cc-text);
   font-size: 16px;
   line-height: 1.55;
@@ -164,7 +176,11 @@
 }
 
 .md-typeset .cc-band--white {
-  background: var(--cc-card);
+  background: var(--cc-ground);
+}
+
+.md-typeset .cc-band + .cc-band {
+  border-top: 1px solid var(--cc-hair);
 }
 
 .cc-wrap {
@@ -2232,9 +2248,9 @@
   display: none;
 }
 
-/* The question admonition's green, on the chevron only. */
+/* A quiet chevron, in the page's own greys. */
 .md-typeset .cc-faq details > summary::after {
-  border-color: #64dd17;
+  border-color: var(--cc-muted);
   opacity: 1;
 }
 
