@@ -1,6 +1,6 @@
 """MkDocs build hooks.
 
-Emits redirect stubs for the ``.html`` URLs the original Sphinx site served, so
+Looks up the repository's GitHub star count for the header, and emits redirect stubs for the ``.html`` URLs the original Sphinx site served, so
 links already published elsewhere keep working on hosts that have no other
 redirect mechanism (GitHub Pages). Netlify skips the stubs: it declares the same
 URLs as ``[[redirects]]`` in ``netlify.toml``, which resolve before file lookup
@@ -9,7 +9,9 @@ and cannot collide with the pages they target.
 
 from __future__ import annotations
 
+import json
 import os
+import urllib.request
 from pathlib import Path
 
 #: Sphinx page name -> path under this site.
@@ -88,6 +90,52 @@ REDIRECT = """<!doctype html>
 <body>Redirecting to <a href="{url}">{url}</a>…</body>
 </html>
 """
+
+
+def format_stars(count: int) -> str:
+    """Show a star count the way GitHub does: 101, 1.2k, 12k."""
+    if count < 1000:
+        return str(count)
+    thousands = round(count / 100) / 10
+    if thousands < 10:
+        return f"{thousands:.1f}".removesuffix(".0") + "k"
+    return f"{round(count / 1000)}k"
+
+
+#: repo -> its formatted count (or None), so ``mkdocs serve`` asks GitHub once
+#: per session rather than on every rebuild.
+_stars: dict[str, str | None] = {}
+
+
+def fetch_stars(repo: str) -> str | None:
+    """The formatted star count of ``owner/name``, or None if GitHub can't say.
+
+    A build must never fail or stall over this, so any error (offline, rate
+    limited, a slow API) leaves the header showing "Star" with no number.
+    ``GITHUB_TOKEN`` is used when set, which keeps CI clear of the anonymous
+    rate limit that runners on shared addresses can hit.
+    """
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{repo}",
+        headers={"Accept": "application/vnd.github+json"},
+    )
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        request.add_header("Authorization", f"Bearer {token}")
+    try:
+        with urllib.request.urlopen(request, timeout=5) as response:
+            return format_stars(int(json.load(response)["stargazers_count"]))
+    except Exception:  # noqa: BLE001 - see above: anything at all means no count
+        return None
+
+
+def on_config(config, **kwargs):
+    """Put the star count where the header template reads it."""
+    repo = config.get("repo_name")
+    if repo and repo not in _stars:
+        _stars[repo] = fetch_stars(repo)
+    config["extra"]["repo_stars"] = _stars.get(repo) if repo else None
+    return config
 
 
 def on_post_build(config, **kwargs) -> None:

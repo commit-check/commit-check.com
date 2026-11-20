@@ -56,6 +56,12 @@ jobs:
 
       - name: Build site
         run: pipx run nox -s docs
+        env:
+          # The header shows the repository's star count, read from the GitHub
+          # API at build time. The token keeps that lookup clear of the
+          # anonymous rate limit runners can share; without it the build still
+          # passes and the header shows "Star" with no number.
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Upload site as pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

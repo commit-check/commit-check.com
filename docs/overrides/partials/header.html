@@ -1,0 +1,98 @@
+{#- Sumi 0.4.1's header, plus the site's own links, GitHub star count and
+    Install App button (marked "Commit Check:" below). Sumi has no setting for
+    any of the three, so the partial is copied whole; when Sumi changes its
+    header, carry the change across. The links and the button come from
+    `extra.header` in mkdocs.yml, the star count from scripts/mkdocs_hooks.py.
+    Their styles are in assets/extra.css. -#}
+{%- import "partials/macros.html" as m with context -%}
+<header class="sumi-header">
+  <div class="sumi-header-inner">
+    {%- if side_items or drawer_items or drawer_tabs %}
+    <button class="sumi-icon-btn sumi-menu-btn" type="button" aria-label="{{ t('menu') }}" aria-expanded="false">{{ icon('menu') }}</button>
+    {%- endif %}
+    <a class="sumi-brand" href="{{ nav.homepage.url | url if nav.homepage else base_url ~ '/' }}" aria-label="{{ config.site_name }}">
+      {%- if config.theme.logo and config.theme.logo_dark %}
+      <img class="sumi-logo sumi-when-light" src="{{ config.theme.logo | url }}" alt="">
+      <img class="sumi-logo sumi-when-dark" src="{{ config.theme.logo_dark | url }}" alt="">
+      {%- elif config.theme.logo %}
+      <img class="sumi-logo" src="{{ config.theme.logo | url }}" alt="">
+      {%- else %}
+      {% include "partials/logo.html" %}
+      {%- endif %}
+      <span class="sumi-brand-name">{{ config.theme.brand or config.site_name }}</span>
+    </a>
+    {#- Commit Check: the site's links. -#}
+    {%- set hdr = config.extra.header or {} %}
+    {%- if hdr.links %}
+    {%- set cur = page.url if page else '' %}
+    {%- set home = nav.homepage.url | url if nav.homepage else base_url ~ '/' %}
+    {%- set ns = namespace(hit=false) %}
+    {%- for l in hdr.links if not l.fallback and not l.link.startswith('#') and cur.startswith(l.link) %}{% set ns.hit = true %}{% endfor %}
+    <nav class="cc-nav" aria-label="Site">
+      {%- for l in hdr.links %}
+      {%- if l.link.startswith('#') %}
+      {%- set on = false %}
+      {%- set href = home ~ ('' if home.endswith('/') else '/') ~ l.link %}
+      {%- else %}
+      {%- set on = cur.startswith(l.link) if not l.fallback else (not ns.hit and cur and not (page and page.is_homepage)) %}
+      {%- set href = l.link | url %}
+      {%- endif %}
+      <a class="cc-nav__link{% if on %} is-active{% endif %}" href="{{ href }}"{% if on %} aria-current="page"{% endif %}>{{ l.title }}</a>
+      {%- endfor %}
+    </nav>
+    {%- endif %}
+    {%- if tabs_on %}
+    <nav class="sumi-tabs-nav" aria-label="{{ t('navigation') }}">
+      {%- for item in nav.items if not (item.is_page and item.is_homepage) %}
+      {%- set href = m.first_url(item) | trim %}
+      <a class="sumi-tab-link{% if item.active %} is-active{% endif %}" href="{{ href }}"{% if item.active %} aria-current="page"{% endif %}{% if item.is_link and item.url.startswith('http') %} target="_blank" rel="noopener"{% endif %}>{{ item.title }}</a>
+      {%- endfor %}
+    </nav>
+    {%- endif %}
+    <div class="sumi-header-tools">
+      <button class="sumi-search-btn" type="button" data-sumi-palette aria-label="{{ t('search') }}">
+        {{ icon('search') }}<span class="sumi-search-label">{{ t('search') }}</span><kbd class="sumi-search-kbd" data-mod>Ctrl K</kbd>
+      </button>
+      {%- if config.theme.version_provider %}
+      <div class="sumi-menu sumi-version-menu" hidden>
+        <button class="sumi-chip-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="{{ t('version') }}">{{ icon('git-branch') }}<span class="sumi-version-current"></span>{{ icon('chevron-down', 'sumi-chevron') }}</button>
+        <ul class="sumi-menu-list" role="menu"></ul>
+      </div>
+      {%- endif %}
+      {%- if versions and not config.theme.version_provider %}
+      <div class="sumi-menu sumi-version-menu">
+        <button class="sumi-chip-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="{{ t('version') }}">{{ icon('git-branch') }}<span class="sumi-version-current">{{ vns.current.title }}</span>{{ icon('chevron-down', 'sumi-chevron') }}</button>
+        <ul class="sumi-menu-list" role="menu">
+          {%- for v in versions %}
+          <li role="none"><a role="menuitem" href="{{ (v.path or './') | url }}"{% if v is sameas vns.current %} aria-current="true"{% endif %}>{{ v.title }}{% if loop.first %} <span class="sumi-menu-note">{{ t('latest') }}</span>{% endif %}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+      {%- endif %}
+      {%- if config.extra.alternate %}
+      <div class="sumi-menu sumi-lang-menu">
+        <button class="sumi-icon-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="{{ t('language') }}" title="{{ t('language') }}">{{ icon('languages') }}</button>
+        <ul class="sumi-menu-list" role="menu">
+          {%- for alt in config.extra.alternate %}
+          <li role="none"><a role="menuitem" href="{{ alt.link | url }}" hreflang="{{ alt.lang }}" data-lang-link{% if alt.lang == sumi_language or alt.lang == sumi_language[:2] %} aria-current="true"{% endif %}>{{ alt.name }}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+      {%- endif %}
+      <button class="sumi-icon-btn sumi-theme-btn" type="button" data-sumi-theme aria-label="{{ t('toggle_theme') }}" title="{{ t('toggle_theme') }}">{{ icon('sun', 'sumi-when-light') }}{{ icon('moon', 'sumi-when-dark') }}</button>
+      {#- Commit Check: the star count. On narrow screens Sumi's plain
+          repository icon below stands in for it. -#}
+      {%- if config.repo_url %}
+      {%- set stars = config.extra.repo_stars %}
+      <a class="cc-star" href="{{ config.repo_url }}" rel="noopener" aria-label="Star {{ config.repo_name }} on GitHub{% if stars %}, {{ stars }} stars{% endif %}">{{ m.repo_icon(config.repo_url) }}<span>Star</span>{% if stars %}<b>{{ stars }}</b>{% endif %}</a>
+      {%- endif %}
+      {%- if config.repo_url %}
+      <a class="sumi-icon-btn sumi-repo" href="{{ config.repo_url }}" aria-label="{{ t('repository') }}" title="{{ config.repo_name or t('repository') }}" rel="noopener">{{ m.repo_icon(config.repo_url) }}</a>
+      {%- endif %}
+      {#- Commit Check: the button, last in the bar. -#}
+      {%- if hdr.cta %}
+      <a class="cc-cta" href="{{ hdr.cta.link }}">{{ hdr.cta.title }}</a>
+      {%- endif %}
+    </div>
+  </div>
+</header>

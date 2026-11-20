@@ -58,6 +58,27 @@ extra:
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/commit-check/
       name: commit-check on PyPI
+  # The links and the button in the header, beside the brand
+  # (overrides/partials/header.html). A link is highlighted on the pages whose
+  # URL starts with it; Docs, marked `fallback`, is highlighted on every other
+  # page except the homepage. The star count next to them is fetched when the
+  # site is built (scripts/mkdocs_hooks.py).
+  header:
+    links:
+      - title: Docs
+        link: getting-started/
+        fallback: true
+      - title: Rules
+        link: rules/
+      - title: Pricing
+        link: "#pricing"
+      - title: Blog
+        link: blog/
+      - title: Changelog
+        link: changelog/
+    cta:
+      title: Install App
+      link: https://github.com/apps/commit-check
   analytics:
     provider: google
     property: G-TSR5L4JL2V
