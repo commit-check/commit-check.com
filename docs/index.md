@@ -368,92 +368,13 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 </div>
 </section>
 
-<section class="cc-band cc-rules" id="what-it-checks" aria-labelledby="cc-rules-title">
+<section class="cc-band cc-band--white cc-pricing" id="pricing" aria-labelledby="cc-pricing-title">
 <div class="cc-wrap">
-<header class="cc-head cc-head--split">
-<div>
-<p class="cc-eyebrow">What it checks</p>
-<h2 id="cc-rules-title" class="cc-h2">Rules grouped <span class="cc-soft">by what they protect.</span></h2>
-<p class="cc-sub">A few are on by default. Turn on what your project needs, rule by rule, or set any rule to warn instead of fail.</p>
-</div>
-<a class="cc-btn cc-btn--quiet" href="rules/#rule-index">Browse all rules →</a>
-</header>
-<ul class="cc-groups">
-<li class="cc-group">
-<p class="cc-group__head"><span>Commit messages</span><code>CC001–CC012</code></p>
-<p class="cc-group__desc">Conventional Commits, subject length, imperative mood, sign-off, and merge, revert, fixup or WIP commits.</p>
-<p class="cc-ex cc-ex--bad"><span aria-hidden="true">✖</span><span class="cc-sr">Rejected: </span>Fix: add streaming support</p>
-<p class="cc-ex cc-ex--ok"><span aria-hidden="true">✔</span><span class="cc-sr">Accepted: </span>fix: add streaming support</p>
-</li>
-<li class="cc-group">
-<p class="cc-group__head"><span>Branch names</span><code>CC201–CC202</code></p>
-<p class="cc-group__desc">Conventional Branch naming, and whether the branch is rebased onto its target.</p>
-<p class="cc-ex cc-ex--bad"><span aria-hidden="true">✖</span><span class="cc-sr">Rejected: </span>my-new-thing</p>
-<p class="cc-ex cc-ex--ok"><span aria-hidden="true">✔</span><span class="cc-sr">Accepted: </span>feature/streaming-support</p>
-</li>
-<li class="cc-group">
-<p class="cc-group__head"><span>AI attribution</span><code>CC013–CC016</code></p>
-<p class="cc-group__desc">Spots the trailers Claude Code, Cursor and others add. Forbid them, or require a disclosure instead.</p>
-<p class="cc-ex cc-ex--bad"><span aria-hidden="true">✖</span><span class="cc-sr">Rejected: </span>Co-authored-by: Claude</p>
-<p class="cc-ex cc-ex--ok"><span aria-hidden="true">✔</span><span class="cc-sr">Accepted: </span>Assisted-by: Claude</p>
-</li>
-<li class="cc-group">
-<p class="cc-group__head"><span>Author identity</span><code>CC101–CC102</code></p>
-<p class="cc-group__desc">Names and emails that match the patterns you set — here <code>author_email_pattern = "@acme\.dev$"</code> — so a build box cannot write itself into the history.</p>
-<p class="cc-ex cc-ex--bad"><span aria-hidden="true">✖</span><span class="cc-sr">Rejected: </span>ec2-user &lt;root@ip-10-0-0-12&gt;</p>
-<p class="cc-ex cc-ex--ok"><span aria-hidden="true">✔</span><span class="cc-sr">Accepted: </span>Jane Doe &lt;jane@acme.dev&gt;</p>
-</li>
-<li class="cc-group">
-<p class="cc-group__head"><span>Pushes and files</span><code>CC301–CC304</code></p>
-<p class="cc-group__desc">No force-pushes, no oversized files, no forbidden paths — caught at pre-push, before they leave the laptop.</p>
-<p class="cc-ex cc-ex--bad"><span aria-hidden="true">✖</span><span class="cc-sr">Rejected: </span>git push --force origin main</p>
-<p class="cc-ex cc-ex--bad"><span aria-hidden="true">✖</span><span class="cc-sr">Rejected: </span>assets/model.bin, 240 MB</p>
-</li>
-<li class="cc-group cc-group--ink">
-<p class="cc-group__head"><span>Across an organization</span></p>
-<p class="cc-group__desc">One shared policy for every repository. Each repo inherits it and overrides only what differs.</p>
-<p class="cc-group__code"><span class="cc-t-blue">inherit_from</span> = "github:acme/.github:cchk.toml"</p>
-<a class="cc-group__link" href="guides/organization/">Organization guide →</a>
-</li>
-</ul>
-</div>
-</section>
-
-<section class="cc-band cc-band--white cc-anatomy" aria-labelledby="cc-anatomy-title">
-<div class="cc-wrap cc-anatomy__grid">
-<div>
-<p class="cc-eyebrow">Every finding</p>
-<h2 id="cc-anatomy-title" class="cc-h2">Not just “failed”. <span class="cc-soft">What failed, and the fix.</span></h2>
-<ol class="cc-steps">
-<li><span><b>A stable rule ID</b> that links to its documentation.</span></li>
-<li><span><b>The exact value</b> that was checked.</span></li>
-<li><span><b>Why it failed</b>, in one sentence.</span></li>
-<li><span><b>A fix you can paste</b>, whenever the correction is unambiguous.</span></li>
-</ol>
-</div>
-<!-- Real output of commit-check 2.23.0, laid out in numbered rows; the one-line header it prints first is left out. -->
-<div class="cc-diag">
-<p class="cc-t-dim">$ echo "Fix: add streaming support" | commit-check -m</p>
-<p><span class="cc-mark">1</span><span><span class="cc-t-fail cc-b">✖ CC001</span> message failed:<span class="cc-mark cc-mark--inline">2</span><span class="cc-t-white">Fix: add streaming support</span></span></p>
-<p class="cc-diag__wrap"><span class="cc-mark">3</span><span class="cc-t-dim">The commit message should follow Conventional Commits. See https://www.conventionalcommits.org</span></p>
-<p><span class="cc-mark">4</span><span><span class="cc-t-blue">Suggest:</span> Use "<span class="cc-t-pass cc-b">fix: add streaming support</span>"</span></p>
-<p class="cc-diag__docs cc-t-dim">Docs:    https://commit-check.com/rules/#cc001</p>
-</div>
-</div>
-</section>
-
-<section class="cc-band cc-proof" aria-label="Who uses Commit Check">
-<div class="cc-wrap">
-<ul class="cc-stats">
+<ul class="cc-stats" aria-label="Who uses Commit Check">
 <li><b>1.6M+</b><span>downloads on PyPI</span></li>
 <li><b>160+</b><span>repositories run the Action</span></li>
 <li><b>Apache</b><span>allowlists the Action for its projects' CI</span></li>
 </ul>
-</div>
-</section>
-
-<section class="cc-band cc-band--white cc-pricing" id="pricing" aria-labelledby="cc-pricing-title">
-<div class="cc-wrap">
 <header class="cc-head">
 <p class="cc-eyebrow">Pricing</p>
 <h2 id="cc-pricing-title" class="cc-h2">Free for open source. <span class="cc-soft">Team plan, soon.</span></h2>
@@ -491,38 +412,8 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
     No. Without a config file the App reports in full but leaves the check
     neutral, and it never rejects a push. Most rules are off until you turn
     them on — the [rules reference](rules.md#rule-index) marks which start on.
-
-??? question "What about the history I already have?"
-
-    Only new commits are checked. Nothing asks you to rewrite what is already
+    Only new commits are checked: nothing asks you to rewrite what is already
     merged.
-
-??? question "Does it only work on GitHub?"
-
-    No. On GitLab CI and Bitbucket Pipelines one command, `commit-check-ci`,
-    checks every merge or pull request: see the
-    [GitLab and Bitbucket guide](guides/other-ci.md). The CLI and the
-    pre-commit hook run anywhere Git does — Gitea, Azure Pipelines, a local
-    machine. The Action and the App are GitHub-specific because they
-    integrate with GitHub's check runs.
-
-??? question "Do I need Node.js?"
-
-    No. On a modern Python there are no runtime dependencies at all.
-
-??? question "Which Python versions are supported?"
-
-    3.11 through 3.15. On every change, CI builds the wheel and installs it on
-    all five, across Linux, macOS and Windows — fifteen combinations.
-
-??? question "How do I know the package I installed is the one you built?"
-
-    Every release carries a signed
-    [build provenance attestation](https://docs.github.com/en/actions/concepts/security/artifact-attestations)
-    naming the workflow in this repository that built it. Check a wheel
-    yourself with `gh attestation verify <file> --repo commit-check/commit-check`;
-    the GitHub Action runs the same check before it installs anything, and
-    fails the step if verification does not pass.
 
 ??? question "Who is behind this?"
 

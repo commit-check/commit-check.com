@@ -45,6 +45,7 @@ name.
 !!! tip "Supported Python versions"
 
     Commit Check supports Python 3.11 through 3.15, on Linux, macOS and Windows.
+    It needs no Node.js, and on a modern Python no other runtime dependencies.
 
 Running it as a [pre-commit hook](guides/pre-commit.md)
 or a [GitHub Action](guides/github-actions.md) needs no
