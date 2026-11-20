@@ -16,7 +16,9 @@
 
   /* Literal stacks rather than var()s of each other, so each one can be read
      on its own. */
-  --cc-display-font: "Bricolage Grotesque", "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
+  /* Headings use the text face, a step bolder and set tighter: one family
+     reads calmer than a second, louder display face. */
+  --cc-display-font: "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
   --sumi-font: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC",
     "Microsoft YaHei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --sumi-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -132,14 +134,14 @@ body {
   border-top: 0;
 }
 
-/* Display face for page titles, section headings and the site name. Body text
-   stays in the text font. */
+/* Page titles, section headings and the site name: the text face, semibold
+   and set tighter. */
 .sumi-prose h1,
 .sumi-prose h2,
 .sumi-brand-name {
   font-family: var(--cc-display-font);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .sumi-brand-name {

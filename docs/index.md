@@ -26,17 +26,18 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 -->
 
 <section class="cc-band cc-band--ink cc-hero" aria-labelledby="cc-title">
-<svg class="cc-hero__graph" viewBox="0 0 480 760" aria-hidden="true" focusable="false"><g fill="none" stroke="#2C9CCD" stroke-opacity=".08" stroke-width="2"><path d="M40 0V760M120 0V760M200 0V760M280 0V760M360 0V760M440 0V760"/><path d="M120 180C120 230 200 230 200 280M280 420C280 470 200 470 200 520M40 560C40 610 120 610 120 660M360 120C360 170 440 170 440 220"/></g><g fill="#0B1620" stroke="#2C9CCD" stroke-opacity=".16" stroke-width="2"><circle cx="40" cy="120" r="6"/><circle cx="120" cy="180" r="6"/><circle cx="200" cy="280" r="6"/><circle cx="280" cy="90" r="6"/><circle cx="280" cy="420" r="6"/><circle cx="360" cy="330" r="6"/><circle cx="200" cy="520" r="6"/><circle cx="40" cy="560" r="6"/><circle cx="120" cy="660" r="6"/><circle cx="440" cy="220" r="6"/><circle cx="360" cy="120" r="6"/></g></svg>
-<div class="cc-wrap cc-hero__grid">
-<div class="cc-hero__copy">
+<div class="cc-wrap cc-hero__copy">
 <p class="cc-pill"><span class="cc-pill__dot"></span>Open source · MIT licensed</p>
 <h1 id="cc-title" class="cc-display">Catch bad commits <span class="cc-accent">before they merge.</span></h1>
-<p class="cc-lede"><strong>Commit policy as code for teams and AI agents.</strong> Commit Check validates commit messages, branch names, authors and sign-offs against one <code>cchk.toml</code> — in your commit hook, in CI, on every pull request and inside your AI agent. When the fix is obvious, it hands you the line.</p>
+<div class="cc-hero__row">
+<p class="cc-lede"><strong>Commit policy as code for teams and AI agents.</strong> One <code>cchk.toml</code> for messages, branches, authors and sign-offs, enforced in your commit hook, in CI, on every pull request and inside your AI agent.</p>
 <div class="cc-actions">
 <a class="cc-btn cc-btn--primary" href="https://github.com/apps/commit-check">Install the GitHub App <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div class="cc-install"><span class="cc-install__sigil" aria-hidden="true">$</span><code>pip install commit-check</code><button class="cc-copy" type="button" data-copy="pip install commit-check" aria-label="Copy the install command"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.2A1.5 1.5 0 0 0 9 2H4a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.2 1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
 </div>
 </div>
+</div>
+<div class="cc-wrap cc-stage">
 <!--
   A transcript of a real run: commit-check 2.20.4 as a pre-commit
   commit-msg hook. Git's own "1 file changed" summary after the last
@@ -59,13 +60,22 @@ description: Commit policy as code for teams and AI agents. Messages, branches, 
 <div class="cc-line cc-t-dim" data-on="7900">[feature/streaming 276fd07] fix: add streaming support</div>
 </div>
 </figure>
-</div>
-<ul class="cc-wrap cc-facts">
-<li>MIT licensed, no account needed</li>
-<li>Python 3.11 – 3.15 on Linux, macOS and Windows</li>
-<li>Signed build provenance on every release</li>
-<li>GitHub, GitLab, Bitbucket and any Git host</li>
+<!-- The same policy on a pull request: one rule per row, the failing one first
+     with the fix the engine prints for it (see the Action demo below). -->
+<figure class="cc-prcheck" aria-label="The same policy on a pull request: one failing check, with its fix">
+<div class="cc-term__bar" aria-hidden="true"><span>acme/widgets · pull request #128</span></div>
+<p class="cc-prcheck__head"><span>Commit Check</span><span class="cc-prcheck__sum">1 failing</span></p>
+<ul>
+<li class="cc-prcheck__row is-fail"><i class="cc-st cc-st--fail" aria-hidden="true"></i><span>Branch name</span><code>CC201</code></li>
+<li class="cc-prcheck__fix"><code><span class="cc-t-fail">− Feature/Add-Login</span><span class="cc-t-pass">+ feature/Add-Login</span></code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Commit messages</span><code>CC001</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Author email</span><code>CC102</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>Signed-off-by</span><code>CC012</code></li>
+<li class="cc-prcheck__row"><i class="cc-st cc-st--pass" aria-hidden="true"></i><span>AI attribution</span><code>CC013</code></li>
 </ul>
+</figure>
+</div>
+<p class="cc-wrap cc-trust"><span>In the CI of</span><a href="https://github.com/apache">Apache</a><a href="https://github.com/freebsd">FreeBSD</a><a href="https://github.com/junit-team">JUnit</a><a href="https://github.com/TexasInstruments">Texas Instruments</a><a href="https://github.com/mila-iqia">Mila</a><a href="https://github.com/istio-ecosystem">Istio Ecosystem</a><a href="https://github.com/OpenDriveLab">OpenDriveLab</a><a href="https://github.com/commit-check/commit-check-action/network/dependents">and more →</a></p>
 </section>
 
 <section class="cc-band cc-paths" id="where-it-runs" aria-labelledby="cc-paths-title">
@@ -439,7 +449,6 @@ conventional_branch  = <span class="cc-t-pass">true</span></div>
 <li><b>160+</b><span>repositories run the Action</span></li>
 <li><b>Apache</b><span>allowlists the Action for its projects' CI</span></li>
 </ul>
-<p class="cc-users"><span>In the CI of</span><a href="https://github.com/apache">Apache</a><a href="https://github.com/freebsd">FreeBSD</a><a href="https://github.com/junit-team">JUnit</a><a href="https://github.com/TexasInstruments">Texas Instruments</a><a href="https://github.com/mila-iqia">Mila</a><a href="https://github.com/istio-ecosystem">Istio Ecosystem</a><a href="https://github.com/OpenDriveLab">OpenDriveLab</a><a href="https://github.com/commit-check/commit-check-action/network/dependents">and more →</a></p>
 </div>
 </section>
 
