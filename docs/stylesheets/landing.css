@@ -2032,6 +2032,29 @@
   padding-left: 34px;
 }
 
+/* The explanation is longer than the panel is wide: wrap it like a terminal
+   would, under its own text, instead of scrolling the panel sideways. */
+.md-typeset .cc-diag p.cc-diag__wrap {
+  white-space: normal;
+  align-items: flex-start;
+  line-height: 1.6;
+  padding: 5px 0;
+}
+
+/* The CLI prints the value on the rule's own line, so its mark sits inline. */
+.cc-diag .cc-mark--inline {
+  display: inline-flex;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  margin: 0 8px 0 10px;
+}
+
+/* Keep "Docs:" padded to line up with "Suggest:", as the CLI prints it. */
+.md-typeset .cc-diag p.cc-diag__docs {
+  white-space: pre-wrap;
+}
+
 /* ---------------------------------------------------------------- proof -- */
 
 .md-typeset .cc-proof {
