@@ -2040,254 +2040,14 @@
   color: #ffffff;
 }
 
-/* ---------------------------------------------------------------- rules -- */
-
-.md-typeset ul.cc-groups {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  margin-top: 52px;
-}
-
-@media screen and (min-width: 1000px) {
-  .md-typeset ul.cc-groups {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.md-typeset .cc-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 26px;
-  border: 1px solid var(--cc-line);
-  border-radius: 16px;
-  background: var(--cc-card);
-}
-
-.md-typeset .cc-group__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--cc-display);
-  font-size: 23px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-
-.md-typeset .cc-group__head code {
-  flex-shrink: 0;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: var(--cc-tint);
-  color: var(--cc-blue-deep);
-  font-family: var(--cc-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0;
-}
-
-.md-typeset .cc-group__desc {
-  flex-grow: 1;
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: var(--cc-muted);
-}
-
-.md-typeset .cc-group__desc code {
-  font-family: var(--cc-mono);
-  font-size: 12.5px;
-  overflow-wrap: anywhere;
-}
-
-.md-typeset .cc-ex {
-  display: flex;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 7px;
-  font-family: var(--cc-mono);
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.md-typeset .cc-ex--bad {
-  background: rgba(200, 50, 43, 0.06);
-  color: #a62a24;
-}
-
-.md-typeset .cc-ex--ok {
-  background: rgba(26, 127, 75, 0.07);
-  color: #146b3e;
-}
-
-[data-theme="dark"] .md-typeset .cc-ex--bad {
-  background: rgba(255, 122, 110, 0.09);
-  color: #ff8f85;
-}
-
-[data-theme="dark"] .md-typeset .cc-ex--ok {
-  background: rgba(79, 201, 139, 0.09);
-  color: #62d29b;
-}
-
-.md-typeset .cc-ex > span:first-child {
-  font-weight: 700;
-}
-
-.md-typeset .cc-group--ink {
-  border-color: var(--cc-ink);
-  background: var(--cc-ink);
-  color: var(--cc-on-ink);
-}
-
-.md-typeset .cc-group--ink .cc-group__desc {
-  color: #9db0be;
-}
-
-.md-typeset .cc-group__code {
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--cc-ink-2);
-  font-family: var(--cc-mono);
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #d6e1e8;
-  overflow-wrap: anywhere;
-}
-
-.md-typeset .cc-group__link,
-.md-typeset .cc-group__link:hover {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--cc-blue-soft);
-}
-
-/* -------------------------------------------------------------- anatomy -- */
-
-.cc-anatomy__grid {
-  display: grid;
-  gap: 48px;
-  align-items: center;
-}
-
-@media screen and (min-width: 960px) {
-  .cc-anatomy__grid {
-    grid-template-columns: minmax(0, 470px) minmax(0, 1fr);
-    gap: 72px;
-  }
-}
-
-.cc-anatomy__grid > div:first-child {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.md-typeset ol.cc-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 10px;
-  counter-reset: cc-step;
-}
-
-.md-typeset .cc-steps li {
-  display: flex;
-  gap: 14px;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--cc-muted);
-  counter-increment: cc-step;
-}
-
-.md-typeset .cc-steps li::before,
-.cc-mark {
-  content: counter(cc-step);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--cc-blue);
-  color: #06131b;
-  font-family: "Instrument Sans", -apple-system, "Segoe UI", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.md-typeset .cc-steps b {
-  color: var(--cc-text);
-}
-
-.cc-diag {
-  display: flex;
-  flex-direction: column;
-  padding: 30px 32px;
-  border-radius: 16px;
-  background: var(--cc-ink);
-  box-shadow: 0 24px 60px rgba(11, 22, 32, 0.2);
-  font-family: var(--cc-mono);
-  font-size: 14.5px;
-  line-height: 2.1;
-  color: #d6e1e8;
-  overflow-x: auto;
-}
-
-.md-typeset .cc-diag p {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  white-space: nowrap;
-}
-
-.cc-diag .cc-mark {
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-}
-
-.md-typeset .cc-diag__docs {
-  padding-left: 34px;
-}
-
-/* The explanation is longer than the panel is wide: wrap it like a terminal
-   would, under its own text, instead of scrolling the panel sideways. */
-.md-typeset .cc-diag p.cc-diag__wrap {
-  white-space: normal;
-  align-items: flex-start;
-  line-height: 1.6;
-  padding: 5px 0;
-}
-
-/* The CLI prints the value on the rule's own line, so its mark sits inline. */
-.cc-diag .cc-mark--inline {
-  display: inline-flex;
-  vertical-align: middle;
-  position: relative;
-  top: -1px;
-  margin: 0 8px 0 10px;
-}
-
-/* Keep "Docs:" padded to line up with "Suggest:", as the CLI prints it. */
-.md-typeset .cc-diag p.cc-diag__docs {
-  white-space: pre-wrap;
-}
-
 /* ---------------------------------------------------------------- proof -- */
 
-.md-typeset .cc-proof {
-  padding-top: 88px;
-  padding-bottom: 88px;
-}
-
+/* The numbers open the pricing band: who already runs it, then what it costs. */
 .md-typeset ul.cc-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px;
+  margin-bottom: 96px;
 }
 
 .md-typeset .cc-stats li {
@@ -2690,22 +2450,6 @@
     padding: 11px 12px;
   }
 
-  .cc-diag {
-    padding: 20px;
-    font-size: 12.5px;
-    line-height: 1.9;
-  }
-
-  .md-typeset .cc-diag p {
-    white-space: normal;
-    align-items: flex-start;
-  }
-
-  .md-typeset .cc-diag__docs {
-    padding-left: 0;
-    overflow-wrap: anywhere;
-  }
-
   .cc-cta__code {
     font-size: 13.5px;
     padding: 18px 20px;
@@ -2734,14 +2478,8 @@
 
 /* JetBrains Mono draws `==>` as one arrow. The transcripts must show what the
    terminal printed, character for character. */
-.md-typeset .cc-band :is(.cc-term, .cc-diag, .cc-tree, .cc-mono, code, .cc-yaml__body, .cc-config__body, .cc-cta__code, .cc-squash, .cc-install, .cc-tab, .cc-ex, .cc-group__code) {
+.md-typeset .cc-band :is(.cc-term, .cc-tree, .cc-mono, code, .cc-yaml__body, .cc-config__body, .cc-cta__code, .cc-squash, .cc-install, .cc-tab) {
   font-variant-ligatures: none;
-}
-
-/* In the dark scheme the cards are already near Ink; an outline keeps the
-   organization card from dissolving into its neighbours. */
-[data-theme="dark"] .md-typeset .cc-group--ink {
-  border-color: #22404f;
 }
 
 /* --------------------------------------------------- hero, light scheme -- */
