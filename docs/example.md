@@ -186,7 +186,7 @@ pushed:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.23.1
+    rev: v2.24.0
     hooks:
       - id: check-no-force-push
         stages: [pre-push]
@@ -411,6 +411,22 @@ $ commit-check -m --rev HEAD --format json | jq -c '.ai_tools'
 It reports attribution, not authorship: a sentence that merely mentions a
 tool adds nothing, an empty list does not mean no AI was used, and a listed
 tool may only have assisted.
+
+A setting that is not in force, such as a misspelt key, an `inherit_from`
+that could not be loaded, a `[files]` value that cannot be used or an invalid
+`CCHK_*` value, is printed on stderr and also listed in `notices`, which is
+empty when there are none. A script can fail on it, though Commit Check does
+not:
+
+```console
+$ commit-check -m --format json | jq '.notices'
+[
+  {
+    "setting": "[commit] subject_max_lenght",
+    "message": "unknown setting [commit] subject_max_lenght is ignored; did you mean subject_max_length?"
+  }
+]
+```
 
 From Python, [`commit_check.api`](guides/python-api.md) returns the same
 result as a `dict`, without a subprocess.

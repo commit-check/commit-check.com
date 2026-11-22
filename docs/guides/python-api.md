@@ -60,6 +60,9 @@ Every function returns the same shape:
 {
     "status": "pass" | "fail" | "skip",
     "warnings": 0,               # how many checks have status "warn"
+    "notices": [                 # settings not in force; [] when there are none
+        {"setting": "[files] max_size", "message": "..."},
+    ],
     "checks": [
         {
             "rule_id": "CC001",
@@ -80,12 +83,16 @@ Every function returns the same shape:
   keeps working whatever else the result holds.
 - **`skip` is not `pass`.** A check skips when it never ran — the author is in
   `ignore_authors`, or there was nothing to check — and the top-level `status`
-  is `skip` only when every check skipped. A skipped run validated nothing, so
+  is `skip` when every check skipped, or when no check ran at all. A skipped run validated nothing, so
   do not read it as approval. When the author or a co-author is in
   `ignore_authors`, the check's `reason` names them.
 - **`warn`** is a rule listed under the config's `warn`: reported in full,
   never a failure. The top-level `status` stays `pass`, and `warnings` counts
   them.
+- **`notices`** lists the settings in `config` that are not in force, such as
+  a `[files]` value that cannot be used and so turns its rule off. Unlike a
+  config file's, the dict's keys are not checked: an unknown key is ignored
+  without a notice.
 - **`fix`** is non-empty only when the correction is mechanical, so it can be
   applied as it stands; otherwise follow `suggest`.
   [Reading the JSON](../example.md#reading-the-json) lists the cases.

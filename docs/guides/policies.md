@@ -219,8 +219,9 @@ $ gh pr view 42 --json body -q .body | commit-check --ai-attribution-only
 
 Under `ai_attribution = "forbid"` a description with an agent's mark fails
 [CC013](../rules.md#cc013); under `"disclose"` it has to disclose the tool,
-like a commit. Under the default `"ignore"` no rule runs and the check
-passes; `--format json` still lists what it found in `ai_tools`, which is
+like a commit. Under the default `"ignore"` no rule runs, so the status is
+`skip`, unless [`ai_declaration_checkboxes`](#requiring-the-templates-ai-declaration)
+is set; `--format json` still lists what it found in `ai_tools`, which is
 enough to label the pull request:
 
 ```console

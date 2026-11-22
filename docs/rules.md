@@ -823,12 +823,15 @@ through a long transfer, so users had to start again.
 **Options**
 
 * `commit.body_max_line_length` — the limit, in characters. `72` is the usual
-  choice. Defaults to `0`, which turns the rule off.
+  choice. Defaults to `0`, which turns the rule off. A Chinese, Japanese or
+  Korean character counts as one character, though a terminal shows it two
+  columns wide.
 
 **Not counted**
 
-* A line with a URL, and a line with no space in it, such as a long path or
-  a hash. Wrapping them breaks them.
+* A line with a URL, and a line that is one word with no space, such as a
+  long path or a hash. Wrapping them breaks them. A line of Chinese, Japanese
+  or Korean has no spaces either, but it is prose, so it is counted.
 * The trailer block at the end of the message, read the same way as for
   CC011: a `Co-authored-by:` line is as long as the name and address in it.
 * Merge commits, whose body git writes, and commits by `dependabot[bot]` and

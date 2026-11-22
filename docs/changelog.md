@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.24.0](#v2240) | `body_max_line_length` limits the length of a body line (opt-in); the JSON lists settings that are not in force in `notices` | [CC018](rules.md#cc018) · [Reading the JSON](example.md#reading-the-json) |
 | [2.23.1](#v2231) | git's `Revert "..."` and `Reapply "..."` commits pass; `revert` is a default type again; several failures quote the message once | [CC001](rules.md#cc001) · [CC004](rules.md#cc004) · [CC007](rules.md#cc007) |
 | [2.23.0](#v2230) | `commit-check-ci` checks a whole merge or pull request in one GitLab CI job or Bitbucket Pipelines step | [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md) |
 | [2.22.0](#v2220) | `--pr-title` checks a pull or merge request title on any CI; the rebase check works in Bitbucket pull request steps and GitLab merged results pipelines | [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md#merge-request-title-and-description) · [CC202](rules.md#cc202) |
@@ -44,6 +45,18 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.24.0 (2026-11-22) { #v2240 }
+
+### Added
+
+* `[commit] body_max_line_length` fails a body line longer than the limit; it is off by default, and lines with a URL, a single word, and trailers are not counted. ([CC018](rules.md#cc018), [#730](https://github.com/commit-check/commit-check/pull/730))
+* The JSON result and the Python API list settings that are not in force, such as a misspelt key or an `inherit_from` that could not be loaded, in `notices`. ([Reading the JSON](example.md#reading-the-json), [#728](https://github.com/commit-check/commit-check/pull/728))
+* Unknown keys in `[pull_request]` are reported, with the closest real name. ([Settings nothing reads](configuration.md#settings-nothing-reads), [#728](https://github.com/commit-check/commit-check/pull/728))
+
+### Changed
+
+* A run with no checks at all reports `skip` instead of `pass`; the exit code stays `0`. ([Python API](guides/python-api.md#the-result), [#728](https://github.com/commit-check/commit-check/pull/728))
 
 ## v2.23.1 (2026-11-20) { #v2231 }
 

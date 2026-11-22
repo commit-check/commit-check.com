@@ -65,7 +65,7 @@ Replace the hook:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.23.1
+    rev: v2.24.0
     hooks:
       - id: check-message
 ```
@@ -96,7 +96,7 @@ Rule by rule:
 | T5 `title-must-not-contain-word` (default `WIP`) | `allow_wip_commits = false` ([CC010](../rules.md#cc010)), which rejects a subject that starts with `WIP`; gitlint rejects the word anywhere in the title |
 | T7 `title-match-regex`, B8 `body-match-regex` | `message_pattern`, one regex over the whole message ([CC001](../rules.md#cc001)) |
 | T8 `title-min-length` | `subject_min_length` ([CC005](../rules.md#cc005)) |
-| B1 `body-max-line-length` | `body_max_line_length` ([CC018](../rules.md#cc018)), off by default; lines with a URL, lines with no space and trailers are not counted |
+| B1 `body-max-line-length` | `body_max_line_length` ([CC018](../rules.md#cc018)), off by default; lines with a URL, a single word with no space (a path, a hash) and trailers are not counted |
 | B5 `body-min-length`, B6 `body-is-missing` | `require_body` ([CC011](../rules.md#cc011)); there is no minimum length |
 | M1 `author-valid-email` | the `check-author-email` hook ([CC102](../rules.md#cc102)), with `author_email_pattern` |
 | CT1 `contrib-title-conventional-commits` | `conventional_commits`, on by default ([CC001](../rules.md#cc001)) |
