@@ -36,7 +36,7 @@ That is it. The next malformed commit message is rejected before it exists.
 
 | Hook ID | Stage | Rules |
 |---|---|---|
-| `check-message` | `commit-msg` | [CC001–CC016](../rules.md#commit-message-rules) |
+| `check-message` | `commit-msg` | [CC001–CC018](../rules.md#commit-message-rules) |
 | `check-branch` | `pre-commit` | [CC201–CC202](../rules.md#branch-rules) |
 | `check-author-name` | `pre-commit` | [CC101](../rules.md#cc101) |
 | `check-author-email` | `pre-commit` | [CC102](../rules.md#cc102) |

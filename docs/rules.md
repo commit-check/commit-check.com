@@ -834,7 +834,9 @@ through a long transfer, so users had to start again.
   or Korean has no spaces either, but it is prose, so it is counted.
 * The trailer block at the end of the message, read the same way as for
   CC011: a `Co-authored-by:` line is as long as the name and address in it.
-* Merge commits, whose body git writes, and commits by `dependabot[bot]` and
+* A merge commit whose subject a merge tool wrote (`Merge branch '...'`,
+  `Merge pull request #...`), since the tool wrote its body too. A merge with
+  a subject of your own is checked. Also commits by `dependabot[bot]` and
   `renovate[bot]`, which copy release notes into the body.
 
 ## Author rules

@@ -50,7 +50,7 @@ page that documents it.
 
 ### Added
 
-* `[commit] body_max_line_length` fails a body line longer than the limit; it is off by default, and lines with a URL, a single word, and trailers are not counted. ([CC018](rules.md#cc018), [#730](https://github.com/commit-check/commit-check/pull/730))
+* `[commit] body_max_line_length` fails a body line longer than the limit; it is off by default, and lines with a URL, a single word such as a path or a hash, and trailers are not counted, while Chinese, Japanese and Korean lines are. ([CC018](rules.md#cc018), [#730](https://github.com/commit-check/commit-check/pull/730))
 * The JSON result and the Python API list settings that are not in force, such as a misspelt key or an `inherit_from` that could not be loaded, in `notices`. ([Reading the JSON](example.md#reading-the-json), [#728](https://github.com/commit-check/commit-check/pull/728))
 * Unknown keys in `[pull_request]` are reported, with the closest real name. ([Settings nothing reads](configuration.md#settings-nothing-reads), [#728](https://github.com/commit-check/commit-check/pull/728))
 

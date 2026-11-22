@@ -415,8 +415,9 @@ tool may only have assisted.
 A setting that is not in force, such as a misspelt key, an `inherit_from`
 that could not be loaded, a `[files]` value that cannot be used or an invalid
 `CCHK_*` value, is printed on stderr and also listed in `notices`, which is
-empty when there are none. A script can fail on it, though Commit Check does
-not:
+empty when none was found (a misspelt `CCHK_*` name is not one Commit Check
+knows, so it goes unnoticed). A script can fail on it, though Commit Check
+does not:
 
 ```console
 $ commit-check -m --format json | jq '.notices'
