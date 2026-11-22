@@ -86,10 +86,12 @@ $ echo "feat: add streaming support" | commit-check -m
 ⚠ unknown setting [commit] subject_max_lenght is ignored; did you mean subject_max_length?
 ```
 
-It is a warning, not an error: the exit code and the JSON on stdout do not
-change. The top-level `warn` list and the
-[`[jira]`](guides/github-app.md#jira-ticket-references) and
-[`[pull_request]`](#pull-requests-every-commit-or-the-squash-message) sections
+It is a warning, not an error: the exit code does not change, and
+`--format json` lists the same line in
+[`notices`](example.md#reading-the-json). The
+[`[pull_request]`](#pull-requests-every-commit-or-the-squash-message) section
+is checked too, for the GitHub App's keys and the CLI's. The top-level `warn`
+list and the [`[jira]`](guides/github-app.md#jira-ticket-references) section
 are not checked for unknown settings. The Python API reads no file at all
 (it takes a `config` dict), and the MCP server loads the file itself without
 reporting unknown settings.
@@ -121,8 +123,8 @@ The value can be a GitHub shorthand, a local path or an HTTPS URL:
 
     If the target is unreachable or the format is not recognized, Commit Check
     ignores the inheritance and uses the local configuration alone, printing a
-    one-line `⊘ inherit_from ... could not be loaded` notice on stderr; the exit
-    code does not change. Plain HTTP URLs are rejected the same way. Only one
+    one-line `⊘ inherit_from ... could not be loaded` notice on stderr, also
+    listed in the JSON's `notices`; the exit code does not change. Plain HTTP URLs are rejected the same way. Only one
     level is followed: an `inherit_from` inside the parent is ignored, with a
     notice. A repository that stops inheriting still passes its own checks, so
     pin the branch when the policy matters.
@@ -274,7 +276,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.23.1
+    rev: v2.24.0
     hooks:
       - id: check-message
         args:
@@ -312,6 +314,7 @@ The full mapping between the three forms:
 | `allow_fixup_commits = true` | `CCHK_ALLOW_FIXUP_COMMITS=true` | `--allow-fixup-commits=true` |
 | `allow_wip_commits = false` | `CCHK_ALLOW_WIP_COMMITS=false` | `--allow-wip-commits=false` |
 | `require_body = false` | `CCHK_REQUIRE_BODY=false` | `--require-body=false` |
+| `body_max_line_length = 72` | `CCHK_BODY_MAX_LINE_LENGTH=72` | `--body-max-line-length=72` |
 | `require_signed_off_by = false` | `CCHK_REQUIRE_SIGNED_OFF_BY=false` | `--require-signed-off-by=false` |
 | `ignore_authors = ["bot"]` | `CCHK_IGNORE_AUTHORS=bot,user` | `--ignore-authors=bot,user` |
 | `author_email_pattern = '^.+@example\.com$'` | `CCHK_AUTHOR_EMAIL_PATTERN=^.+@example\.com$` | `--author-email-pattern=^.+@example\.com$` |
@@ -409,6 +412,7 @@ These two sit above every section, at the top of the file.
 | `allow_fixup_commits` | bool | true | Allow fixup commits: `fixup!`, `squash!` and `amend!` subjects. |
 | `allow_wip_commits` | bool | true | Allow work-in-progress commits (e.g., "WIP: <commit message>"). |
 | `require_body` | bool | false | Require a body in the commit message. |
+| `body_max_line_length` | int | 0 | Maximum length of a body line. Lines with a URL, a single word with no space (a path, a hash) and the trailer block are not counted, and commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off — see [CC018](rules.md#cc018). |
 | `ignore_authors` | list[str] | [] (none ignored) | List of commit authors **or co-authors** (`Co-authored-by:` lines) to bypass all commit checks. Useful for bots (e.g., `"dependabot[bot]"`, `"coderabbitai[bot]"`). |
 | `author_email_pattern` | str | `^.+@.+$` | Custom regex for the author email check. When empty, the built-in default pattern is used. This option only takes effect when the author_email check is enabled (`-e` / `--author-email`). |
 | `author_name_pattern` | str | "" (built-in default) | Custom regex for the author name check. When empty, the built-in default pattern is used (it is not disabled). This option only takes effect when the author_name check is enabled (`-n` / `--author-name`). |

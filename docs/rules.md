@@ -98,6 +98,8 @@ Run with `-m` / `--message`.
 | [CC014](#cc014) | `ai-disclosure` | AI assistance is not disclosed with an accepted trailer | `-m` | ⚪ Off |
 | [CC015](#cc015) | `ai-co-author` | An AI tool is credited as a co-author | `-m` | ⚪ Off |
 | [CC016](#cc016) | `ai-signoff` | An AI tool signed off the commit | `-m` | ⚪ Off |
+| [CC017](#cc017) | `ai-author` | An AI tool is the commit author | `-m` | ⚪ Off |
+| [CC018](#cc018) | `body-max-line-length` | Body lines must be at most `{max_len}` characters | `-m` | ⚪ Off |
 
 </div>
 
@@ -785,6 +787,57 @@ tool set them. All four outrank `user.name` and `user.email`.
 * `commit.ignore_authors` — authors listed here are skipped, for a bot you
   trust to commit on its own.
 * Top-level `warn = ["ai_author"]` reports the rule without failing the run.
+
+### body-max-line-length (CC018) { #cc018 }
+
+**What it does**
+
+Checks that no line of the commit body is longer than a configured number of
+characters. The subject is CC004's to measure, so it is not counted here.
+
+**Why is this bad?**
+
+git does not wrap a message. `git log`, `git show` and the patches that
+`git format-patch` writes print each line as it was typed, so an unwrapped
+paragraph runs off the side of a terminal or wraps mid-word. 72 columns
+leaves room for the four spaces `git log` indents the body by inside an
+80-column terminal.
+
+**Example**
+
+```text
+fix: retry the upload when the token expires
+
+The upload used to fail for good when the token expired halfway through a long transfer, so users had to start again.
+```
+
+Use instead:
+
+```text
+fix: retry the upload when the token expires
+
+The upload used to fail for good when the token expired halfway
+through a long transfer, so users had to start again.
+```
+
+**Options**
+
+* `commit.body_max_line_length` — the limit, in characters. `72` is the usual
+  choice. Defaults to `0`, which turns the rule off. A Chinese, Japanese or
+  Korean character counts as one character, though a terminal shows it two
+  columns wide.
+
+**Not counted**
+
+* A line with a URL, and a line that is one word with no space, such as a
+  long path or a hash. Wrapping them breaks them. A line of Chinese, Japanese
+  or Korean has no spaces either, but it is prose, so it is counted.
+* The trailer block at the end of the message, read the same way as for
+  CC011: a `Co-authored-by:` line is as long as the name and address in it.
+* A merge commit whose subject a merge tool wrote (`Merge branch '...'`,
+  `Merge pull request #...`), since the tool wrote its body too. A merge with
+  a subject of your own is checked. Also commits by `dependabot[bot]` and
+  `renovate[bot]`, which copy release notes into the body.
 
 ## Author rules
 
