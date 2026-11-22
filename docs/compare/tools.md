@@ -85,6 +85,7 @@ subject_max_length = 72       # T1
 subject_min_length = 5        # T8
 allow_wip_commits = false     # T5's default word, WIP
 require_body = true           # B6
+body_max_line_length = 80     # B1
 ```
 
 Rule by rule:
@@ -95,6 +96,7 @@ Rule by rule:
 | T5 `title-must-not-contain-word` (default `WIP`) | `allow_wip_commits = false` ([CC010](../rules.md#cc010)), which rejects a subject that starts with `WIP`; gitlint rejects the word anywhere in the title |
 | T7 `title-match-regex`, B8 `body-match-regex` | `message_pattern`, one regex over the whole message ([CC001](../rules.md#cc001)) |
 | T8 `title-min-length` | `subject_min_length` ([CC005](../rules.md#cc005)) |
+| B1 `body-max-line-length` | `body_max_line_length` ([CC018](../rules.md#cc018)), off by default; lines with a URL, lines with no space and trailers are not counted |
 | B5 `body-min-length`, B6 `body-is-missing` | `require_body` ([CC011](../rules.md#cc011)); there is no minimum length |
 | M1 `author-valid-email` | the `check-author-email` hook ([CC102](../rules.md#cc102)), with `author_email_pattern` |
 | CT1 `contrib-title-conventional-commits` | `conventional_commits`, on by default ([CC001](../rules.md#cc001)) |
@@ -102,9 +104,9 @@ Rule by rule:
 | CC2 `contrib-disallow-cleanup-commits` | `allow_fixup_commits = false` ([CC009](../rules.md#cc009)) |
 | I4 `ignore-by-author-name` | `ignore_authors` |
 | merge, revert, fixup commits ignored | the format rules already skip the subjects git writes; [CC006](../rules.md#cc006), [CC007](../rules.md#cc007) and [CC009](../rules.md#cc009) decide whether they are allowed |
-| T2–T4, T6 whitespace and tab rules, T3 trailing punctuation, B1–B4 body line rules, B7 changed-file mention, user-defined Python rules | no equivalent |
+| T2–T4, T6 whitespace and tab rules, T3 trailing punctuation, B2–B4 body whitespace, tab and blank-line rules, B7 changed-file mention, user-defined Python rules | no equivalent |
 
-The last row is the honest gap: if your policy depends on body line length or
+The last row is the honest gap: if your policy depends on whitespace rules or
 a custom rule written in Python, gitlint still does that and Commit Check does
 not. What you gain is the rest of this page: branch names, authors, the
 Action, the App, and a release that is current.
@@ -114,7 +116,7 @@ Action, the App, and a release that is current.
 - You want the pull request title checked and nothing else: `action-semantic-pull-request`.
 - You are in a JavaScript repository with husky and want plugins: commitlint.
 - You need sign-off with a remediation flow: the DCO app, or DCO-2.
-- You rely on gitlint's body line rules or your own Python rules: gitlint.
+- You rely on gitlint's whitespace rules or your own Python rules: gitlint.
 - You want one policy for messages, branches and authors, the same everywhere
   a commit is made and checked, with a hosted option that needs no workflow
   file: Commit Check.

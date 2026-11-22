@@ -312,6 +312,7 @@ The full mapping between the three forms:
 | `allow_fixup_commits = true` | `CCHK_ALLOW_FIXUP_COMMITS=true` | `--allow-fixup-commits=true` |
 | `allow_wip_commits = false` | `CCHK_ALLOW_WIP_COMMITS=false` | `--allow-wip-commits=false` |
 | `require_body = false` | `CCHK_REQUIRE_BODY=false` | `--require-body=false` |
+| `body_max_line_length = 72` | `CCHK_BODY_MAX_LINE_LENGTH=72` | `--body-max-line-length=72` |
 | `require_signed_off_by = false` | `CCHK_REQUIRE_SIGNED_OFF_BY=false` | `--require-signed-off-by=false` |
 | `ignore_authors = ["bot"]` | `CCHK_IGNORE_AUTHORS=bot,user` | `--ignore-authors=bot,user` |
 | `author_email_pattern = '^.+@example\.com$'` | `CCHK_AUTHOR_EMAIL_PATTERN=^.+@example\.com$` | `--author-email-pattern=^.+@example\.com$` |
@@ -409,6 +410,7 @@ These two sit above every section, at the top of the file.
 | `allow_fixup_commits` | bool | true | Allow fixup commits: `fixup!`, `squash!` and `amend!` subjects. |
 | `allow_wip_commits` | bool | true | Allow work-in-progress commits (e.g., "WIP: <commit message>"). |
 | `require_body` | bool | false | Require a body in the commit message. |
+| `body_max_line_length` | int | 0 | Maximum length of a body line. Lines with a URL, lines with no space and the trailer block are not counted, and commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off — see [CC018](rules.md#cc018). |
 | `ignore_authors` | list[str] | [] (none ignored) | List of commit authors **or co-authors** (`Co-authored-by:` lines) to bypass all commit checks. Useful for bots (e.g., `"dependabot[bot]"`, `"coderabbitai[bot]"`). |
 | `author_email_pattern` | str | `^.+@.+$` | Custom regex for the author email check. When empty, the built-in default pattern is used. This option only takes effect when the author_email check is enabled (`-e` / `--author-email`). |
 | `author_name_pattern` | str | "" (built-in default) | Custom regex for the author name check. When empty, the built-in default pattern is used (it is not disabled). This option only takes effect when the author_name check is enabled (`-n` / `--author-name`). |
