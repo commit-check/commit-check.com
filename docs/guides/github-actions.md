@@ -150,9 +150,14 @@ merges:
 - On a push or any event other than a pull request, the setting has no
   effect, and the Action says so in a notice.
 
-The config file is only half of it. Under `pull_request` the workflow file
-also comes from the pull request, so its inputs and `CCHK_*` variables can be
-changed the same way. Protect `.github/` with a CODEOWNERS review as well.
+The setting decides which config a pull request is checked against, not who
+may change it: a pull request that loosens the config still merges once it
+passes, and every later pull request is checked against the looser rules.
+Under `pull_request` the workflow file also comes from the pull request, so its
+inputs and `CCHK_*` variables can be changed the same way. Put the config
+file, any local file it names in `inherit_from`, and `.github/` under
+CODEOWNERS, and require a code owner's review in the branch's ruleset or
+branch protection.
 
 ## Pull requests from forks
 
