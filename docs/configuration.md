@@ -276,7 +276,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.24.0
+    rev: v2.24.1
     hooks:
       - id: check-message
         args:
@@ -403,8 +403,8 @@ These two sit above every section, at the top of the file.
 | `message_pattern` | str | "" (no custom pattern) | Custom regex pattern for commit message validation.  When set, this pattern replaces the auto-generated Conventional Commits regex entirely, making it possible to enforce custom formats such as JIRA smart commits (e.g., `"^PROJ-\\d+: .+"`).  When `message_pattern` is set (non-empty) it takes precedence over `conventional_commits`. |
 | `subject_capitalized` | bool | false | Subject must start with a capital letter. |
 | `subject_imperative` | bool | false | Subject must be in imperative mood. Judged on the first word's form, so a verb no list contains is still accepted — see [CC003](rules.md#cc003). |
-| `subject_max_length` | int | 80 | Maximum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. The `Revert "..."` and `Reapply "..."` subjects `git revert` writes are not measured. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
-| `subject_min_length` | int | 5 | Minimum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. The `Revert "..."` and `Reapply "..."` subjects `git revert` writes are not measured. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
+| `subject_max_length` | int | 80 | Maximum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. The `Revert "..."` and `Reapply "..."` subjects `git revert` writes, and the `fixup!`, `squash!` and `amend!` ones `git commit --fixup` writes, are not measured. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
+| `subject_min_length` | int | 5 | Minimum length of the subject line, not counting the ` (#123)` a GitHub squash merge adds. The `Revert "..."` and `Reapply "..."` subjects `git revert` writes, and the `fixup!`, `squash!` and `amend!` ones `git commit --fixup` writes, are not measured. Commits by `dependabot[bot]` and `renovate[bot]` skip it. `0` turns the check off. |
 | `allow_commit_types` | list[str] | ["feat", "fix", "docs", "style", "refactor", "test", "chore", "perf", "build", "ci", "revert"] | Allowed commit types when conventional_commits is true. |
 | `allow_merge_commits` | bool | true | Allow merge commits. |
 | `allow_revert_commits` | bool | true | Allow the `Revert "..."` and `Reapply "..."` commits `git revert` writes. |

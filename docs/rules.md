@@ -244,6 +244,10 @@ fix: Handle empty input
 
 * `commit.subject_capitalized` — set to `true` to enable this rule.
 
+Merge subjects and the `fixup!`, `squash!` and `amend!` subjects git writes are
+not judged: git writes them in lower case, and `--autosquash` would not find a
+`Fixup!` commit.
+
 ### subject-imperative (CC003) { #cc003 }
 
 **What it does**
@@ -292,6 +296,9 @@ two apart.
 
 * `commit.subject_imperative` — set to `true` to enable this rule.
 
+Merge subjects and the `fixup!`, `squash!` and `amend!` subjects git writes are
+not judged.
+
 ### subject-max-length (CC004) { #cc004 }
 
 **What it does**
@@ -337,6 +344,10 @@ same root cause.
   author cannot shorten. Their other checks still run.
 * The `Revert "..."` and `Reapply "..."` subjects `git revert` writes, which
   add nine characters to a subject that already fit. CC005 skips them too.
+* The `fixup!`, `squash!` and `amend!` subjects `git commit --fixup` and
+  `--squash` write, which add seven or eight characters to a subject that
+  already fit. CC005 skips them too, and [CC009](#cc009) decides whether they
+  are allowed.
 
 ### subject-min-length (CC005) { #cc005 }
 
@@ -367,7 +378,8 @@ fix: reject config files with a null inherit_from
 * `commit.subject_min_length` — the minimum, in characters. Defaults to `5`.
   `0` turns the rule off.
 
-The squash-merge ` (#123)` and the two dependency bots are treated as for
+The squash-merge ` (#123)`, the two dependency bots and the subjects
+`git revert`, `git commit --fixup` and `--squash` write are treated as for
 [CC004](#cc004).
 
 ### allow-merge-commits (CC006) { #cc006 }
