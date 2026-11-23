@@ -46,6 +46,12 @@ page that documents it.
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
+## v2.24.1 (2026-11-23) { #v2241 }
+
+### Fixed
+
+* CC002 to CC005 skip the `fixup!`, `squash!` and `amend!` subjects `git commit --fixup` and `--squash` write, so a fixup of a subject that fit the limit passes; CC009 still decides whether they are allowed. ([CC004](rules.md#cc004), [#734](https://github.com/commit-check/commit-check/pull/734))
+
 ## v2.24.0 (2026-11-22) { #v2240 }
 
 ### Added

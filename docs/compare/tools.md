@@ -65,7 +65,7 @@ Replace the hook:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.24.0
+    rev: v2.24.1
     hooks:
       - id: check-message
 ```
