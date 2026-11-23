@@ -67,6 +67,7 @@ has one needs no Action-specific configuration.
 | `pr-comments` | `false` | Post the report as a pull request comment, edited in place on later runs. Needs `pull-requests: write`; skipped on fork pull requests |
 | `job-summary` | `true` | Write the report to the job summary |
 | `dry-run` | `false` | Report failures as warnings and always exit `0` |
+| `config-source` | `head` | Where a pull request run reads `cchk.toml`: `head`, the checked-out files, or `base`, the base branch, so a pull request cannot loosen the rules it is checked against. See [below](#config-source). Since v2.25.0 |
 
 `pull_request` does not fire when a title or description is edited. With
 `pr-title` or `pr-body-ai-attribution`, add
@@ -120,6 +121,43 @@ without blocking merges. `dry-run` always exits `0`:
 ```
 
 Turn it off once the history is clean.
+
+## Checking against the base branch's config { #config-source }
+
+By default the Action reads `cchk.toml` from the checkout, which on a pull
+request is the pull request's own copy. A pull request that edits the config
+is then checked against its edit: it can drop a rule and pass the very check
+the rule was for.
+
+With `config-source: base`, a pull request is checked against the config on
+its base branch instead, as CODEOWNERS is. A config change takes effect once it
+merges:
+
+```yaml
+      - uses: commit-check/commit-check-action@v2
+        with:
+          message: true
+          branch: true
+          config-source: base
+```
+
+- A pull request that changes or adds the config gets a notice saying the
+  change applies after it merges.
+- A parent named by a local path in `inherit_from` is read from the base
+  branch too. A `github:` or HTTPS parent is fetched as usual.
+- If the base branch cannot be read, the step fails rather than fall back to
+  the pull request's config.
+- On a push or any event other than a pull request, the setting has no
+  effect, and the Action says so in a notice.
+
+The setting decides which config a pull request is checked against, not who
+may change it: a pull request that loosens the config still merges once it
+passes, and every later pull request is checked against the looser rules.
+Under `pull_request` the workflow file also comes from the pull request, so its
+inputs and `CCHK_*` variables can be changed the same way. Put the config
+file, any local file it names in `inherit_from`, and `.github/` under
+CODEOWNERS, and require a code owner's review in the branch's ruleset or
+branch protection.
 
 ## Pull requests from forks
 
