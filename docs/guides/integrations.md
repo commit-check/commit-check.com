@@ -71,7 +71,8 @@ push and pull request, with no workflow file and no CI minutes.
 
 One job in the pipeline runs `commit-check-ci`, which finds the merge or pull
 request and checks its branch, every commit it adds and, if asked, its title
-and description. [Set it up →](other-ci.md)
+and description. On GitLab a component from the CI/CD Catalog adds that job.
+[Set it up →](other-ci.md)
 
 ## MCP server
 
