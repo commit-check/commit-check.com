@@ -6,7 +6,9 @@ does that job: `commit-check-ci`, which comes with the package from 2.23.0
 on. It finds the merge or pull request from the variables the CI system sets
 and checks the source branch and every commit the request adds, against the
 same `cchk.toml` as the hook and the Action. The title, the description, each
-commit's author and the files it changes are one option away.
+commit's author and the files it changes are one option away. On GitLab the
+[Commit Check component](https://gitlab.com/explore/catalog/commit-check/commit-check)
+in the CI/CD Catalog adds the job for you.
 
 On Azure Pipelines, and on any other CI, the job is
 [written by hand](#azure-pipelines).
@@ -14,17 +16,12 @@ On Azure Pipelines, and on any other CI, the job is
 ## GitLab CI
 
 ```yaml title=".gitlab-ci.yml"
-commit-check:
-  image: python:3.13
-  variables:
-    GIT_DEPTH: "0"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  script:
-    - pip install commit-check
-    - commit-check-ci
+include:
+  - component: gitlab.com/commit-check/commit-check/commit-check@2
 ```
 
+The component adds one job, `commit-check`, to merge request pipelines. It
+installs the latest commit-check 2.x from PyPI and runs `commit-check-ci`.
 Every check is listed under a heading of its own, and one failure fails the
 job:
 
@@ -44,44 +41,79 @@ Commit 20119d2e fix: trim the user name
 1 of 3 failed.
 ```
 
-- `GIT_DEPTH: "0"` turns shallow cloning off, for this job only. The command
+- The job clones the full history (`GIT_DEPTH: "0"`), for this job only. It
   needs every commit of the merge request and the commit they start from.
-  With a clone that ends inside the merge request the job fails and names
-  this setting, rather than pass with commits unchecked.
-- The command fetches the target branch itself, which
-  `require_rebase_target` ([CC202](../rules.md#cc202)) compares with. For a
-  merge request from a fork it fetches from the target project. A pipeline
-  that runs in a fork of a private project cannot fetch it: with that rule
-  set the branch check fails there, and without the rule the branch name is
-  checked as usual.
+- The job fetches the target branch itself, which `require_rebase_target`
+  ([CC202](../rules.md#cc202)) compares with. For a merge request from a fork
+  it fetches from the target project. A pipeline that runs in a fork of a
+  private project cannot fetch it: with that rule set the branch check fails
+  there, and without the rule the branch name is checked as usual.
 - In a merged results pipeline, `HEAD` is a merge commit GitLab made. The
   checks stop at the merge request's own last commit.
-- `rules` keeps the job to merge request pipelines. In any other pipeline the
-  command checks the branch and the last commit only, and says so.
-- The `python` image ships with git. A `-slim` image does not, and needs it
-  installed first.
+- `@2` follows the latest 2.x release of the component. To stay on one
+  release, write it out: `@2.0.0`.
 
-### Options
+### Inputs
 
-Each check has an option, named after the
+Each check has an input, named after the
 [Action's input](github-actions.md#inputs) and on or off by default as it is
 there:
 
-| Option | Default | What it checks |
+| Input | Default | What it checks |
 |---|---|---|
-| `--message` | on | The message of every commit the request adds. |
-| `--branch` | on | The name of the source branch, and `require_rebase_target` if it is set. |
-| `--author-name` | off | The author name of every commit. |
-| `--author-email` | off | The author email of every commit. |
-| `--files` | off | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules). |
-| `--pr-title` | off | The title, with the message rules a one-line title can meet. |
-| `--pr-body-ai-attribution` | off | The description, against the AI attribution rules. |
+| `message` | `true` | The message of every commit the request adds. |
+| `branch` | `true` | The name of the source branch, and `require_rebase_target` if it is set. |
+| `author-name` | `false` | The author name of every commit. |
+| `author-email` | `false` | The author email of every commit. |
+| `files` | `false` | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules). |
+| `pr-title` | `false` | The title, with the message rules a one-line title can meet. |
+| `pr-body-ai-attribution` | `false` | The description, against the AI attribution rules. |
 
-An option alone switches its check on, and `=false` switches one off:
+```yaml
+include:
+  - component: gitlab.com/commit-check/commit-check/commit-check@2
+    inputs:
+      author-email: true
+      branch: false
+```
+
+Four more inputs shape the job itself:
+
+| Input | Default | What it does |
+|---|---|---|
+| `version` | `2.*` | The commit-check release to install: `2.*` for the latest 2.x, or an exact one such as `2.24.1`. |
+| `image` | `python:3.13` | The image the job runs in. It needs Python 3.11 or newer with pip, and git, which `-slim` and `-alpine` images do not have. |
+| `stage` | `test` | The stage the job runs in. |
+| `job-name` | `commit-check` | The name of the job. |
+
+### Writing the job yourself
+
+A self-managed GitLab cannot include a component from gitlab.com. There, or
+to call the command your own way, write the job out:
+
+```yaml title=".gitlab-ci.yml"
+commit-check:
+  image: python:3.13
+  variables:
+    GIT_DEPTH: "0"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - pip install commit-check
+    - commit-check-ci
+```
+
+Each input above is an option of `commit-check-ci` with the same name. An
+option alone switches its check on, and `=false` switches one off:
 
 ```yaml
     - commit-check-ci --author-email --branch=false
 ```
+
+With a clone that ends inside the merge request the job fails and names
+`GIT_DEPTH`, rather than pass with commits unchecked. In a pipeline that is
+not for a merge request the command checks the branch and the last commit
+only, and says so.
 
 ### Making a failed check block the merge
 
@@ -115,18 +147,24 @@ Two things decide whether a failed check stops the merge request:
 
 ### Merge request title and description
 
-GitLab passes both to the job, so two options are all it takes:
+GitLab passes both to the job, so two inputs are all it takes:
 
 ```yaml
-    - commit-check-ci --pr-title --pr-body-ai-attribution
+include:
+  - component: gitlab.com/commit-check/commit-check/commit-check@2
+    inputs:
+      pr-title: true
+      pr-body-ai-attribution: true
 ```
 
-- `--pr-title` checks the title with the message rules a one-line title can
-  meet: everything `--message` runs except a body (CC011), a sign-off (CC012)
+In a job written by hand they are `--pr-title` and `--pr-body-ai-attribution`.
+
+- `pr-title` checks the title with the message rules a one-line title can
+  meet: everything `message` runs except a body (CC011), a sign-off (CC012)
   and an AI author (CC017). With squash merges the title is often the commit
   message that lands. A draft marker (`Draft:`, `[Draft]`, `(Draft)`) is not
   part of the title that is checked.
-- `--pr-body-ai-attribution` checks the description against your
+- `pr-body-ai-attribution` checks the description against your
   `ai_attribution` policy, and, when `[pull_request] ai_declaration_checkboxes`
   is set, that it ticks exactly one AI declaration box (CC501). GitLab task
   lists (`- [x]`, `* [x]`, `1. [x]`) are read like GitHub's.
@@ -134,9 +172,12 @@ GitLab passes both to the job, so two options are all it takes:
   only that part is checked, and the job says so when it happens. Put the AI
   declaration boxes near the top of the merge request template, so a long
   description does not cut them off. To fail a description that was cut
-  rather than check part of it, add before the `commit-check-ci` line:
+  rather than check part of it, give the job a `before_script`. A job of the
+  same name in your `.gitlab-ci.yml` is merged with the component's:
 
     ```yaml
+    commit-check:
+      before_script:
         - test "$CI_MERGE_REQUEST_DESCRIPTION_IS_TRUNCATED" != "true" || { echo "The description is over 2700 characters; GitLab passed only part of it"; exit 1; }
     ```
 
@@ -167,7 +208,8 @@ pipelines:
   step runs. The checks stop at `BITBUCKET_COMMIT`, the pull request's own
   last commit, so commits that only came in with that merge are not checked.
   The rebase check judges that commit too, not the merge.
-- The output and the [options](#options) are the same as on GitLab.
+- The output is the same as on GitLab, and so are the options of a
+  [job written by hand](#writing-the-job-yourself).
 
 ### Pull request title and description
 
