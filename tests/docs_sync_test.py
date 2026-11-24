@@ -172,7 +172,9 @@ _REV_PIN = re.compile(r"^\s*rev:\s*v(\d+\.\d+\.\d+)\s*$", re.M)
 
 #: A Bitbucket pipe pin, e.g. ``pipe: commit-check/commit-check:2.24.2``. The
 #: pipe is published with each release under the same version.
-_PIPE_PIN = re.compile(r"^\s*-?\s*pipe:\s*commit-check/commit-check:(\d+\.\d+\.\d+)\s*$", re.M)
+_PIPE_PIN = re.compile(
+    r"^\s*-?\s*pipe:\s*commit-check/commit-check:(\d+\.\d+\.\d+)\s*(?:#.*)?$", re.M
+)
 
 
 class TestDocumentedRevisions:

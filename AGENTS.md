@@ -23,10 +23,10 @@ so the pages go stale on their own: a release happens elsewhere and nothing in t
    These are the only version-pinned snippets — the GitHub Action is referenced by its moving major tag (`commit-check-action@v2`) and `uvx commit-check-mcp` carries no version, so neither goes stale.
 
    ```console
-   $ grep -rnE "rev: v|pipe: commit-check/" docs | grep -v docs/blog
+   $ grep -rnE "rev: v|pipe: commit-check/" docs | grep -v -e docs/blog -e docs/changelog.md
    ```
 
-   Every one of those must name the released version. **Blog posts are excluded on purpose** — they are dated records of what was current when they were written, and moving their pins forward would falsify them. Never touch them.
+   Every one of those must name the released version. **Blog posts and changelog entries are excluded on purpose** — they are dated records of what was current when they were written, and moving their pins forward would falsify them. Never touch them.
 
 3. **Check the changelog.** `docs/changelog.md` must have an entry for the latest release, and that entry must carry its **release date**, not `(unreleased)`:
 
