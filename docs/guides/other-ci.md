@@ -103,8 +103,8 @@ commit-check:
     - commit-check-ci
 ```
 
-Each input above is an option of `commit-check-ci` with the same name. An
-option alone switches its check on, and `=false` switches one off:
+Each check input above is an option of `commit-check-ci` with the same name.
+An option alone switches its check on, and `=false` switches one off:
 
 ```yaml
     - commit-check-ci --author-email --branch=false
