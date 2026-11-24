@@ -8,7 +8,9 @@ and checks the source branch and every commit the request adds, against the
 same `cchk.toml` as the hook and the Action. The title, the description, each
 commit's author and the files it changes are one option away. On GitLab the
 [Commit Check component](https://gitlab.com/explore/catalog/commit-check/commit-check)
-in the CI/CD Catalog adds the job for you.
+in the CI/CD Catalog adds the job for you, and on Bitbucket the
+[Commit Check pipe](https://bitbucket.org/commit-check/commit-check) runs it
+in a step.
 
 On Azure Pipelines, and on any other CI, the job is
 [written by hand](#azure-pipelines).
@@ -187,6 +189,60 @@ In a job written by hand they are `--pr-title` and `--pr-body-ai-attribution`.
 ## Bitbucket Pipelines
 
 ```yaml title="bitbucket-pipelines.yml"
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Commit Check
+          clone:
+            depth: full
+          script:
+            - pipe: commit-check/commit-check:2.25.0
+```
+
+The pipe runs `commit-check-ci` from the commit-check release of the same
+version, in an image of its own, so the step needs no `image` and no
+install. Its output is the same as on GitLab.
+
+- `depth: full` gives the step the pull request's whole history. With a clone
+  that ends inside the pull request the step fails and names this setting,
+  rather than pass with commits unchecked.
+- Bitbucket merges the destination branch into the pull request before the
+  step runs. The checks stop at `BITBUCKET_COMMIT`, the pull request's own
+  last commit, so commits that only came in with that merge are not checked.
+  The rebase check judges that commit too, not the merge.
+- Outside a pull request pipeline, such as a `branches` pipeline, the pipe
+  checks the branch and the last commit only.
+
+Each check is a variable, with the same defaults as the
+[component's inputs](#gitlab-ci):
+
+| Variable | Default | What it checks |
+|---|---|---|
+| `MESSAGE` | `true` | The message of every commit the pull request adds. |
+| `BRANCH` | `true` | The name of the source branch, and `require_rebase_target` if it is set. |
+| `AUTHOR_NAME` | `false` | The author name of every commit. |
+| `AUTHOR_EMAIL` | `false` | The author email of every commit. |
+| `FILES` | `false` | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules). |
+| `PR_TITLE` | `false` | The title, with the message rules a one-line title can meet. |
+| `PR_BODY_AI_ATTRIBUTION` | `false` | The description, against the AI attribution rules. |
+
+```yaml
+            - pipe: commit-check/commit-check:2.25.0
+              variables:
+                AUTHOR_EMAIL: 'true'
+                BRANCH: 'false'
+```
+
+A setting from `cchk.toml` can come from a `CCHK_` variable in the same
+place, such as `CCHK_SUBJECT_MAX_LENGTH: '72'`.
+
+### Writing the step yourself
+
+To pick the image or call the command your own way, install commit-check in
+the step:
+
+```yaml title="bitbucket-pipelines.yml"
 image: python:3.13
 
 pipelines:
@@ -201,31 +257,33 @@ pipelines:
             - commit-check-ci
 ```
 
-- `depth: full` gives the step the pull request's whole history. With a clone
-  that ends inside the pull request the step fails and names this setting,
-  rather than pass with commits unchecked.
-- Bitbucket merges the destination branch into the pull request before the
-  step runs. The checks stop at `BITBUCKET_COMMIT`, the pull request's own
-  last commit, so commits that only came in with that merge are not checked.
-  The rebase check judges that commit too, not the merge.
-- The output is the same as on GitLab, and so are the options of a
-  [job written by hand](#writing-the-job-yourself).
+The variables above are options of `commit-check-ci`, as in a
+[GitLab job written by hand](#writing-the-job-yourself): `AUTHOR_EMAIL: 'true'`
+is `--author-email`.
 
 ### Pull request title and description
 
 Bitbucket gives the step the pull request's id but not its title or
-description, so the command reads them from the Bitbucket API. Create a
+description, so the pipe reads them from the Bitbucket API. Create a
 [repository access token](https://support.atlassian.com/bitbucket-cloud/docs/repository-access-tokens/)
 with the **Pull requests: Read** scope, store it as a secured repository
 variable named `BITBUCKET_ACCESS_TOKEN`, and switch the two checks on:
 
 ```yaml
-            - commit-check-ci --pr-title --pr-body-ai-attribution
+            - pipe: commit-check/commit-check:2.25.0
+              variables:
+                PR_TITLE: 'true'
+                PR_BODY_AI_ATTRIBUTION: 'true'
+                BITBUCKET_ACCESS_TOKEN: $BITBUCKET_ACCESS_TOKEN
 ```
 
-Without the variable, or with a token Bitbucket refuses, the two checks fail
+In a step written by hand they are `commit-check-ci --pr-title
+--pr-body-ai-attribution`, and the variable reaches the command without
+being named.
+
+Without the token, or with one Bitbucket refuses, the two checks fail
 and say why: a title that could not be read is never checked as empty text.
-`--pr-title` and `--pr-body-ai-attribution` work as in the
+The two checks work as in the
 [GitLab section](#merge-request-title-and-description). Editing a pull
 request does not start a pipeline, so run the step again after an edit.
 

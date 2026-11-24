@@ -19,11 +19,11 @@ so the pages go stale on their own: a release happens elsewhere and nothing in t
    A draft is not one, and you cannot tell by looking for a tag: a draft can be saved against a tag that already exists, and publishing to PyPI is a
    separate step from publishing the GitHub release. Read the published release, or ask PyPI as above — PyPI is what the pin check compares against, since that is what a reader installs.
 
-2. **Check the install pins.** The pre-commit snippets pin a revision with `rev:`, and a stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes.
+2. **Check the install pins.** The pre-commit snippets pin a revision with `rev:`, and the Bitbucket snippets pin the pipe with `pipe: commit-check/commit-check:X.Y.Z` (each release publishes a pipe of the same version). A stale pin is invisible: the snippet keeps working, it just installs an older release than the page around it describes.
    These are the only version-pinned snippets — the GitHub Action is referenced by its moving major tag (`commit-check-action@v2`) and `uvx commit-check-mcp` carries no version, so neither goes stale.
 
    ```console
-   $ grep -rn "rev: v" docs | grep -v docs/blog
+   $ grep -rnE "rev: v|pipe: commit-check/" docs | grep -v docs/blog
    ```
 
    Every one of those must name the released version. **Blog posts are excluded on purpose** — they are dated records of what was current when they were written, and moving their pins forward would falsify them. Never touch them.

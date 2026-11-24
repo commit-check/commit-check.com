@@ -170,6 +170,10 @@ _PROSE_RULE_COUNT = re.compile(r"\b\d+\s+(?:documented\s+)?rules?\b")
 #: A pre-commit revision pin, e.g. ``rev: v2.13.1``.
 _REV_PIN = re.compile(r"^\s*rev:\s*v(\d+\.\d+\.\d+)\s*$", re.M)
 
+#: A Bitbucket pipe pin, e.g. ``pipe: commit-check/commit-check:2.25.0``. The
+#: pipe is published with each release under the same version.
+_PIPE_PIN = re.compile(r"^\s*-?\s*pipe:\s*commit-check/commit-check:(\d+\.\d+\.\d+)\s*$", re.M)
+
 
 class TestDocumentedRevisions:
     """The revisions the install snippets pin are the released version.
@@ -183,7 +187,7 @@ class TestDocumentedRevisions:
     """
 
     def test_pinned_revisions_match_the_released_version(self):
-        """Every ``rev:`` outside the blog names the installed version."""
+        """Every ``rev:`` and pipe pin outside the blog names the installed version."""
         installed = version("commit-check")
         stale = []
         for page in DOCS.rglob("*.md"):
@@ -191,10 +195,11 @@ class TestDocumentedRevisions:
             # were written, and moving their pins forward would falsify them.
             if "blog" in page.relative_to(DOCS).parts:
                 continue
-            for pinned in _REV_PIN.findall(page.read_text("utf-8")):
+            text = page.read_text("utf-8")
+            for pinned in _REV_PIN.findall(text) + _PIPE_PIN.findall(text):
                 if pinned != installed:
                     stale.append(
-                        f"{page.relative_to(DOCS)}: pins v{pinned}, "
+                        f"{page.relative_to(DOCS)}: pins {pinned}, "
                         f"the released version is {installed}"
                     )
         assert not stale, "install snippets are out of date:\n  " + "\n  ".join(stale)
