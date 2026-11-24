@@ -11,7 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
-| [2.25.0](#v2250) | A Bitbucket Pipelines pipe runs `commit-check-ci` in a step with no install | [Bitbucket Pipelines](guides/other-ci.md#bitbucket-pipelines) |
+| [2.24.2](#v2242) | A Bitbucket Pipelines pipe runs `commit-check-ci` in a step with no install | [Bitbucket Pipelines](guides/other-ci.md#bitbucket-pipelines) |
 | [2.24.0](#v2240) | `body_max_line_length` limits the length of a body line (opt-in); the JSON lists settings that are not in force in `notices` | [CC018](rules.md#cc018) · [Reading the JSON](example.md#reading-the-json) |
 | [2.23.1](#v2231) | git's `Revert "..."` and `Reapply "..."` commits pass; `revert` is a default type again; several failures quote the message once | [CC001](rules.md#cc001) · [CC004](rules.md#cc004) · [CC007](rules.md#cc007) |
 | [2.23.0](#v2230) | `commit-check-ci` checks a whole merge or pull request in one GitLab CI job or Bitbucket Pipelines step | [GitLab CI, Bitbucket and Azure Pipelines](guides/other-ci.md) |
@@ -47,11 +47,11 @@ page that documents it.
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
 
-## v2.25.0 (2026-11-24) { #v2250 }
+## v2.24.2 (2026-11-24) { #v2242 }
 
 ### Added
 
-* The Commit Check pipe for Bitbucket Pipelines: `- pipe: commit-check/commit-check:2.25.0` checks a pull request with no `image` and no install, and every release publishes a pipe of the same version. ([Bitbucket Pipelines](guides/other-ci.md#bitbucket-pipelines), [#736](https://github.com/commit-check/commit-check/pull/736))
+* The Commit Check pipe for Bitbucket Pipelines: `- pipe: commit-check/commit-check:2.24.2` checks a pull request with no `image` and no install, and every release publishes a pipe of the same version. ([Bitbucket Pipelines](guides/other-ci.md#bitbucket-pipelines), [#736](https://github.com/commit-check/commit-check/pull/736))
 
 ## v2.24.1 (2026-11-23) { #v2241 }
 

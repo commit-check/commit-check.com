@@ -170,7 +170,7 @@ _PROSE_RULE_COUNT = re.compile(r"\b\d+\s+(?:documented\s+)?rules?\b")
 #: A pre-commit revision pin, e.g. ``rev: v2.13.1``.
 _REV_PIN = re.compile(r"^\s*rev:\s*v(\d+\.\d+\.\d+)\s*$", re.M)
 
-#: A Bitbucket pipe pin, e.g. ``pipe: commit-check/commit-check:2.25.0``. The
+#: A Bitbucket pipe pin, e.g. ``pipe: commit-check/commit-check:2.24.2``. The
 #: pipe is published with each release under the same version.
 _PIPE_PIN = re.compile(r"^\s*-?\s*pipe:\s*commit-check/commit-check:(\d+\.\d+\.\d+)\s*$", re.M)
 

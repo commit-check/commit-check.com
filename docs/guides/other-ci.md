@@ -197,7 +197,7 @@ pipelines:
           clone:
             depth: full
           script:
-            - pipe: commit-check/commit-check:2.25.0
+            - pipe: commit-check/commit-check:2.24.2
 ```
 
 The pipe runs `commit-check-ci` from the commit-check release of the same
@@ -228,7 +228,7 @@ Each check is a variable, with the same defaults as the
 | `PR_BODY_AI_ATTRIBUTION` | `false` | The description, against the AI attribution rules. |
 
 ```yaml
-            - pipe: commit-check/commit-check:2.25.0
+            - pipe: commit-check/commit-check:2.24.2
               variables:
                 AUTHOR_EMAIL: 'true'
                 BRANCH: 'false'
@@ -270,7 +270,7 @@ with the **Pull requests: Read** scope, store it as a secured repository
 variable named `BITBUCKET_ACCESS_TOKEN`, and switch the two checks on:
 
 ```yaml
-            - pipe: commit-check/commit-check:2.25.0
+            - pipe: commit-check/commit-check:2.24.2
               variables:
                 PR_TITLE: 'true'
                 PR_BODY_AI_ATTRIBUTION: 'true'
