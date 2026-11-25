@@ -1,12 +1,13 @@
 # Compared with other tools
 
-What else checks commit messages, branch names and pull request titles on
-GitHub, what each one does, and when it is the better choice. Prices and
-features are as the projects list them in September and October 2026; follow the links
-for the current state. GitHub's own rulesets are on
-[their own page](github-rules.md).
+What else checks commit messages, branch names and pull or merge request
+titles on GitHub, GitLab and Bitbucket, what each one does, and when it is the
+better choice. Prices and features are as the projects list them between
+September and November 2026; follow the links for the current state. GitHub's
+own rulesets are on [their own page](github-rules.md); GitLab's and
+Bitbucket's own settings are in their sections below.
 
-## The field
+## On GitHub { #the-field }
 
 | Tool | What it is | What it checks | Where it runs | Price |
 |---|---|---|---|---|
@@ -17,15 +18,85 @@ for the current state. GitHub's own rulesets are on
 | [commitcheck](https://github.com/marketplace/commitcheck) | A hosted App that applies one regular expression, set in its web admin | Commit message, pull request title or description, by regex | GitHub App | Free for public repositories; $25 a month for private ones |
 | [DCO app](https://github.com/apps/dco) and [DCO-2](https://github.com/cncf/dco2) | The sign-off check the Linux kernel and the CNCF use, with a remediation flow for missing sign-offs | `Signed-off-by` trailers | GitHub App | Free, open source |
 | [PRLint](https://github.com/ewolfe/prlint), [PR Title Checker](https://github.com/marketplace/actions/pr-title-checker) | Regular expressions over pull request fields | Title, body, labels, branch | App / Action | Free, open source |
-| **Commit Check** | One rule engine, [documented rule by rule](../rules.md), run as a hook, a CLI, an Action, a hosted App or an MCP tool | Commit message, branch name, author name and email, sign-off, AI attribution, force pushes, file size and paths, tag names; the pull request title (Action) and the squash message of a pull request (App) | All of the above | Free, open source; the App's private organization repositories move to a paid plan later |
+| **Commit Check** | One rule engine, [documented rule by rule](../rules.md), run as a hook, a CLI, an Action, a hosted App, a GitLab CI/CD component, a Bitbucket pipe or an MCP tool | Commit message, branch name, author name and email, sign-off, AI attribution, force pushes, file size and paths, tag names; the pull or merge request title (Action, GitLab CI, Bitbucket Pipelines) and the squash message of a pull request (App) | All of the above, plus GitLab CI and Bitbucket Pipelines | Free, open source; the App's private organization repositories move to a paid plan later |
+
+## On GitLab
+
+GitLab has commit policies of its own, in its paid tiers. On GitLab Free, a
+check is a job in the merge request pipeline.
+
+| Tool | What it is | What it checks | Where it runs | Price |
+|---|---|---|---|---|
+| [Push rules](https://docs.gitlab.com/user/project/repository/push_rules/) | GitLab's own `pre-receive` hooks, set for a project or a group | Commit messages that must or must not match a regex, branch names, author and committer email, DCO sign-off, signed commits | On the GitLab server, when the push arrives | Premium and Ultimate |
+| [Merge request title validation](https://docs.gitlab.com/user/project/merge_requests/title_validation) | A merge request setting, generally available since GitLab 18.10 | The merge request title, against a pattern; a title that does not match blocks the merge | GitLab | Premium and Ultimate |
+| [commitlint](https://commitlint.js.org/guides/ci-setup) in a CI job | commitlint's documented GitLab CI setup, linting every commit of the merge request | Commit messages | A Node job in the pipeline | Free, open source |
+| [Danger JS](https://danger.systems/js/) | Rules you write yourself, in a `dangerfile.js` or `dangerfile.ts` | Whatever the Dangerfile checks | A Node job in the pipeline | Free, open source |
+| **Commit Check** | The [CI/CD Catalog component](https://gitlab.com/explore/catalog/commit-check/commit-check), two lines in `.gitlab-ci.yml` ([setup](../guides/other-ci.md#gitlab-ci)) | The source branch and every commit the merge request adds; the title, AI attribution in the description, authors and files as inputs | A job in merge request pipelines | Free, open source |
+
+- **On GitLab Free** there are no push rules and no title validation, so a CI
+  job is the way to check anything. The component is that job, with every
+  failure explained under its rule ID.
+- **On Premium and Ultimate** push rules refuse the push itself, which no CI
+  job can do. They are one regular expression per field. Commit Check checks
+  with named rules, each failure carrying a suggestion and a link to its
+  documentation, and the same `cchk.toml` runs in the developer's commit hook.
+  The two combine: push rules for what must never reach the server, the
+  component for the rest.
+- A CI job blocks the merge only with **Pipelines must succeed** turned on;
+  see [Making a failed check block the merge](../guides/other-ci.md#making-a-failed-check-block-the-merge).
+
+## On Bitbucket
+
+Bitbucket Cloud cannot check commit messages by itself:
+[Atlassian's knowledge base](https://support.atlassian.com/bitbucket-cloud/kb/commit-message-validation-with-regex-patterns-using-local-hooks/)
+says there is no native feature for it and lists server-side hooks as a
+feature request. The choice is a Pipelines step or a Marketplace app, and on
+Data Center a pre-receive hook app.
+
+| Tool | What it is | What it checks | Where it runs | Price |
+|---|---|---|---|---|
+| [commitlint](https://commitlint.js.org/guides/ci-setup) in a Pipelines step | commitlint's documented Bitbucket setup, in a `pull-requests` pipeline | Commit messages | A Node step | Free, open source |
+| [Danger JS](https://danger.systems/js/) | Rules you write yourself in a Dangerfile; supports Bitbucket Cloud and Server | Whatever the Dangerfile checks | A Node step | Free, open source |
+| [Better Commit Policy Connector](https://marketplace.atlassian.com/apps/1214430/better-commit-policy-connector-for-bitbucket) | Midori's Marketplace app, enforced through merge checks | Commit messages, committer, branch names, pull request titles and descriptions | Bitbucket Cloud, Server and Data Center | Free; needs Midori's Better Commit Policy for Jira |
+| [Yet Another Commit Checker](https://marketplace.atlassian.com/apps/1211854/yet-another-commit-checker) | Appfire's pre-receive hook app; not offered for Bitbucket Cloud | Commit messages by regex, branch names, Jira issue keys, committer name and email | Bitbucket Data Center and Server | Paid, through Atlassian |
+| **Commit Check** | The [Commit Check pipe](https://bitbucket.org/commit-check/commit-check), one line in a `pull-requests` step ([setup](../guides/other-ci.md#bitbucket-pipelines)) | The source branch and every commit the pull request adds; the title, AI attribution in the description, authors and files as variables | A Pipelines step | Free, open source |
+
+- **The pipe needs no Node and no Jira.** It runs in an image of its own, with
+  the same `cchk.toml` as the hook and the GitHub Action.
+- **Blocking the merge is a Premium setting.** On Bitbucket Cloud,
+  [merge checks](https://support.atlassian.com/bitbucket-cloud/docs/suggest-or-require-checks-before-a-merge/)
+  that stop the merge need the Premium plan; on other plans they only warn,
+  and the pull request can still be merged. That holds for every tool in the
+  table that runs in Cloud.
+- **Jira-centred policies** are where the Marketplace apps are stronger: they
+  check an issue key against Jira itself. Commit Check can require a key's
+  shape with `message_pattern`, not that the issue exists.
+
+## AI attribution checkers
+
+Newer tools check AI attribution in commits. They differ in which way the
+policy points.
+
+| Tool | What it does | Where it runs | Price |
+|---|---|---|---|
+| [no-ai-marks](https://github.com/marketplace/actions/no-ai-marks) | Fails when commits, pull requests, branch names or files carry AI attribution or hidden watermarks. An `Assisted-by:` trailer is an error too | GitHub Action, reusable workflow, pre-commit, CLI | Free, open source |
+| [CommitGuard](https://pypi.org/project/commitguardian/) | Blocks AI, bot and agent attribution in commits: co-author lines, AI identities and AI trailers. Marked pre-alpha | Git hooks, CLI, GitHub Actions, an optional GitHub App | Free, open source |
+| [commitlint-config-agent-coauthor](https://www.npmjs.com/package/commitlint-config-agent-coauthor) | The other way round: requires a `Co-authored-by` trailer when an AI agent made the commit, detected from environment variables | commitlint | Free, open source |
+| **Commit Check** | Either way: `ai_attribution = "forbid"` rejects known AI tool signatures ([CC013](../rules.md#cc013)); `"disclose"` requires a trailer such as `Assisted-by:` and rejects an AI co-author or sign-off ([CC014](../rules.md#cc014) to [CC016](../rules.md#cc016)). The pull request description can be checked too | Everywhere on this page | Free, open source |
+
+A project that accepts AI-assisted work and wants it declared needs a check
+that requires the disclosure, not one that rejects every trace of AI. See
+[Asking for disclosure instead](../guides/policies.md#asking-for-disclosure-instead).
 
 ## What is different about Commit Check
 
 - **One config, every place it runs.** The same `cchk.toml` drives the
   [pre-commit hook](../guides/pre-commit.md), the [Action](../guides/github-actions.md),
-  the [App](../guides/github-app.md) and the [MCP server](../guides/mcp.md).
-  The others cover one place each: commitlint is a Node hook and an Action;
-  the title checkers are Actions or Apps; commitcheck is an App.
+  the [App](../guides/github-app.md), the
+  [GitLab component and the Bitbucket pipe](../guides/other-ci.md) and the
+  [MCP server](../guides/mcp.md). The others cover one place each: commitlint
+  is a Node hook and a CI job; the title checkers are Actions or Apps;
+  commitcheck is an App; push rules and Marketplace apps belong to one forge.
 - **More than the message.** Branch names, author identity, sign-off, AI
   attribution trailers, force pushes and file rules are rules, not separate
   tools to find and wire up.
@@ -49,10 +120,12 @@ for the current state. GitHub's own rulesets are on
 - **Sign-off remediation.** The DCO app can accept a later commit that
   certifies earlier ones, and lets a maintainer override. Commit Check checks
   the trailer and stops there.
-- **Rejecting the push itself.** Only GitHub's rulesets (and a server-side
-  hook on GitHub Enterprise Server) refuse a ref update; see the
-  [rulesets page](github-rules.md). Every tool above, Commit Check included,
-  marks the commit or blocks the merge.
+- **Rejecting the push itself.** Only rules that run on the server refuse a
+  ref update: GitHub's rulesets (see the [rulesets page](github-rules.md)) and
+  a server-side hook on GitHub Enterprise Server, GitLab's push rules, and a
+  pre-receive hook app such as Yet Another Commit Checker on Bitbucket Data
+  Center. Every other tool above, Commit Check included, marks the commit or
+  blocks the merge.
 
 ## Coming from gitlint
 
@@ -117,6 +190,10 @@ Action, the App, and a release that is current.
 - You are in a JavaScript repository with husky and want plugins: commitlint.
 - You need sign-off with a remediation flow: the DCO app, or DCO-2.
 - You rely on gitlint's whitespace rules or your own Python rules: gitlint.
+- You are on GitLab Premium, a regex per field is enough, and the push itself
+  must be refused: push rules.
+- Your policy is Jira issue keys on Bitbucket: a Marketplace app that reads
+  Jira.
 - You want one policy for messages, branches and authors, the same everywhere
-  a commit is made and checked, with a hosted option that needs no workflow
-  file: Commit Check.
+  a commit is made and checked, on GitHub, GitLab and Bitbucket, with a hosted
+  option on GitHub that needs no workflow file: Commit Check.
