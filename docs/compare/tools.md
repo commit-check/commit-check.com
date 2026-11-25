@@ -31,7 +31,7 @@ check is a job in the merge request pipeline.
 | [Merge request title validation](https://docs.gitlab.com/user/project/merge_requests/title_validation) | A merge request setting, generally available since GitLab 18.10 | The merge request title, against a pattern; a title that does not match blocks the merge | GitLab | Premium and Ultimate |
 | [commitlint](https://commitlint.js.org/guides/ci-setup) in a CI job | commitlint's documented GitLab CI setup, linting every commit of the merge request | Commit messages | A Node job in the pipeline | Free, open source |
 | [Danger JS](https://danger.systems/js/) | Rules you write yourself, in a `dangerfile.js` or `dangerfile.ts` | Whatever the Dangerfile checks | A Node job in the pipeline | Free, open source |
-| **Commit Check** | The [CI/CD Catalog component](https://gitlab.com/explore/catalog/commit-check/commit-check), two lines in `.gitlab-ci.yml` ([setup](../guides/other-ci.md#gitlab-ci)) | The source branch and every commit the merge request adds; the title, AI attribution in the description, authors and files as inputs | A job in merge request pipelines | Free, open source |
+| **Commit Check** | On GitLab.com, the [CI/CD Catalog component](https://gitlab.com/explore/catalog/commit-check/commit-check), two lines in `.gitlab-ci.yml`; on a self-managed GitLab, a job you [write out](../guides/other-ci.md#writing-the-job-yourself) ([setup](../guides/other-ci.md#gitlab-ci)) | The source branch and every commit the merge request adds; the title, AI attribution in the description, authors and files as inputs | A job in merge request pipelines | Free, open source |
 
 - **On GitLab Free** there are no push rules and no title validation, so a CI
   job is the way to check anything. The component is that job, with every
@@ -44,6 +44,9 @@ check is a job in the merge request pipeline.
   component for the rest.
 - A CI job blocks the merge only with **Pipelines must succeed** turned on;
   see [Making a failed check block the merge](../guides/other-ci.md#making-a-failed-check-block-the-merge).
+  It also checks the title as it was when the pipeline ran: editing the title
+  or description does not start a new pipeline, where GitLab's own title
+  validation judges the current title.
 
 ## On Bitbucket
 
@@ -57,12 +60,14 @@ Data Center a pre-receive hook app.
 |---|---|---|---|---|
 | [commitlint](https://commitlint.js.org/guides/ci-setup) in a Pipelines step | commitlint's documented Bitbucket setup, in a `pull-requests` pipeline | Commit messages | A Node step | Free, open source |
 | [Danger JS](https://danger.systems/js/) | Rules you write yourself in a Dangerfile; supports Bitbucket Cloud and Server | Whatever the Dangerfile checks | A Node step | Free, open source |
-| [Better Commit Policy Connector](https://marketplace.atlassian.com/apps/1214430/better-commit-policy-connector-for-bitbucket) | Midori's Marketplace app, enforced through merge checks | Commit messages, committer, branch names, pull request titles and descriptions | Bitbucket Cloud, Server and Data Center | Free; needs Midori's Better Commit Policy for Jira |
+| [Better Commit Policy Connector](https://marketplace.atlassian.com/apps/1214430/better-commit-policy-connector-for-bitbucket) | Midori's Marketplace app, enforced through merge checks | Commit messages, committer, branch names, pull request titles and descriptions | Bitbucket Cloud, Server and Data Center | Free; needs Midori's [Better Commit Policy for Jira](https://marketplace.atlassian.com/apps/1213415/better-commit-policy-for-jira-git-bitbucket-and-more), a paid app (free up to 10 Jira Cloud users) |
 | [Yet Another Commit Checker](https://marketplace.atlassian.com/apps/1211854/yet-another-commit-checker) | Appfire's pre-receive hook app; not offered for Bitbucket Cloud | Commit messages by regex, branch names, Jira issue keys, committer name and email | Bitbucket Data Center and Server | Paid, through Atlassian |
 | **Commit Check** | The [Commit Check pipe](https://bitbucket.org/commit-check/commit-check), one line in a `pull-requests` step ([setup](../guides/other-ci.md#bitbucket-pipelines)) | The source branch and every commit the pull request adds; the title, AI attribution in the description, authors and files as variables | A Pipelines step | Free, open source |
 
 - **The pipe needs no Node and no Jira.** It runs in an image of its own, with
-  the same `cchk.toml` as the hook and the GitHub Action.
+  the same `cchk.toml` as the hook and the GitHub Action. As on GitLab,
+  editing a pull request does not start a pipeline, so run the step again
+  after changing the title or description.
 - **Blocking the merge is a Premium setting.** On Bitbucket Cloud,
   [merge checks](https://support.atlassian.com/bitbucket-cloud/docs/suggest-or-require-checks-before-a-merge/)
   that stop the merge need the Premium plan; on other plans they only warn,
@@ -82,7 +87,7 @@ policy points.
 | [no-ai-marks](https://github.com/marketplace/actions/no-ai-marks) | Fails when commits, pull requests, branch names or files carry AI attribution or hidden watermarks. An `Assisted-by:` trailer is an error too | GitHub Action, reusable workflow, pre-commit, CLI | Free, open source |
 | [CommitGuard](https://pypi.org/project/commitguardian/) | Blocks AI, bot and agent attribution in commits: co-author lines, AI identities and AI trailers. Marked pre-alpha | Git hooks, CLI, GitHub Actions, an optional GitHub App | Free, open source |
 | [commitlint-config-agent-coauthor](https://www.npmjs.com/package/commitlint-config-agent-coauthor) | The other way round: requires a `Co-authored-by` trailer when an AI agent made the commit, detected from environment variables | commitlint | Free, open source |
-| **Commit Check** | Either way: `ai_attribution = "forbid"` rejects known AI tool signatures ([CC013](../rules.md#cc013)); `"disclose"` requires a trailer such as `Assisted-by:` and rejects an AI co-author or sign-off ([CC014](../rules.md#cc014) to [CC016](../rules.md#cc016)). The pull request description can be checked too | Everywhere on this page | Free, open source |
+| **Commit Check** | Either way: `ai_attribution = "forbid"` rejects known AI tool signatures ([CC013](../rules.md#cc013)); `"disclose"` requires a trailer such as `Assisted-by:` on a commit that shows signs of AI assistance (a vendor's co-author line, an AI sign-off, a tool's mark) and rejects an AI co-author or sign-off ([CC014](../rules.md#cc014) to [CC016](../rules.md#cc016)). To have every pull request declare, [CC501](../rules.md#cc501) requires one AI declaration box ticked in the template | Everywhere on this page | Free, open source |
 
 A project that accepts AI-assisted work and wants it declared needs a check
 that requires the disclosure, not one that rejects every trace of AI. See
