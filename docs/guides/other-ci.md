@@ -202,7 +202,8 @@ pipelines:
 
 The pipe runs `commit-check-ci` from the commit-check release of the same
 version, in an image of its own, so the step needs no `image` and no
-install. Its output is the same as on GitLab.
+install. Its output is the same as on GitLab. Atlassian lists it among the
+[official Bitbucket pipes](https://bitbucket.org/product/features/pipelines/integrations).
 
 - `depth: full` gives the step the pull request's whole history. With a clone
   that ends inside the pull request the step fails and names this setting,
