@@ -196,3 +196,88 @@ and a commit that skipped the hook still cannot merge, since both look at every
 commit of the pull request. The App's check is named **Commit Check**
 ([enforcing it](github-app.md#enforcing-it)); the Action's takes its job's
 name, `commit-check` in [the example](github-actions.md#making-it-a-required-check).
+
+## Run it before the expensive jobs { #before-the-expensive-jobs }
+
+Agents now open a large share of pull requests: by GitHub's count, more than
+40% of pull requests in September 2026 were started with an agent, up from 17%
+in March ([Octoverse][octoverse]). Every one of them runs the whole pipeline,
+and every push to it runs the pipeline again. Commit Check reads commit
+messages, authors and branch names, not code, so it finishes in seconds. On
+the commit-check repository's own pull requests its job takes 8 to 12 seconds;
+the 17 build and test jobs in its CI workflow take about ten minutes of runner
+time together. Run the check first and make the other jobs wait for it, and a
+pull request that breaks the policy fails before it costs a test run, with a
+message the agent can act on.
+
+On GitHub, put the check in the workflow that runs the tests, and list it
+under `needs`:
+
+```yaml title=".github/workflows/ci.yml"
+on: pull_request
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  commit-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: commit-check/commit-check-action@v2
+
+  test:
+    needs: commit-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: make test
+```
+
+- `needs` works inside one workflow file only. A check in a workflow of its
+  own runs next to the tests, not before them.
+- `concurrency` cancels the run still going when the agent pushes again, so
+  only the newest commit is built.
+
+On GitLab, run the component's job in `.pre`, the stage GitLab always runs
+first. Jobs in later stages start only when it has passed:
+
+```yaml title=".gitlab-ci.yml"
+include:
+  - component: gitlab.com/commit-check/commit-check/commit-check@2
+    inputs:
+      stage: .pre
+```
+
+The job runs in merge request pipelines, so this holds back the jobs that run
+there too. A job with `needs` starts when the jobs it lists finish, whatever
+its stage; add `commit-check` to its list.
+
+On Bitbucket, make the check the first step. Steps run in order and a failed
+step stops the ones after it:
+
+```yaml title="bitbucket-pipelines.yml"
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Commit Check
+          clone:
+            depth: full
+          script:
+            - pipe: commit-check/commit-check:2.24.2
+      - step:
+          name: Test
+          script:
+            - make test
+```
+
+Steps in a `parallel` group start together, so keep the check out of one.
+
+[octoverse]: https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/
