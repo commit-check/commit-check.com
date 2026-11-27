@@ -8,7 +8,7 @@ Add Commit Check to `.pre-commit-config.yaml`:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.24.2
+    rev: v2.25.0
     hooks:
       - id: check-message
       - id: check-branch
@@ -41,7 +41,7 @@ That is it. The next malformed commit message is rejected before it exists.
 | `check-author-name` | `pre-commit` | [CC101](../rules.md#cc101) |
 | `check-author-email` | `pre-commit` | [CC102](../rules.md#cc102) |
 | `check-no-force-push` | `pre-push` | [CC301](../rules.md#cc301) |
-| `check-files` | `pre-push` | [CC302–CC304](../rules.md#push-rules) |
+| `check-files` | `pre-push` | [CC302–CC304](../rules.md#push-rules), [CC601–CC604](../rules.md#agent-config-rules) |
 | `check-tag` | `pre-push` | [CC401](../rules.md#cc401) |
 
 The three `pre-push` hooks need their own install too:
@@ -68,7 +68,7 @@ Options can be passed as hook arguments, which keeps everything in one file:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.24.2
+    rev: v2.25.0
     hooks:
       - id: check-message
         args:
@@ -90,7 +90,7 @@ colon, and lets the commit through:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.24.2
+    rev: v2.25.0
     hooks:
       - id: check-message
         args: [--fix]

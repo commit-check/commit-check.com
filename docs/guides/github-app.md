@@ -132,8 +132,8 @@ The App reads the same file the CLI reads, as it stands at the head of the
 push or pull request, in the same four places: `cchk.toml`, `commit-check.toml`, `.github/cchk.toml`,
 `.github/commit-check.toml`. Every option on the
 [configuration page](../configuration.md) that belongs to a rule the App runs
-applies, precedence included; the `[push]`, `[files]` and `[tag]` sections are
-read but have nothing to act on here. Nothing is App-specific to set apart
+applies, precedence included; the `[push]`, `[files]`, `[agent]` and `[tag]`
+sections are read but have nothing to act on here. Nothing is App-specific to set apart
 from `[pull_request]` (above), `[jira]` and `[commit] require_verified` (below);
 the CLI and the Action ignore them, except `[pull_request] ai_declaration_checkboxes`
 ([CC501](../rules.md#cc501)), which all three read.

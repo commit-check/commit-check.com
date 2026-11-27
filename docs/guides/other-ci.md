@@ -67,7 +67,7 @@ there:
 | `branch` | `true` | The name of the source branch, and `require_rebase_target` if it is set. |
 | `author-name` | `false` | The author name of every commit. |
 | `author-email` | `false` | The author email of every commit. |
-| `files` | `false` | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules). |
+| `files` | `false` | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules) and, when enabled, the [`[agent]` rules](../rules.md#agent-config-rules). |
 | `pr-title` | `false` | The title, with the message rules a one-line title can meet. |
 | `pr-body-ai-attribution` | `false` | The description, against the AI attribution rules. |
 
@@ -197,7 +197,7 @@ pipelines:
           clone:
             depth: full
           script:
-            - pipe: commit-check/commit-check:2.24.2
+            - pipe: commit-check/commit-check:2.25.0
 ```
 
 The pipe runs `commit-check-ci` from the commit-check release of the same
@@ -224,12 +224,12 @@ Each check is a variable, with the same defaults as the
 | `BRANCH` | `true` | The name of the source branch, and `require_rebase_target` if it is set. |
 | `AUTHOR_NAME` | `false` | The author name of every commit. |
 | `AUTHOR_EMAIL` | `false` | The author email of every commit. |
-| `FILES` | `false` | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules). |
+| `FILES` | `false` | The files every commit changes, against the [`[files]` rules](../rules.md#push-rules) and, when enabled, the [`[agent]` rules](../rules.md#agent-config-rules). |
 | `PR_TITLE` | `false` | The title, with the message rules a one-line title can meet. |
 | `PR_BODY_AI_ATTRIBUTION` | `false` | The description, against the AI attribution rules. |
 
 ```yaml
-            - pipe: commit-check/commit-check:2.24.2
+            - pipe: commit-check/commit-check:2.25.0
               variables:
                 AUTHOR_EMAIL: 'true'
                 BRANCH: 'false'
@@ -271,7 +271,7 @@ with the **Pull requests: Read** scope, store it as a secured repository
 variable named `BITBUCKET_ACCESS_TOKEN`, and switch the two checks on:
 
 ```yaml
-            - pipe: commit-check/commit-check:2.24.2
+            - pipe: commit-check/commit-check:2.25.0
               variables:
                 PR_TITLE: 'true'
                 PR_BODY_AI_ATTRIBUTION: 'true'
@@ -356,7 +356,7 @@ steps:
   builds a branch policy started.
 - Add `--author-name --author-email` to the `commit-check` call in the loop
   to check each commit's author as well, and `--files` to check the files
-  each commit adds (configured in the `[files]` section).
+  each commit adds (configured in the `[files]` and `[agent]` sections).
 - The branch check also covers `require_rebase_target` (CC202), which needs
   the target branch in the clone as `origin/<branch>`. Without it the rule
   reports itself as skipped (`rebase target 'main' not found`) and the job

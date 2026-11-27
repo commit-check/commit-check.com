@@ -276,7 +276,7 @@ Used from a hook definition, with no config file anywhere in the repository:
 ```yaml title=".pre-commit-config.yaml"
 repos:
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.24.2
+    rev: v2.25.0
     hooks:
       - id: check-message
         args:
@@ -333,6 +333,9 @@ The full mapping between the three forms:
 | `max_size = "5MB"` (in files section) | `CCHK_FILES_MAX_SIZE=5MB` | `--files-max-size=5MB` |
 | `prohibited_patterns = ["*.pem"]` (in files section) | `CCHK_FILES_PROHIBITED_PATTERNS=*.pem,.env` | `--files-prohibited-patterns=*.pem,.env` |
 | `max_path_length = 250` (in files section) | `CCHK_FILES_MAX_PATH_LENGTH=250` | `--files-max-path-length=250` |
+| `enabled = true` (in agent section) | `CCHK_AGENT_ENABLED=true` | `--agent-enabled=true` |
+| `allow_mcp_servers = ["github"]` (in agent section) | `CCHK_AGENT_ALLOW_MCP_SERVERS=github,notes` | `--agent-allow-mcp-servers=github,notes` |
+| `allow_api_endpoints = ["https://llm.example.com"]` (in agent section) | `CCHK_AGENT_ALLOW_API_ENDPOINTS=https://llm.example.com` | `--agent-allow-api-endpoints=https://llm.example.com` |
 
 ## Which value wins
 
@@ -463,6 +466,18 @@ Action do not check signatures; see [Verified commits](guides/github-app.md#veri
 | `max_size` | str | "" (disabled) | Largest a committed file may be, in bytes or with a `KB`/`MB`/`GB` suffix (binary units, so `5MB` is 5 × 1024²). Empty disables the rule. |
 | `prohibited_patterns` | list[str] | [] (empty list) | fnmatch patterns a committed path may not match, e.g. `["*.pem", ".env", "id_rsa*"]`. A bare pattern also matches the file name at any depth. Matching is case-sensitive on every platform, like git pathspecs. Empty disables the rule. |
 | `max_path_length` | int | 0 (disabled) | Longest a committed file path may be, in characters. `0` disables the rule. |
+
+{.fields}
+
+### `[agent]`
+
+Read by `--files`. See [Agent config rules](rules.md#agent-config-rules).
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | bool | false | Report risky settings in the coding agent config files a commit touches: MCP servers approved without asking ([CC601](rules.md#cc601)), API requests sent to another endpoint ([CC602](rules.md#cc602)), commands run without asking or outside the sandbox ([CC603](rules.md#cc603)), and agent workflows anyone can start ([CC604](rules.md#cc604)). |
+| `allow_mcp_servers` | list[str] | [] (none allowed) | MCP servers, by name, that a committed setting may approve (CC601). A setting that approves every server is reported whatever the list holds. |
+| `allow_api_endpoints` | list[str] | [] (none allowed) | API endpoint URLs a committed setting may send requests to (CC602), such as your company's LLM gateway. Matched exactly; a trailing slash is ignored. |
 
 {.fields}
 

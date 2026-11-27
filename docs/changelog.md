@@ -11,6 +11,7 @@ page that documents it.
 
 | Version | What changed | Documented in |
 |---|---|---|
+| [2.25.0](#v2250) | Risky settings in committed coding agent config files reported: MCP servers approved without asking, another API endpoint, full access, workflows anyone can start (opt-in) | [Agent config rules](rules.md#agent-config-rules) · [`[agent]`](configuration.md#agent) |
 | [2.24.2](#v2242) | A Bitbucket Pipelines pipe runs `commit-check-ci` in a step with no install | [Bitbucket Pipelines](guides/other-ci.md#bitbucket-pipelines) |
 | [2.24.0](#v2240) | `body_max_line_length` limits the length of a body line (opt-in); the JSON lists settings that are not in force in `notices` | [CC018](rules.md#cc018) · [Reading the JSON](example.md#reading-the-json) |
 | [2.23.1](#v2231) | git's `Revert "..."` and `Reapply "..."` commits pass; `revert` is a default type again; several failures quote the message once | [CC001](rules.md#cc001) · [CC004](rules.md#cc004) · [CC007](rules.md#cc007) |
@@ -46,6 +47,12 @@ page that documents it.
 | [2.6.0](#v260) | `--format json` and the Python API; `--compact`, `--no-banner` | [Command-line recipes](example.md#output-for-scripts-and-ci) |
 | [2.5.0](#v250) | Organization-wide config with `inherit_from` | [Across an organization](guides/organization.md) |
 | [2.0.0](#v200) | Configuration moved from YAML to TOML — breaking | [Migrating from v1](migration.md) |
+
+## v2.25.0 (2026-11-27) { #v2250 }
+
+### Added
+
+* With `[agent] enabled = true`, `--files` reads the coding agent config files a commit touches (Claude Code, Codex, Gemini CLI, Cursor CLI, GitHub Copilot in VS Code and the Claude Code GitHub Action) and reports MCP servers approved without asking (CC601), API requests sent to another endpoint (CC602), an agent that runs without asking or without a sandbox (CC603), and an agent workflow anyone can start (CC604); `allow_mcp_servers` and `allow_api_endpoints` let named servers and endpoints through. ([Agent config rules](rules.md#agent-config-rules), [#744](https://github.com/commit-check/commit-check/pull/744))
 
 ## v2.24.2 (2026-11-24) { #v2242 }
 

@@ -59,7 +59,7 @@ has one needs no Action-specific configuration.
 | `branch` | `true` | Check the branch name |
 | `author-name` | `false` | Check each commit's author name |
 | `author-email` | `false` | Check each commit's author email |
-| `files` | `false` | Check the files each commit changes against the [`[files]` rules](../rules.md#push-rules) of `cchk.toml` (size, prohibited paths, path length). Needs `fetch-depth: 0`: a commit the clone holds without its parent is skipped. Since v2.24.0 |
+| `files` | `false` | Check the files each commit changes against the [`[files]` rules](../rules.md#push-rules) of `cchk.toml` (size, prohibited paths, path length) and, when enabled, the [`[agent]` rules](../rules.md#agent-config-rules). Needs `fetch-depth: 0`: a commit the clone holds without its parent is skipped. Since v2.24.0 |
 | `pr-title` | `false` | Check the pull request title, the one that matters for squash merges, against the message rules a one-line title can meet: every `message` rule except a body (CC011), a sign-off (CC012) and an AI author (CC017). Pull request events only |
 | `message-ai-attribution` | `false` | Check every commit against the [AI rules](policies.md#checking-ai-attribution-and-nothing-else) of `cchk.toml` (`ai_attribution`) only, author included, without the format rules. Takes the place of `message` |
 | `pr-body-ai-attribution` | `false` | Check the [pull request description](policies.md#checking-a-pull-request-description) against the AI rules of `cchk.toml`, and its [AI declaration boxes](../rules.md#cc501) when `[pull_request] ai_declaration_checkboxes` is set. Pull request events only |
