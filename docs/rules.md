@@ -1328,8 +1328,8 @@ committed, its settings hold for everyone who opens the repository with that
 agent, and for every agent run in CI. The rules below report the settings that
 open everything up, as each agent documents them.
 
-They are off until you turn them on, and run with `--files`, so wherever the
-file rules already run they run too: the
+They are off until you turn them on, and run with `--files` from CLI 2.25.0, so
+wherever the file rules already run on that version they run too: the
 [`check-files` hook](guides/pre-commit.md), the [Action](guides/github-actions.md)'s
 `files` input, and the `files` and `FILES` inputs of the
 [GitLab component and the Bitbucket pipe](guides/other-ci.md):
@@ -1385,7 +1385,10 @@ An agent asks before it starts an MCP server a repository brings, because the
 server is a command that runs on your machine. A committed approval skips that
 question for everyone who clones the repository: a pull request that adds a
 server to `.mcp.json` and approves it in `.claude/settings.json` runs it the
-next time anyone opens the project.
+next time anyone opens the project. Check Point showed this as
+[CVE-2025-59536](https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files/);
+the fix holds the setting back until you trust the folder, and after that it is
+in force.
 
 **Example**
 
@@ -1432,7 +1435,10 @@ Mantle, AWS, Vertex or Foundry base URL.
 
 The endpoint receives every request the agent makes, with your prompts, the
 code it reads and your API key. A committed base URL sends them there for
-everyone who opens the repository, with nothing on screen to say so.
+everyone who opens the repository, with nothing on screen to say so. In
+[CVE-2026-21852](https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files/),
+a committed `ANTHROPIC_BASE_URL` sent requests, API key included, to an address
+the repository chose.
 
 **Example**
 
@@ -1485,7 +1491,7 @@ The approval prompt and the sandbox are what stand between a prompt injection,
 in an issue, a web page or a file the agent reads, and a command on your
 machine. Turning them off is a choice for one person to make in their own user
 settings. Committed, it is made for everyone who opens the repository.
-In CVE-2025-53773, a prompt injection had Copilot write
+In [CVE-2025-53773](https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/), a prompt injection had Copilot write
 `chat.tools.autoApprove` into `.vscode/settings.json` to run commands.
 
 **Example**
@@ -1520,9 +1526,12 @@ composite action under `.github/actions/`.
 **Why is this bad?**
 
 By default the action runs only for people with write access to the
-repository. `"*"` lets any GitHub account, or any bot, start the agent with a
-comment, and the agent runs with the workflow's token and secrets on what that
-account wrote.
+repository, and for no GitHub App. `"*"` lets any GitHub account, or any App,
+start the agent, and the agent runs with the workflow's token and secrets on
+what that account wrote. The action's
+[security guide](https://github.com/anthropics/claude-code-action/blob/main/docs/security.md)
+marks `allowed_non_write_users` as risky, and says that with `allowed_bots: '*'`
+any such App can invoke the action with a prompt it controls.
 
 **Example**
 

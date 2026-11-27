@@ -3,7 +3,7 @@
 A coding agent commits more often than a person, and when a hook rejects a
 commit it can reach for `git commit --no-verify` to get past it. Agents that
 work in the cloud often run no hook at all. Four layers keep the policy in
-place, cheapest first. Only the last one cannot be skipped.
+place, cheapest first. Only the check on the pull request cannot be skipped.
 
 ## Tell the agent
 
@@ -196,3 +196,19 @@ and a commit that skipped the hook still cannot merge, since both look at every
 commit of the pull request. The App's check is named **Commit Check**
 ([enforcing it](github-app.md#enforcing-it)); the Action's takes its job's
 name, `commit-check` in [the example](github-actions.md#making-it-a-required-check).
+
+## Check the agent's own settings
+
+The files that configure an agent live in the repository too, and one commit
+to them changes what the agent does for everyone who opens it: an MCP server
+approved in advance, requests sent to another endpoint, the sandbox turned off,
+or anyone allowed to start the agent in CI. With `[agent] enabled = true`,
+`--files` reports those settings in each commit that touches them, wherever it
+runs: the `check-files` [pre-commit hook](pre-commit.md) or a CI job. The
+[agent config rules](../rules.md#agent-config-rules) list the agents and
+settings covered.
+
+```toml title="cchk.toml"
+[agent]
+enabled = true
+```
