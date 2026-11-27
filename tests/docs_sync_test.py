@@ -221,7 +221,7 @@ _OPTIONS_ROW = re.compile(
 )
 # The sections get_default_config() returns. [pull_request] is read by the
 # App alone and has no CLI default to compare against.
-_RUNTIME_SECTIONS = ("commit", "branch", "push", "files", "tag")
+_RUNTIME_SECTIONS = ("commit", "branch", "push", "files", "tag", "agent")
 
 # Markdown code spans use single backticks.
 _QUOTED = re.compile(r'^(?:`+(.*?)`+|"(.*?)")')
